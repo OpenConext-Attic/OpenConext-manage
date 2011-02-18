@@ -1,0 +1,144 @@
+<?php
+/**
+ * 
+ * User: dennisjan
+ * Date: 2/18/11
+ * Time: 4:48 PM
+ */
+ ?>
+
+<div id="dataGrid"></div>
+
+<script type="text/javascript">
+
+YAHOO.util.Event.addListener(window, "load", function() {
+    YAHOO.datagrid.InlineCellEditing = function() {
+        var ColumnDefs = [
+        <?php
+            foreach($this->columns->toArray() as $column => $options)
+            {
+                $editor = '';
+                if ($options['edit'])
+                {
+                    $editor  = 'editor: new YAHOO.widget.TextboxCellEditor()';
+                }
+                echo '{key:"' . $column . '", sortable:' . $options['sort'] . ', '. $editor .'},';
+            }
+        ?>
+
+        ];
+
+        this.DataSource = new YAHOO.util.DataSource("<?php echo $this->url();?>/format/json/?");
+        this.DataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+        this.DataSource.connXhrMode = "queueRequests";
+        this.DataSource.responseSchema = {
+            resultsList: "ResultSet.Result",
+            fields: [<?php echo '"'.implode('","', array_keys($this->columns->toArray())).'"';?>],
+            metaFields: {
+                totalRecords: "totalRecords" // Access to value in the server response
+            }
+        };
+
+        // DataTable configuration
+        var Configs = {
+            initialRequest: "", // Initial request for first page of data
+            dynamicData: true, // Enables dynamic server-driven data
+            sortedBy : {key:"name", dir:YAHOO.widget.DataTable.CLASS_ASC}, // Sets UI initial sort arrow
+            paginator: new YAHOO.widget.Paginator({ rowsPerPage:25 }) // Enables pagination
+        };
+
+        var DataTable = new YAHOO.widget.DataTable("dataGrid", ColumnDefs, this.DataSource, Configs);
+
+        var handleSuccess = function(){
+
+            confirm('succes');
+        }
+
+        var handleFailure = function(){
+
+            confirm('failure');
+        }
+
+        var callbackDelete =
+        {
+            success:handleSuccess,
+            failure:handleFailure,
+            scope : DataTable
+        };
+
+
+        var onContextMenuClick = function(p_sType, p_aArgs, p_DataTable) {
+            var task = p_aArgs[1];
+            if(task) {
+                // Extract which TR element triggered the context menu
+                var elRow = this.contextEventTarget;
+                elRow = p_DataTable.getTrEl(elRow);
+
+                if(elRow) {
+                    switch(task.index) {
+                        case 0:     // Delete row upon confirmation
+                            var oRecord = p_DataTable.getRecord(elRow);
+                            if(confirm("Are you sure you want to delete " +
+                                    oRecord.getData("name") + " (" +
+                                    oRecord.getData("city") + ")?")) {
+                                p_DataTable.deleteRow(elRow);
+                                var request = YAHOO.util.Connect.asyncRequest('GET', "<?php echo $this->url();?>/format/json/id/1", callbackDelete);
+                            }
+                    }
+                }
+            }
+        };
+
+        var ContextMenu = new YAHOO.widget.ContextMenu("contextmenu",
+                {trigger:DataTable.getTbodyEl()});
+        ContextMenu.addItem("Delete Item");
+        // Render the ContextMenu instance to the parent container of the DataTable
+        ContextMenu.render("dataGrid");
+        ContextMenu.clickEvent.subscribe(onContextMenuClick, DataTable);
+
+        // Update totalRecords on the fly with value from server
+        DataTable.handleDataReturnPayload = function(oRequest, oResponse, oPayload) {
+            oPayload.totalRecords = oResponse.meta.totalRecords;
+            return oPayload;
+        }
+
+        var SuccessHandler = function() {
+            this.set("sortedBy", null);
+            this.onDataReturnAppendRows.apply(this,arguments);
+        };
+        var FailureHandler = function() {
+            this.showTableMessage(YAHOO.widget.DataTable.MSG_ERROR, YAHOO.widget.DataTable.CLASS_ERROR);
+            this.onDataReturnAppendRows.apply(this,arguments);
+        };
+        var callbackObj = {
+            success : SuccessHandler,
+            failure : FailureHandler,
+            scope : DataTable
+        };
+
+
+
+//        DataSource.sendRequest("action=feed&format=json",
+//                callbackObj);
+
+        // Set up editing flow
+        var highlightEditableCell = function(oArgs) {
+            var elCell = oArgs.target;
+            if(YAHOO.util.Dom.hasClass(elCell, "yui-dt-editable")) {
+                this.highlightCell(elCell);
+            }
+        };
+        DataTable.subscribe("cellMouseoverEvent", highlightEditableCell);
+        DataTable.subscribe("cellMouseoutEvent", DataTable.onEventUnhighlightCell);
+        DataTable.subscribe("cellClickEvent", DataTable.onEventShowCellEditor);
+
+        return {
+            oDS: DataSource,
+            oDT: DataTable
+        };
+    }();
+});
+
+
+
+</script>

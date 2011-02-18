@@ -19,4 +19,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $viewRenderer->setView($view);
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
     }
+
+    protected function _initViewHelpers() {
+        $this->bootstrap ( 'view' );
+		$view = $this->getResource ( 'view' );
+
+        $view->addHelperPath(APPLICATION_PATH . '/views/helpers/', 'Application_View_Helper');
+    }
 }

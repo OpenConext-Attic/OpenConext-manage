@@ -6,13 +6,6 @@ class PortalController extends Zend_Controller_Action
         $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
                                     ->addActionContext('gadgetcount', 'json')
                                     ->initContext();
-
-//        $this->view->jQuery()->setLocalPath('/javascript/jquery-1.4.4.min.js');
-//        $this->view->jQuery()->enable();
-
-        $this->view->headScript()->prependFile('/javascript/flexigrid.js');
-        $this->view->headLink()->prependStylesheet('/css/flexigrid.css');
-        $this->view->headScript()->prependFile('http://code.jquery.com/jquery-1.4.4.min.js');
     }
     
     public function indexAction ()
@@ -26,15 +19,28 @@ class PortalController extends Zend_Controller_Action
             header("Content-disposition: attachment; filename=json.txt");
         }
 
-        $this->view->page = $this->getRequest()->getParam('page', 1);
-        $this->view->total = 270;
-        if($this->view->page == 1) {
-        $this->view->rows = array(array('id' => 1,'cell' => array(1, 'Linus')),
-                                  array('id' => 2,'cell' => array(2,'Rasmus')));
-        }
-        else {
-            $this->view->rows = array();
-        }
+        $Result = array(
+                    array('name' => 'Dennis-Jan', 'address' => 'Toutenburg 55', 'city' => 'Vlissingen', 'state' => 'Zeeland'),
+                    array('name' => 'Richard', 'address' => 'Caland 35', 'city' => 'Vlissingen', 'state' => 'Zeeland'),
+                    array('name' => 'bert', 'address' => 'Toutenburg 55', 'city' => 'Vlissingen', 'state' => 'Zeeland'),
+                    array('name' => 'janus', 'address' => 'Caland 35', 'city' => 'Vlissingen', 'state' => 'Zeeland'),
+                    array('name' => 'frits', 'address' => 'Toutenburg 55', 'city' => 'Vlissingen', 'state' => 'Zeeland'),
+                    array('name' => 'klaas', 'address' => 'Caland 35', 'city' => 'Vlissingen', 'state' => 'Zeeland'));
+
+        $this->view->ResultSet = array('Result' => $Result);
+        $this->view->totalRecords = 55;
+        $this->view->recordsReturned = 6;
+        $this->view->startIndex = 0;
+        $this->view->pageSize = 25;
+
+        $config = new Zend_Config(array(), true);
+        $config->columns = array('name' => array('sort' => true, 'edit' => true),
+                                'address' => array('sort' => true, 'edit' => true),
+                                'city' => array('sort' => true, 'edit' => true),
+                                'state' => array('sort' => true, 'edit' => true),
+                                );
+
+        $this->view->config = $config;
     }
     
     public function gadgetavailableAction()
