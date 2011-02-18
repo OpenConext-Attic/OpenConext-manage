@@ -1,0 +1,46 @@
+.box {
+    -moz-border-radius: 5px 5px 5px 5px;
+    -moz-box-shadow: 0 3px 8px #AAAAAA;
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #BABBB0;
+    margin: 0 15px 10px 5px;
+    position: relative;
+    width: 100%;
+}
+
+.box-header {
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    background: url("/media/box-header-background.png") repeat-x scroll 50% 50% #FD7700;
+    color: #FFFFFF;
+    font-weight: bold;
+    overflow: hidden;
+    width: 100%;
+}
+
+.box-header h2 {
+    margin: 0;
+    padding: 6px !important;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.box-content {
+    padding: 15px;
+}
+
+.box-content ul li {
+    list-style-type: none;
+}
+
+.box-content table th {
+    text-align: left;
+}
+
+.box-content table td, .box-content table th {
+    padding: 5px;
+}
+
+.box-content table td.numeric {
+    text-align: right;
+}

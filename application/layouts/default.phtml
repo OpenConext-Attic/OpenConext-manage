@@ -1,0 +1,40 @@
+<?php echo $this->doctype() ?>
+<html lang="nl">
+    <head>
+        <meta charset="utf-8" />
+        <title>SURFconext Platform Administration Environment</title>
+        <?php 
+            echo $this->headLink()->appendStylesheet('/css/reset.css')
+                                  ->appendStylesheet('/css/fonts.css')
+                                  ->appendStylesheet('/css/global.css')
+                                  ->appendStylesheet('/css/boxes.css'); 
+                                    
+                  
+            echo $this->headScript(); 
+            echo $this->headStyle();
+            
+            echo $this->jQuery();
+        ?>
+
+        <!--[if lt IE 9]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <header>
+            <div class="nav" id="TopNav"></div>
+            <a href="/" id="Logo"><img src="/media/logo-surfnet.gif" alt="SURFNET - We make innovation work"></a>
+        </header>
+
+        <nav>
+            <?php echo $this->navigation();?>
+        </nav>
+        <div class='content'>
+            <?php echo $this->layout()->content ?>
+        </div>
+        
+        <footer>
+            <?php echo $this->inlineScript() ?>
+        </footer>
+    </body>
+</html>

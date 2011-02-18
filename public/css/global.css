@@ -1,0 +1,139 @@
+/* = Generic classes */
+.hide {
+	display: none !important;
+}
+
+.clear {
+    clear: both;
+}
+
+.left {
+	float:left;
+}
+
+.right {
+	float:right;
+}
+
+header {
+    -moz-box-shadow: 0 8px 5px -5px #999999;
+    background-color: white;
+    background-image: url("/media/header.gif");
+    background-repeat: no-repeat;
+    height: 108px;
+    min-width: 990px;
+}
+
+header #Logo {
+    height: 80px;
+    position: absolute;
+    text-indent: -999em;
+    width: 520px;
+}
+
+nav {
+    background: url("/media/background-content-top.png") no-repeat scroll 0 0 transparent;
+    padding-top: 50px;
+    float: left;
+    width: 150px;
+    min-height: 30px;
+    height: 100%;
+}
+
+nav ul.navigation li a:visited, nav ul.navigation li ul li a:visited {
+ text-decoration: none;
+}
+
+nav ul.navigation li a.main-item, nav ul.navigation li ul li a.sub-item {
+    margin: 1px 0 7px;
+    border-top: medium none;
+    color: white;
+    display: block;
+    font-size: 11px;
+    line-height: 15px;
+    min-height: 23px;
+    padding: 4px 7px 0;
+    position: relative;
+    width: 136px;
+}
+
+nav ul.navigation li a.main-item {
+    background: url("/media/background-nav-items.png") no-repeat scroll 100% -150px transparent;
+}
+
+nav ul.navigation li ul li a.sub-item {
+    background: url("/media/background-nav-items.png") no-repeat scroll 100% 0px transparent;
+}
+
+nav ul.navigation li ul li.active a.sub-item {
+ color: black;
+ background: url("/media/background-nav-items.png") no-repeat scroll 100% -100px transparent;
+}
+
+nav ul.navigation li a.main-item:hover, nav ul.navigation li.active a.main-item {
+ color: white;
+ background: url("/media/background-nav-items.png") no-repeat scroll 100% -200px transparent;
+}
+
+nav ul.navigation li ul li a.sub-item:hover {
+ color: white;
+ background: url("/media/background-nav-items.png") no-repeat scroll 100% -50px transparent;
+}
+
+
+
+nav ul.navigation li ul li a.sub-item {
+    padding-left: 27px;
+    width: 116px;
+}
+
+nav ul.navigation li a.main-item {
+    font-weight: bold;
+}
+
+.column {
+    float: left;
+    width: 350px;
+    margin-right: 50px;
+}
+
+body {
+    background: url("../media/background-content.png") repeat-y scroll 0 0 #FFFFFF;
+    min-width: 990px;
+    width: 100%;
+}
+
+#dashboard {
+    float: left;
+    padding-top: 12px;
+    padding-left: 15px;
+}
+
+#columnContainer {
+    padding-top: 20px;
+}
+
+.component-status-okay {
+    background-color: green;
+    margin: 5px;
+    padding: 13px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.component-status-error {
+    background-color: red;
+    margin: 5px;
+    padding: 13px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.content {
+    margin-left: 150px;
+    padding: 10px;
+}
+
+.flexigrid {
+    margin-top: 10px;
+}
