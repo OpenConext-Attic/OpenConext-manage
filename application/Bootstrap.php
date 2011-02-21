@@ -2,6 +2,37 @@
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+    /**
+     * Set up the autoloaders for the default module
+     *
+     * @return Zend_Application_Module_Autoloader
+     */
+    protected function _initModuleAutoload()
+    {
+        $autoloader = new Zend_Application_Module_Autoloader(array(
+            'namespace' => '',
+            'basePath' => dirname(__FILE__)
+        ));
+        return $autoloader;
+    }
+
+    /**
+     * Set up the db adapter
+     *
+     * @return Void
+     */
+    protected function _initDbAdapter()
+    {
+        $this->bootstrap('db');
+        $db = $this->getResource('db');
+        if ($db != null) {
+            Zend_Registry::set('db', $db);
+        } else {
+            throw new Exception('Cannot create database adapter');
+        }
+        Zend_Db_Table_Abstract::setDefaultAdapter($db);
+    }
+
     protected function _initDoctype()
     {
         $this->bootstrap('view');
