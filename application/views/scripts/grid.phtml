@@ -28,7 +28,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         ];
 
-        this.DataSource = new YAHOO.util.DataSource("<?php echo $this->url();?>/format/json/?");
+        this.DataSource = new YAHOO.util.DataSource("<?php echo $this->url(array('format'=>'json'));?>/?");
         this.DataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
         this.DataSource.connXhrMode = "queueRequests";
         this.DataSource.responseSchema = {
@@ -82,7 +82,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
                                     oRecord.getData("name") + " (" +
                                     oRecord.getData("city") + ")?")) {
                                 p_DataTable.deleteRow(elRow);
-                                var request = YAHOO.util.Connect.asyncRequest('GET', "<?php echo $this->url();?>/format/json/id/1", callbackDelete);
+                                var request = YAHOO.util.Connect.asyncRequest('GET', "<?php echo $this->url(array('format'=>'json'));?>/id/1", callbackDelete);
                             }
                     }
                 }
