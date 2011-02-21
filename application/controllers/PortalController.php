@@ -27,13 +27,14 @@ class PortalController extends Zend_Controller_Action
                     array('name' => 'frits', 'address' => 'Toutenburg 55', 'city' => 'Vlissingen', 'state' => 'Zeeland'),
                     array('name' => 'klaas', 'address' => 'Caland 35', 'city' => 'Vlissingen', 'state' => 'Zeeland'));
 
-        $this->view->ResultSet = array('Result' => $Result);
+        $this->view->ResultSet = $Result;
         $this->view->totalRecords = 55;
         $this->view->recordsReturned = 6;
         $this->view->startIndex = 0;
         $this->view->pageSize = 25;
 
-        $config = new Zend_Config(array(), true);
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/grid.ini', APPLICATION_ENV, true);
+
         $config->columns = array('name' => array('sort' => true, 'edit' => true),
                                 'address' => array('sort' => true, 'edit' => true),
                                 'city' => array('sort' => true, 'edit' => true),

@@ -12,10 +12,10 @@
 <script type="text/javascript">
 
 YAHOO.util.Event.addListener(window, "load", function() {
-    YAHOO.datagrid.InlineCellEditing = function() {
+    YAHOO.datagrid = function() {
         var ColumnDefs = [
         <?php
-            foreach($this->columns->toArray() as $column => $options)
+            foreach($this->config->columns->toArray() as $column => $options)
             {
                 $editor = '';
                 if ($options['edit'])
@@ -32,8 +32,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
         this.DataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
         this.DataSource.connXhrMode = "queueRequests";
         this.DataSource.responseSchema = {
-            resultsList: "ResultSet.Result",
-            fields: [<?php echo '"'.implode('","', array_keys($this->columns->toArray())).'"';?>],
+            resultsList: "ResultSet",
+            fields: [<?php echo '"'.implode('","', array_keys($this->config->columns->toArray())).'"';?>],
             metaFields: {
                 totalRecords: "totalRecords" // Access to value in the server response
             }
@@ -44,7 +44,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
             initialRequest: "", // Initial request for first page of data
             dynamicData: true, // Enables dynamic server-driven data
             sortedBy : {key:"name", dir:YAHOO.widget.DataTable.CLASS_ASC}, // Sets UI initial sort arrow
-            paginator: new YAHOO.widget.Paginator({ rowsPerPage:25 }) // Enables pagination
+            paginator: new YAHOO.widget.Paginator({ rowsPerPage:<?php echo $this->config->pageSize; ?> }) // Enables pagination
         };
 
         var DataTable = new YAHOO.widget.DataTable("dataGrid", ColumnDefs, this.DataSource, Configs);
@@ -64,6 +64,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
             success:handleSuccess,
             failure:handleFailure,
             scope : DataTable
+        };
+
+        // Create a Custom Event handler
+        var saveHandler = function(oArgs) {
+            var oEditor = oArgs.editor;
+            
+            alert(YAHOO.lang.JSON.stringify(oEditor.getRecord().getData()));
         };
 
 
@@ -89,8 +96,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
             }
         };
 
-        var ContextMenu = new YAHOO.widget.ContextMenu("contextmenu",
-                {trigger:DataTable.getTbodyEl()});
+        var ContextMenu = new YAHOO.widget.ContextMenu("contextmenu", {trigger:DataTable.getTbodyEl()});
         ContextMenu.addItem("Delete Item");
         // Render the ContextMenu instance to the parent container of the DataTable
         ContextMenu.render("dataGrid");
@@ -131,6 +137,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
         DataTable.subscribe("cellMouseoverEvent", highlightEditableCell);
         DataTable.subscribe("cellMouseoutEvent", DataTable.onEventUnhighlightCell);
         DataTable.subscribe("cellClickEvent", DataTable.onEventShowCellEditor);
+        // Assign the handler to the Custom Event
+        DataTable.subscribe("editorSaveEvent", saveHandler);
 
         return {
             oDS: DataSource,
