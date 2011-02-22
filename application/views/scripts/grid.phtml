@@ -22,7 +22,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
                 {
                     $editor  = 'editor: new YAHOO.widget.TextboxCellEditor()';
                 }
-                echo '{key:"' . $column . '", sortable:' . $options['sort'] . ', '. $editor .'},';
+                echo '{key:"' . $column . '", sortable:' 
+                     . ($options['sort'] ? 'true' : 'false')
+                     . ', '. $editor .'},';
             }
         ?>
 
@@ -43,7 +45,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var Configs = {
             initialRequest: "", // Initial request for first page of data
             dynamicData: true, // Enables dynamic server-driven data
-            sortedBy : {key:"name", dir:YAHOO.widget.DataTable.CLASS_ASC}, // Sets UI initial sort arrow
+            sortedBy : {key:"<?php echo $this->config->initialSortField; ?>", dir:YAHOO.widget.DataTable.CLASS_ASC}, // Sets UI initial sort arrow
             paginator: new YAHOO.widget.Paginator({ rowsPerPage:<?php echo $this->config->pageSize; ?> }) // Enables pagination
         };
 
