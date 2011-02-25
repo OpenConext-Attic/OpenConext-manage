@@ -1,0 +1,11 @@
+<phpunit bootstrap="./TestHelper.php">
+  <testsuites>
+    <testsuite name="Application">
+      <directory>application</directory>
+    </testsuite>
+    <testsuite name="Library">
+      <directory>library</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
+
