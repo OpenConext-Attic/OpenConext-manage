@@ -11,6 +11,44 @@
 
 <script type="text/javascript">
 
+YAHOO.widget.DataTable.Formatter.accepticon = function(el, oRecord, oColumn, oData) {
+    if (YAHOO.lang.isString(oData)) {
+        var icon = 'cancel.png';
+        if (oData == 'T') {
+            icon = 'accept.png';
+        }
+        el.innerHTML = '<img src="/images/' + icon + '" />';
+    } else {
+        el.innerHTML = YAHOO.lang.isValue(oData) ? oData : "";
+    }
+};
+
+YAHOO.widget.DataTable.Formatter.screenshot = function(el, oRecord, oColumn, oData) {
+    if (YAHOO.lang.isString(oData)) {
+        var icon = 'cancel.png';
+        if (oData != '') {
+            url = '<?php echo $this->config->host ?>' + oData;
+            el.innerHTML = '<img src="' + url + '"/>';
+        }
+
+    } else {
+        el.innerHTML = YAHOO.lang.isValue(oData) ? oData : "";
+    }
+};
+
+YAHOO.widget.DataTable.Formatter.xmllink = function(el, oRecord, oColumn, oData) {
+    if (YAHOO.lang.isString(oData)) {
+        var icon = 'cancel.png';
+        if (oData != '') {
+            el.innerHTML = '<a href="' + oData + '" target="_blank"/>[xml]</a>';
+        }
+
+    } else {
+        el.innerHTML = YAHOO.lang.isValue(oData) ? oData : "";
+    }
+};
+
+
 YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.datagrid = function() {
         var ColumnDefs = [
@@ -24,7 +62,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
                 }
                 echo '{key:"' . $column . '", sortable:' 
                      . ($options['sort'] ? 'true' : 'false')
-                     . ', '. $editor .'},';
+                     . (!empty($editor) ? ', '. $editor : '')
+                     . (isset($options['formatter']) ? ', formatter:"' . $options['formatter'] . '"' : '')
+                     . '},';
             }
         ?>
 
