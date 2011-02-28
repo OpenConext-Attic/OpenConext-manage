@@ -45,7 +45,6 @@ class Model_Mapper_LogLoginMapper extends Model_Mapper_Abstract
      */
     public function fetchGrouped($grouped='', $order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
-
         $select = $this->_dao->select();
         $select->from($this->_dao,
                       array("num" => "COUNT(id)",
@@ -114,5 +113,4 @@ class Model_Mapper_LogLoginMapper extends Model_Mapper_Abstract
         }
         return $result;
     }
-
 }

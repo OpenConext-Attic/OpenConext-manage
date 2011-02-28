@@ -35,4 +35,5 @@ class Model_LogLogin extends Model_Abstract
     {
         return $this->getMapper()->fetchCount();
     }
+
 }

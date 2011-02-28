@@ -10,6 +10,8 @@ class PortalController extends Zend_Controller_Action
                                      ->addActionContext('gadgetavailable', 'json')
                                      ->addActionContext('gadgetcount', 'json')
                                      ->addActionContext('gadgetusage', 'json')
+                                     ->addActionContext('invitestatus', 'json')
+                                     ->addActionContext('teamtabs', 'json')
                                      ->initContext();
     }
     
@@ -186,11 +188,59 @@ class PortalController extends Zend_Controller_Action
     
     public function invitestatusAction()
     {
-        
+        if($this->getRequest()->getParam('download', false))
+        {
+            header("Content-disposition: attachment; filename=json.txt");
+        }
+
+        $gadgetList = new Model_GadgetList();
+        $Result = $gadgetList->getInvites();
+
+        $this->view->ResultSet = $Result;
+        $this->view->totalRecords = count($Result);
+        $this->view->recordsReturned = count($Result);
+        $this->view->startIndex = 0;
+
+
+
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/grid.ini', APPLICATION_ENV, true);
+
+        $config->initialSortField = 'num';
+        $config->pageSize = count($Result);
+        $config->columns = array('num' => array('sort' => false, 'edit' => false),
+                                 'status' => array('sort' => false, 'edit' => false),
+                                );
+
+
+        $this->view->config = $config;
     }
     
     public function teamtabsAction()
     {
-        
+        if($this->getRequest()->getParam('download', false))
+        {
+            header("Content-disposition: attachment; filename=json.txt");
+        }
+
+        $gadgetList = new Model_GadgetList();
+        $Result = $gadgetList->getTeamTabs();
+
+        $this->view->ResultSet = $Result;
+        $this->view->totalRecords = count($Result);
+        $this->view->recordsReturned = count($Result);
+        $this->view->startIndex = 0;
+
+
+
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/grid.ini', APPLICATION_ENV, true);
+
+        $config->initialSortField = 'num';
+        $config->pageSize = count($Result);
+        $config->columns = array('num' => array('sort' => false, 'edit' => false),
+                                 'type' => array('sort' => false, 'edit' => false),
+                                );
+
+
+        $this->view->config = $config;
     }
 }

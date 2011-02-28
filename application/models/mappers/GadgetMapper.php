@@ -202,4 +202,92 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         }
         return $result;
     }
+
+    public function fetchInvites($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    {
+        $this->setDao('Model_Dao_Invite');
+        /**
+         * $qry = "select COUNT(id) as num, status from coin_portal.invite group by status";
+         */
+        $select = $this->_dao->select();
+        $select->from($this->_dao,
+                      array("num" => "COUNT(id)",
+                            "status" => "status"))
+               ->group("status");
+
+        if (isset($limit)) {
+            $select->limit($limit, $offset);
+        }
+
+        if ($order != '' && !$countOnly) {
+            $select->order($order . ' ' . $dir);
+        }
+
+        $rows = $this->_dao->fetchAll($select);
+
+        if ($countOnly) {
+            return count($rows);
+        }
+
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = array(
+                'num' => $row['num'],
+                'status' => $row['status'],
+            );
+        }
+        return $result;
+    }
+
+    public function fetchTeamTabs($order='num', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    {
+        /**
+         * $qry = "SELECT COUNT(id) AS num, 'Total Tabs' as type FROM `coin_portal`.`tab`
+         *  UNION
+         * SELECT COUNT(id) AS num, 'Shared Team Tabs' as type FROM `coin_portal`.`tab` where team IS NOT NULL
+         *  UNION
+         * SELECT COUNT(id) AS num, 'Not Shared' as type FROM `coin_portal`.`tab` where team IS NULL";
+         */
+        $this->setDao('Model_Dao_Tab');
+        $selectTotal = $this->_dao->select();
+        $selectTotal->from($this->_dao,
+                      array("num" => "COUNT(id)",
+                            'type' => new Zend_Db_Expr("'Total'"))
+                     );
+
+        $selectShared = $this->_dao->select();
+        $selectShared->from($this->_dao,
+                        array("num" => "COUNT(id)",
+                              'type' => new Zend_Db_Expr("'Shared'"))
+                       )
+                      ->where('team IS NOT NULL');
+
+        $selectNotShared = $this->_dao->select();
+        $selectNotShared->from($this->_dao,
+                           array("num" => "COUNT(id)",
+                                 'type' => new Zend_Db_Expr("'Not Shared'"))
+                          )
+                          ->where('team IS NULL');
+
+        $select = $this->_dao->select()
+                ->union(array(
+                    $selectTotal,
+                    $selectShared,
+                    $selectNotShared
+                ));
+        $rows = $this->_dao->fetchAll(
+            $select
+        );
+
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = array(
+                'num' => $row['num'],
+                'type' => $row['type']
+            );
+        }
+        return $result;
+
+
+    }
 }

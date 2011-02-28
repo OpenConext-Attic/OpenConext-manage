@@ -65,6 +65,17 @@ class Model_GadgetList extends Model_Abstract
        return $this->getMapper()->fetchUsage($limit, $offset, $countOnly);
     }
 
+    public function getInvites($order='num', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    {
+       return $this->getMapper()->fetchInvites($order, $dir, $limit, $offset, $countOnly);
+    }
+
+    public function getTeamTabs($order='num', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    {
+       return $this->getMapper()->fetchTeamTabs($order, $dir, $limit, $offset, $countOnly);
+    }
+
+
     /**
      * Populate the gadget list.
      *
