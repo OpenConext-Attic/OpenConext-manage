@@ -1,4 +1,7 @@
 <?php
+
+require_once 'Surfnet/Filter/InArray.php';
+
 class PortalController extends Zend_Controller_Action
 {
     public function init ()
@@ -51,6 +54,8 @@ class PortalController extends Zend_Controller_Action
             header("Content-disposition: attachment; filename=json.txt");
         }
 
+        $options = array('filterNamespace' => 'Surfnet_Filter');
+        
         /**
          * Input filtering/validation.
          * @todo Move this to the init() routine ?
@@ -58,39 +63,46 @@ class PortalController extends Zend_Controller_Action
         $filters = array(
             'results' => array('Int'),
             'startIndex' => array('Int'),
+            'dir' =>array(
+                             new Surfnet_Filter_InArray(array('asc','desc'), 'asc')
+                         )
         );
         
-        $validators = array(
-        );
+        $validators = array('*' => array());
+        $validators = null;
         
         $input = new Zend_Filter_Input(
                                         $filters,
                                         $validators,
-                                        $this->getRequest()->getParams()
+                                        $this->getRequest()->getParams(),
+                                        $options
                                       );
-
-        $limit = $input->results;
-        $offset = $input->startIndex;
 
         $gadgetList = new Model_GadgetList();
         /**
          * @todo Implement a way to get the total with a proper query.
          */
-        $total = $gadgetList->getAvailable(null,0,true);
+        $total = $gadgetList->getAvailable(null, null, null,0,true);
 
-        $Result = $gadgetList->getAvailable($limit, $offset);
+        $Result = $gadgetList->getAvailable(
+                                   $input->order,
+                                   $input->dir,
+                                   $input->results,
+                                   $input->startIndex
+                               );
 
         $this->view->ResultSet = $Result;
 
         $this->view->recordsReturned = count($Result);
-        $this->view->startIndex = $offset;
+        $this->view->startIndex = $input->startIndex;
         $this->view->totalRecords = $total;
 
 
         $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/grid.ini', APPLICATION_ENV, true);
 
+        $config->dir = $input->dir;
         $config->initialSortField = 'title';
-        $config->startIndex = $offset;
+        $config->startIndex = $input->startIndex;
 
         $config->columns = array(
                                  'title' => array(
