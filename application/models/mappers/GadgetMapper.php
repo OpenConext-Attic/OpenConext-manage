@@ -55,23 +55,9 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
      *
      * @return Array|Integer Array with gagdet usage data or row count.
      */
-    public function fetchAvailable($limit=null, $offset=0, $countOnly=false)
+    public function fetchAvailable($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
 
-        /**
-         * $qry = "select 	title,
-				author,
-				DATE_FORMAT(added, '%e-%c-%Y, %T') AS added,
-				description,
-				install_count,
-				CONCAT(\"<img src='https://gui.dev.coin.surf.net/\",  screenshot, \"'>\") as icon,
-				CONCAT(\"<a href='\", url, \"' target='_blank'>[xml]</a>\") AS url,
-				CONCAT(\"<img src='icons/\", IF(approved = 'T', 'accept.png', 'cancel.png') , \"'>\") as approved,
-				CONCAT(\"<img src='icons/\", IF(supportssso = 'T', 'accept.png', 'cancel.png') , \"'>\") as ssosupport,
-				CONCAT(\"<img src='icons/\", IF(supports_groups = 'T', 'accept.png', 'cancel.png') , \"'>\") as groupsupport
-		from coin_portal.gadgetdefinition
-		order by title";
-         */
         $this->setDao('Model_Dao_GadgetDefinition');
         $select = $this->_dao->select();
         if ($countOnly) {
@@ -88,6 +74,9 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         
         if (isset($limit)) {
             $select->limit($limit, $offset);
+        }
+        if ($order != '' && !$countOnly) {
+            $select->order($order . ' ' . $dir);
         }
 
         $rows = $this->_dao->fetchAll($select);
