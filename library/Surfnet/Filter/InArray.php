@@ -10,7 +10,7 @@
  *
  * @author marc
  */
-class Surfnet_Filter_InArray
+class Surfnet_Filter_InArray implements Zend_Filter_Interface
 {
     /**
      * Default value returned when the input
@@ -26,6 +26,13 @@ class Surfnet_Filter_InArray
      * @var Array 
      */
     protected $_haystack;
+
+
+    public function __construct(Array $haystack=null, $default=null)
+    {
+        $this->setHaystack($haystack);
+        $this->setDefault($default);
+    }
 
     /**
      * Set the default value.
@@ -50,7 +57,7 @@ class Surfnet_Filter_InArray
      *
      * @param Array
      */
-    public function setHaystack(Array $haystack)
+    public function setHaystack(Array $haystack=null)
     {
         $this->_haystack = $haystack;
     }

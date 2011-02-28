@@ -35,7 +35,39 @@ class Surfnet_Filter_InArrayTest extends PHPUnit_Framework_TestCase
                                 );
     public function setUp()
     {
-        $this->_filter = new Surfnet_Filter_InArray();
+        $this->_filter = new Surfnet_Filter_InArray(
+                                $this->_haystack,
+                                $this->_default
+                             );
+    }
+
+    /**
+     * Test the constructor
+     */
+    public function testConstructor()
+    {
+        $dummyDefault = 'Dummy';
+        $dummyHaystack = array(
+                                  'Dummy1',
+                                  'Dummy2'
+                              );
+        $dummyFilter = new Surfnet_Filter_InArray(
+                               $dummyHaystack,
+                               $dummyDefault
+                           );
+        $this->assertEquals(
+                $dummyDefault,
+                $dummyFilter->getDefault(),
+                'Constructor did not process default correctly'
+
+        );
+        $this->assertEquals(
+                $dummyHaystack,
+                $dummyFilter->getHaystack(),
+                'Constructor did not process haystack correctly'
+
+        );
+
     }
 
     /**
@@ -43,9 +75,10 @@ class Surfnet_Filter_InArrayTest extends PHPUnit_Framework_TestCase
      */
     public function testGetSetDefault()
     {
-        $this->_filter->setDefault($this->_default);
+        $dummyDefault = 'Dummy';
+        $this->_filter->setDefault($dummyDefault);
         $this->assertEquals(
-                $this->_default,
+                $dummyDefault,
                 $this->_filter->getDefault(),
                 'Default value did not get processed correctly'
 
@@ -57,9 +90,13 @@ class Surfnet_Filter_InArrayTest extends PHPUnit_Framework_TestCase
      */
     public function testGetSetHaystack()
     {
-        $this->_filter->setHaystack($this->_haystack);
+        $dummyHaystack = array(
+                                  'Dummy1',
+                                  'Dummy2'
+                              );
+        $this->_filter->setHaystack($dummyHaystack);
         $this->assertEquals(
-                $this->_haystack,
+                $dummyHaystack,
                 $this->_filter->getHaystack(),
                 'Haystack did not get processed correctly'
 
@@ -71,8 +108,6 @@ class Surfnet_Filter_InArrayTest extends PHPUnit_Framework_TestCase
      */
     public function testValueInArray()
     {
-        $this->_filter->setDefault($this->_default);
-        $this->_filter->setHaystack($this->_haystack);
         $input = 'InArray1';
         $this->assertEquals(
                 $input,
@@ -86,8 +121,6 @@ class Surfnet_Filter_InArrayTest extends PHPUnit_Framework_TestCase
      */
     public function testValueNotInArray()
     {
-        $this->_filter->setDefault($this->_default);
-        $this->_filter->setHaystack($this->_haystack);
         $input = 'NotInArray1';
         $this->assertEquals(
                 $this->_default,
