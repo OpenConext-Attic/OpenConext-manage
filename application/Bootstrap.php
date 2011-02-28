@@ -21,16 +21,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      *
      * @return Void
      */
-    protected function _initDbAdapter()
+    protected function _initDbRegistry()
     {
-        $this->bootstrap('db');
-        $db = $this->getResource('db');
-        if ($db != null) {
-            Zend_Registry::set('db', $db);
-        } else {
-            throw new Exception('Cannot create database adapter');
-        }
-        Zend_Db_Table_Abstract::setDefaultAdapter($db);
+        $this->bootstrap('multidb');
+        $multidb = $this->getPluginResource('multidb');
+
+        Zend_Registry::set('db_coin_portal', $multidb->getDb('coin_portal'));
+        Zend_Registry::set('db_engine_block', $multidb->getDb('engine_block'));
+
     }
 
     protected function _initDoctype()
