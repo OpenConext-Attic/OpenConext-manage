@@ -11,6 +11,10 @@ class EngineBlockController extends Zend_Controller_Action
                                      ->addActionContext('idplogins', 'json')
                                      ->addActionContext('splogins', 'json')
                                      ->initContext();
+        //Filter and sanitize input and set up grid.
+        $input = $this->_helper->FilterLoader('portal');
+
+        $this->view->config = $this->_helper->gridSetup($input);
     }
 
     /**
@@ -25,25 +29,23 @@ class EngineBlockController extends Zend_Controller_Action
         }
 
         $gadgetList = new Model_GadgetList();
-        $Result = $gadgetList->getCount();
-
+        $input = $this->_helper->FilterLoader('engineblock');
+        
+        $Result = $gadgetList->getCount(
+                                       $input->sort,
+                                       $input->dir,
+                                       $input->results,
+                                       $input->startIndex
+                                       );
+        $this->view->totalRecords = $gadgetList->getCount(null, null, null, null, true);
+        
         $this->view->ResultSet = $Result;
         $this->view->totalRecords = count($Result);
         $this->view->recordsReturned = count($Result);
         $this->view->startIndex = 0;
 
+        
 
-
-        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/grid.ini', APPLICATION_ENV, true);
-
-        $config->initialSortField = 'num';
-        $config->pageSize = count($Result);
-        $config->columns = array('num' => array('sort' => false, 'edit' => false),
-                                 'type' => array('sort' => false, 'edit' => false),
-                                );
-
-
-        $this->view->config = $config;
     }
 
     /**
@@ -64,26 +66,21 @@ class EngineBlockController extends Zend_Controller_Action
             header("Content-disposition: attachment; filename=json.txt");
         }
 
-        $LogLogin = new Model_LogLogin();
-        $Result = $LogLogin->getByIdp();
+        $logLogin = new Model_LogLogin();
+
+        $input = $this->_helper->FilterLoader('engineblock');
+
+        $Result = $logLogin->getByIdp(
+                                      $input->sort,
+                                      $input->dir,
+                                      $input->results,
+                                      $input->startIndex
+                                     );
+        $this->view->totalRecords = $logLogin->getCount(null, null, null, null, true);
 
         $this->view->ResultSet = $Result;
-        $this->view->totalRecords = count($Result);
         $this->view->recordsReturned = count($Result);
         $this->view->startIndex = 0;
-
-
-
-        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/grid.ini', APPLICATION_ENV, true);
-
-        $config->initialSortField = 'num';
-        $config->pageSize = count($Result);
-        $config->columns = array(
-                                 'grouped' => array('sort' => false, 'edit' => false),
-                                 'num' => array('sort' => false, 'edit' => false)
-                                );
-
-        $this->view->config = $config;
     }
 
     /**
@@ -96,29 +93,21 @@ class EngineBlockController extends Zend_Controller_Action
             header("Content-disposition: attachment; filename=json.txt");
         }
 
-        $LogLogin = new Model_LogLogin();
+        $logLogin = new Model_LogLogin();
 
-        $total = $LogLogin->getBySP(null, null, null,0,true);
-        
-        $Result = $LogLogin->getBySP();
+        $input = $this->_helper->FilterLoader('engineblock');
+
+        $Result = $logLogin->getBySP(
+                                      $input->sort,
+                                      $input->dir,
+                                      $input->results,
+                                      $input->startIndex
+                                     );
+        $this->view->totalRecords = $logLogin->getCount(null, null, null, null, true);
 
         $this->view->ResultSet = $Result;
-        $this->view->totalRecords = $total;
         $this->view->recordsReturned = count($Result);
         $this->view->startIndex = 0;
-
-
-
-        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/grid.ini', APPLICATION_ENV, true);
-
-        $config->initialSortField = 'num';
-        $config->pageSize = count($Result);
-        $config->columns = array(
-                                 'grouped' => array('sort' => false, 'edit' => false),
-                                 'num' => array('sort' => false, 'edit' => false)
-                                );
-
-        $this->view->config = $config;
     }
 
     /**
@@ -130,27 +119,21 @@ class EngineBlockController extends Zend_Controller_Action
         {
             header("Content-disposition: attachment; filename=json.txt");
         }
+        $input = $this->_helper->FilterLoader('engineblock');
 
         $LogLogin = new Model_LogLogin();
 
-        $Result = $LogLogin->getCount();
+        $Result = $LogLogin->getCount(
+                                       $input->sort,
+                                       $input->dir,
+                                       $input->results,
+                                       $input->startIndex
+                                     );
 
         $this->view->ResultSet = $Result;
-        $this->view->totalRecords = count($Result);
+        $this->view->totalRecords = $LogLogin->getCount(null,null,null,null,true);
         $this->view->recordsReturned = count($Result);
         $this->view->startIndex = 0;
 
-
-
-        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/grid.ini', APPLICATION_ENV, true);
-
-        $config->initialSortField = 'num';
-        $config->pageSize = count($Result);
-        $config->columns = array(
-                                 'type' => array('sort' => false, 'edit' => false),
-                                 'num' => array('sort' => false, 'edit' => false)
-                                );
-
-        $this->view->config = $config;
     }
 }

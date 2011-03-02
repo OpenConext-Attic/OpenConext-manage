@@ -38,7 +38,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->doctype('HTML5');
     }
 
-    protected function _initViewHelpers() {
+    protected function _initActionHelpers()
+    {
+        Zend_Controller_Action_HelperBroker::addPrefix('Surfnet_Helper');
+    }
+
+    protected function _initViewHelpers()
+    {
         $this->bootstrap ( 'view' );
 	$view = $this->getResource ( 'view' );
 

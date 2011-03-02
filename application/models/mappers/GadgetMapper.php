@@ -75,6 +75,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         if (isset($limit)) {
             $select->limit($limit, $offset);
         }
+        
         if ($order != '' && !$countOnly) {
             $select->order($order . ' ' . $dir);
         }
@@ -107,7 +108,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
      *
      * @return Array Array with gagdet count data
      */
-    public function fetchCount()
+    public function fetchCount($order='type', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
         $this->setDao('Model_Dao_GadgetDefinition');
         $selectTotal = $this->_dao->select();
@@ -146,6 +147,10 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
             $select
         );
 
+        if ($countOnly) {
+            return count($rows);
+        }
+        
         $result = array();
         foreach ($rows as $row) {
             $result[] = array(
@@ -166,7 +171,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
      *
      * @return Array|Integer Array with gagdet usage data or row count.
      */
-    public function fetchUsage($limit=null, $offset=0, $countOnly=false)
+    public function fetchUsage($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
         $db = $this->_dao->getAdapter();
         $select = $db->select();
@@ -182,8 +187,12 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
                        'g.tab_id = t.id')
                 ->group('g.definition');
 
-        if (isset($limit)) {
+        if (isset($limit) && !$countOnly) {
             $select->limit($limit, $offset);
+        }
+
+        if ($order != '' && !$countOnly) {
+            $select->order($order . ' ' . $dir);
         }
 
         $rows = $db->fetchAll($select);
@@ -203,7 +212,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         return $result;
     }
 
-    public function fetchInvites($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    public function fetchInvites($order='num', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
         $this->setDao('Model_Dao_Invite');
         /**

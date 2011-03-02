@@ -85,7 +85,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var Configs = {
             initialRequest: "", // Initial request for first page of data
             dynamicData: true, // Enables dynamic server-driven data
-            sortedBy : {key:"<?php echo $this->config->initialSortField; ?>", dir:<?php if ($this->config->dir == 'desc') echo 'YAHOO.widget.DataTable.CLASS_DESC'; else echo 'YAHOO.widget.DataTable.CLASS_ASC'; ?>}, // Sets UI initial sort arrow
+            sortedBy : {key:"<?php echo $this->config->defaultsortfield; ?>", dir:<?php if ($this->config->dir == 'desc') echo 'YAHOO.widget.DataTable.CLASS_DESC'; else echo 'YAHOO.widget.DataTable.CLASS_ASC'; ?>}, // Sets UI initial sort arrow
             paginator: new YAHOO.widget.Paginator({ rowsPerPage:<?php echo $this->config->pageSize; ?> }) // Enables pagination
         };
 

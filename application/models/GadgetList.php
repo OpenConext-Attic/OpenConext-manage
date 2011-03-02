@@ -34,9 +34,9 @@ class Model_GadgetList extends Model_Abstract
      * Get a list of the amount of gadgets in certain classes.
      * SSO enabled, Group enabled etc.
      */
-    public function getCount()
+    public function getCount($order='type', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
-       return $this->getMapper()->fetchCount();
+       return $this->getMapper()->fetchCount($order, $dir, $limit, $offset, $countOnly);
     }
 
     /**
@@ -60,9 +60,9 @@ class Model_GadgetList extends Model_Abstract
      * @param Boolean $countOnly Return only the number of rows instead of the
      *                           full dataset.
      */
-    public function getUsage($limit=null, $offset=0, $countOnly=false)
+    public function getUsage($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
-       return $this->getMapper()->fetchUsage($limit, $offset, $countOnly);
+       return $this->getMapper()->fetchUsage($order, $dir, $limit, $offset, $countOnly);
     }
 
     public function getInvites($order='num', $dir='asc', $limit=null, $offset=0, $countOnly=false)
