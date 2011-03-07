@@ -60,7 +60,7 @@ class Model_GadgetList extends Model_Abstract
      * @param Boolean $countOnly Return only the number of rows instead of the
      *                           full dataset.
      */
-    public function getUsage($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    public function getUsage($order='num', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
        return $this->getMapper()->fetchUsage($order, $dir, $limit, $offset, $countOnly);
     }

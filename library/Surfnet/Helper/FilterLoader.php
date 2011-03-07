@@ -60,7 +60,7 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
             'dir' =>array(
                              new Surfnet_Filter_InArray(
                                         array('asc', 'desc'),
-                                        'asc'
+                                        'desc'
                                      )
                          ),
             'sort' => array(
@@ -73,7 +73,10 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
 
         $validators = array('*' => array());
         $validators = null;
-        $options = array('filterNamespace' => 'Surfnet_Filter');
+        $options = array(
+                         'filterNamespace' => 'Surfnet_Filter',
+                         'allowEmpty' => true
+                        );
         return new Zend_Filter_Input(
                                       $filters,
                                       $validators,

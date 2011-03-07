@@ -31,10 +31,18 @@ class PortalController extends Zend_Controller_Action
         }
 
         $gadgetList = new Model_GadgetList();
-        $Result = $gadgetList->getCount(null, null, null, null, false);
+
+        $input = $this->_helper->FilterLoader('portal');
+
+        $Result = $gadgetList->getCount(
+                                        $input->sort,
+                                        $input->dir,
+                                        $input->results,
+                                        $input->startIndex
+                                       );
 
         $this->view->ResultSet = $Result;
-        $this->view->totalRecords = count($Result);
+        $this->view->totalRecords = $gadgetList->getCount(null, null, null,0,true);
         $this->view->recordsReturned = count($Result);
         $this->view->startIndex = 0;
     }
@@ -136,7 +144,7 @@ class PortalController extends Zend_Controller_Action
                                           );
 
         $this->view->ResultSet = $Result;
-        $this->view->totalRecords = count($Result);
+        $this->view->totalRecords = $gadgetList->getTeamTabs(null, null, null,0,true);
         $this->view->recordsReturned = count($Result);
         $this->view->startIndex = 0;
 

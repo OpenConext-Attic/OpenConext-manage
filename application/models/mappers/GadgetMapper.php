@@ -108,8 +108,16 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
      *
      * @return Array Array with gagdet count data
      */
-    public function fetchCount($order='type', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    public function fetchCount($order='type', $dir='desc', $limit=null, $offset=0, $countOnly=false)
     {
+        if (empty($order)) {
+            $order = 'num';
+        }
+
+        if (empty($dir)) {
+            $dir = 'desc';
+        }
+
         $this->setDao('Model_Dao_GadgetDefinition');
         $selectTotal = $this->_dao->select();
         $selectTotal->from($this->_dao,
@@ -143,6 +151,13 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
                     $selectSsoEnabled,
                     $selectGroupEnabled
                 ));
+        if ($order != '' && !$countOnly) {
+            $select->order($order
+                           . (empty($dir) ? '' : ' ')
+                           . $dir
+                          );
+        }
+
         $rows = $this->_dao->fetchAll(
             $select
         );
@@ -171,8 +186,17 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
      *
      * @return Array|Integer Array with gagdet usage data or row count.
      */
-    public function fetchUsage($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    public function fetchUsage($order='num', $dir='desc', $limit=null, $offset=0, $countOnly=false)
     {
+
+        if (empty($order)) {
+            $order = 'num';
+        }
+
+        if (empty($dir)) {
+            $dir = 'desc';
+        }
+
         $db = $this->_dao->getAdapter();
         $select = $db->select();
 
@@ -192,7 +216,10 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         }
 
         if ($order != '' && !$countOnly) {
-            $select->order($order . ' ' . $dir);
+            $select->order($order 
+                           . (empty($dir) ? '' : ' ')
+                           . $dir
+                          );
         }
 
         $rows = $db->fetchAll($select);
@@ -250,6 +277,14 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
 
     public function fetchTeamTabs($order='num', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
+        if (empty($order)) {
+            $order = 'num';
+        }
+
+        if (empty($dir)) {
+            $dir = 'desc';
+        }
+
         /**
          * $qry = "SELECT COUNT(id) AS num, 'Total Tabs' as type FROM `coin_portal`.`tab`
          *  UNION
@@ -284,6 +319,19 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
                     $selectShared,
                     $selectNotShared
                 ));
+
+        if (isset($limit) && !$countOnly) {
+            $select->limit($limit, $offset);
+        }
+
+        if ($order != '' && !$countOnly) {
+            $select->order($order
+                           . (empty($dir) ? '' : ' ')
+                           . $dir
+                          );
+        }
+
+
         $rows = $this->_dao->fetchAll(
             $select
         );

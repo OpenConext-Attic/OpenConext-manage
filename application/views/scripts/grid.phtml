@@ -60,17 +60,19 @@ YAHOO.util.Event.addListener(window, "load", function() {
                 {
                     $editor  = 'editor: new YAHOO.widget.TextboxCellEditor()';
                 }
-                echo '{key:"' . $column . '", sortable:' 
+
+                echo '{key:"' . $column . '", sortable:'
                      . ($options['sort'] ? 'true' : 'false')
                      . (!empty($editor) ? ', '. $editor : '')
                      . (isset($options['formatter']) ? ', formatter:"' . $options['formatter'] . '"' : '')
+                     . (isset($options['label']) ? ', label:"' . $options['label'] . '"' : '')
                      . '},';
             }
         ?>
 
         ];
 
-        this.DataSource = new YAHOO.util.DataSource("<?php echo $this->url(array('format'=>'json'));?>/?");
+        this.DataSource = new YAHOO.util.XHRDataSource("<?php echo $this->url(array('format'=>'json'));?>/?");
         this.DataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
         this.DataSource.connXhrMode = "queueRequests";
         this.DataSource.responseSchema = {
