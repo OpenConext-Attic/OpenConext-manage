@@ -7,6 +7,7 @@ class EngineBlockController extends Zend_Controller_Action
         $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
                                      ->addActionContext('availableidps', 'json')
                                      ->addActionContext('availablesps', 'json')
+                                     ->addActionContext('idpandspcount', 'json')
                                      ->addActionContext('logins', 'json')
                                      ->addActionContext('idplogins', 'json')
                                      ->addActionContext('splogins', 'json')
@@ -28,32 +29,49 @@ class EngineBlockController extends Zend_Controller_Action
             header("Content-disposition: attachment; filename=json.txt");
         }
 
-        $gadgetList = new Model_GadgetList();
+        $janusEntity = new Model_JanusEntity();
         $input = $this->_helper->FilterLoader('engineblock');
         
-        $Result = $gadgetList->getCount(
-                                       $input->sort,
-                                       $input->dir,
-                                       $input->results,
-                                       $input->startIndex
-                                       );
-        $this->view->totalRecords = $gadgetList->getCount(null, null, null, null, true);
+        $Result = $janusEntity->getAvailableIdps(
+                                                 $input->sort,
+                                                 $input->dir,
+                                                 $input->results,
+                                                 $input->startIndex
+                                                );
+        $this->view->totalRecords = $janusEntity->getAvailableIdps(
+                null, null, null, null, true);
         
         $this->view->ResultSet = $Result;
-        $this->view->totalRecords = count($Result);
         $this->view->recordsReturned = count($Result);
-        $this->view->startIndex = 0;
-
-        
-
+        $this->view->startIndex = $input->startIndex;
     }
 
     /**
      * Show available Service Providers
+     *
      */
     public function availablespsAction()
     {
+        if($this->getRequest()->getParam('download', false))
+        {
+            header("Content-disposition: attachment; filename=json.txt");
+        }
 
+        $janusEntity = new Model_JanusEntity();
+        $input = $this->_helper->FilterLoader('engineblock');
+
+        $Result = $janusEntity->getAvailableSps(
+                                                $input->sort,
+                                                $input->dir,
+                                                $input->results,
+                                                $input->startIndex
+                                               );
+        $this->view->totalRecords = $janusEntity->getAvailableSps(
+                null, null, null, null, true);
+
+        $this->view->ResultSet = $Result;
+        $this->view->recordsReturned = count($Result);
+        $this->view->startIndex = $input->startIndex;
     }
 
     /**
@@ -135,5 +153,32 @@ class EngineBlockController extends Zend_Controller_Action
         $this->view->recordsReturned = count($Result);
         $this->view->startIndex = 0;
 
+    }
+
+    /**
+     * 
+     */
+    public function idpandspcountAction()
+    {
+        if($this->getRequest()->getParam('download', false))
+        {
+            header("Content-disposition: attachment; filename=json.txt");
+        }
+
+        $janusEntity = new Model_JanusEntity();
+        $input = $this->_helper->FilterLoader('engineblock');
+
+        $Result = $janusEntity->getIdpAndSpCount(
+                                                $input->sort,
+                                                $input->dir,
+                                                $input->results,
+                                                $input->startIndex
+                                               );
+        $this->view->totalRecords = $janusEntity->getIdpAndSpCount(
+                null, null, null, null, true);
+
+        $this->view->ResultSet = $Result;
+        $this->view->recordsReturned = count($Result);
+        $this->view->startIndex = $input->startIndex;
     }
 }
