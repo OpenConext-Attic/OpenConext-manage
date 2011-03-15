@@ -47,7 +47,7 @@ class Model_Mapper_LogLoginMapper extends Model_Mapper_Abstract
     {
         $select = $this->_dao->select();
         $select->from($this->_dao,
-                      array("num" => "COUNT(id)",
+                      array("num" => "COUNT(*)",
                             "grouped" => $grouped))
                ->group($grouped);
 
