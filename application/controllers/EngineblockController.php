@@ -16,6 +16,8 @@ class EngineBlockController extends Zend_Controller_Action
         $input = $this->_helper->FilterLoader('portal');
 
         $this->view->config = $this->_helper->gridSetup($input);
+        
+        $this->view->exportconfig = $this->_helper->ExportSetup($input);
     }
 
     /**
@@ -44,6 +46,7 @@ class EngineBlockController extends Zend_Controller_Action
         $this->view->ResultSet = $Result;
         $this->view->recordsReturned = count($Result);
         $this->view->startIndex = $input->startIndex;
+
     }
 
     /**
