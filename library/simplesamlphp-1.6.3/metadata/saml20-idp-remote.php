@@ -10,7 +10,7 @@
 /*
  * DEV enginbblock IdP
  */
-$metadata'https://engine.dev.surfconext.nl/authentication/idp/metadata' = array (
+$metadata['https://engine.dev.surfconext.nl/authentication/idp/metadata'] = array (
 	'entityid' => 'https://engine.dev.surfconext.nl/authentication/idp/metadata',
 	'metadata-set' => 'saml20-idp-remote',
 	'expire' => 1301349600,
