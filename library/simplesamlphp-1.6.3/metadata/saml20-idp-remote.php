@@ -8,91 +8,88 @@
  */
 
 /*
- * Guest IdP. allows users to sign up and register. Great for testing!
+ * DEV enginbblock IdP
  */
-$metadata['https://openidp.feide.no'] = array(
-	'name' => array(
-		'en' => 'Feide OpenIdP - guest users',
-		'no' => 'Feide Gjestebrukere',
+$metadata'https://engine.dev.surfconext.nl/authentication/idp/metadata' = array (
+	'entityid' => 'https://engine.dev.surfconext.nl/authentication/idp/metadata',
+	'metadata-set' => 'saml20-idp-remote',
+	'expire' => 1301349600,
+	'SingleSignOnService' =>
+		array (
+			0 =>
+			array (
+				'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+				'Location' => 'https://engine.dev.surfconext.nl/authentication/idp/single-sign-on',
+			),
+		),
+	'SingleLogoutService' => array (),
+	'ArtifactResolutionService' => array (),
+	'certFingerprint' => array (
+		0 => 'afe71c28ef740bc87425be13a2263d37971da1f9',
 	),
-	'description'          => 'Here you can login with your account on Feide RnD OpenID. If you do not already have an account on this identity provider, you can create a new one by following the create new account link and follow the instructions.',
-
-	'SingleSignOnService'  => 'https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php',
-	'SingleLogoutService'  => 'https://openidp.feide.no/simplesaml/saml2/idp/SingleLogoutService.php',
-	'certFingerprint'      => 'c9ed4dfb07caf13fc21e0fec1572047eb8a7a4cb'
+	'certData' => 'MIICgTCCAeoCCQCbOlrWDdX7FTANBgkqhkiG9w0BAQUFADCBhDELMAkGA1UEBhMCTk8xGDAWBgNVBAgTD0FuZHJlYXMgU29sYmVyZzEMMAoGA1UEBxMDRm9vMRAwDgYDVQQKEwdVTklORVRUMRgwFgYDVQQDEw9mZWlkZS5lcmxhbmcubm8xITAfBgkqhkiG9w0BCQEWEmFuZHJlYXNAdW5pbmV0dC5ubzAeFw0wNzA2MTUxMjAxMzVaFw0wNzA4MTQxMjAxMzVaMIGEMQswCQYDVQQGEwJOTzEYMBYGA1UECBMPQW5kcmVhcyBTb2xiZXJnMQwwCgYDVQQHEwNGb28xEDAOBgNVBAoTB1VOSU5FVFQxGDAWBgNVBAMTD2ZlaWRlLmVybGFuZy5ubzEhMB8GCSqGSIb3DQEJARYSYW5kcmVhc0B1bmluZXR0Lm5vMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDivbhR7P516x/S3BqKxupQe0LONoliupiBOesCO3SHbDrl3+q9IbfnfmE04rNuMcPsIxB161TdDpIesLCn7c8aPHISKOtPlAeTZSnb8QAu7aRjZq3+PbrP5uW3TcfCGPtKTytHOge/OlJbo078dVhXQ14d1EDwXJW1rRXuUt4C8QIDAQABMA0GCSqGSIb3DQEBBQUAA4GBACDVfp86HObqY+e8BUoWQ9+VMQx1ASDohBjwOsg2WykUqRXF+dLfcUH9dWR63CtZIKFDbStNomPnQz7nbK+onygwBspVEbnHuUihZq3ZUdmumQqCw4Uvs/1Uvq3orOo/WJVhTyvLgFVK2QarQ4/67OZfHd7R+POBXhophSMv1ZOo',
 );
-
 
 /*
- * Feide, the norwegian federation. Test and production metadata.
+ * TEST enginbblock IdP
  */
-$metadata['https://idp-test.feide.no'] = array(
-	'name' => array(
-		'en' => 'Feide Test environment',
-		'no' => 'Feide testmiljø',
-	),
-	'description'                  => 'Feide test environment (idp-test.feide.no). Authenticate with your identity from a school or university in Norway.',
-	'send_metadata_email'          => 'moria-support@uninett.no',
 
-	'SingleSignOnService'          => 'https://idp-test.feide.no/simplesaml/saml2/idp/SSOService.php',
-	'SingleLogoutService'          => 'https://idp-test.feide.no/simplesaml/saml2/idp/SingleLogoutServiceiFrame.php',
-	'SingleLogoutServiceResponse'  => 'https://idp-test.feide.no/simplesaml/saml2/idp/SingleLogoutServiceiFrameResponse.php',
-
-	'certFingerprint'              => 'fa982efdb69f26e8073c8f815a82a0c5885960a2',
-	'hint.cidr'                    => '158.38.0.0/16',
-);
-
-$metadata['https://idp.feide.no'] = array(
-	'name' => 'Feide',
-	'description' => array(
-		'en' => 'Authenticate with your identity from a school or university in Norway.',
-		'no' => 'Logg inn med din identitet fra skolen eller universitetet du er tilknyttet (i Norge).',
-	),
-	'send_metadata_email'          => 'moria-support@uninett.no',
-	'SingleSignOnService'          => 'https://idp.feide.no/simplesaml/saml2/idp/SSOService.php',
-	'SingleLogoutService'          => 'https://idp.feide.no/simplesaml/saml2/idp/SingleLogoutServiceiFrame.php',
-	'SingleLogoutServiceResponse'  => 'https://idp.feide.no/simplesaml/saml2/idp/SingleLogoutServiceiFrameResponse.php',
-	'certFingerprint'              => 'cde69e332fa7dd0eaa99ee0ddf06916e8942ac53',
-	'hint.cidr'                    => '158.38.0.0/16',
-);
-
-
+// ToDO
 
 /*
- * Wayf, the danish federation metadata.
+ * ACC enginbblock IdP
  */
-$metadata['https://wayf.wayf.dk'] = array(
-	'name' => array(
-		'en' => 'DK-WAYF Production server',
-		'da' => 'DK-WAYF Produktionsmiljøet',
-	),
-	'description'          => 'Login with your identity from a danish school, university or library.',
-	'send_metadata_email'  => 'sekretariat@wayf.dk',
-	'SingleSignOnService'  => 'https://wayf.wayf.dk/saml2/idp/SSOService.php',
-	'SingleLogoutService'  => 'https://wayf.wayf.dk/saml2/idp/SingleLogoutService.php',
-	'certFingerprint'      => 'c215d7bf9d51c7805055239f66b957d9a72ff44b'
+$metadata['https://engine.acc.surfconext.nl/authentication/idp/metadata'] = array (
+  'entityid' => 'https://engine.acc.surfconext.nl/authentication/idp/metadata',
+  'metadata-set' => 'saml20-idp-remote',
+  'expire' => 1301349600,
+  'SingleSignOnService' => 
+  array (
+    0 => 
+    array (
+      'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+      'Location' => 'https://engine.acc.surfconext.nl/authentication/idp/single-sign-on',
+    ),
+  ),
+  'SingleLogoutService' => 
+  array (
+  ),
+  'ArtifactResolutionService' => 
+  array (
+  ),
+  'certFingerprint' => 
+  array (
+    0 => 'afe71c28ef740bc87425be13a2263d37971da1f9',
+  ),
+  'certData' => 'MIICgTCCAeoCCQCbOlrWDdX7FTANBgkqhkiG9w0BAQUFADCBhDELMAkGA1UEBhMCTk8xGDAWBgNVBAgTD0FuZHJlYXMgU29sYmVyZzEMMAoGA1UEBxMDRm9vMRAwDgYDVQQKEwdVTklORVRUMRgwFgYDVQQDEw9mZWlkZS5lcmxhbmcubm8xITAfBgkqhkiG9w0BCQEWEmFuZHJlYXNAdW5pbmV0dC5ubzAeFw0wNzA2MTUxMjAxMzVaFw0wNzA4MTQxMjAxMzVaMIGEMQswCQYDVQQGEwJOTzEYMBYGA1UECBMPQW5kcmVhcyBTb2xiZXJnMQwwCgYDVQQHEwNGb28xEDAOBgNVBAoTB1VOSU5FVFQxGDAWBgNVBAMTD2ZlaWRlLmVybGFuZy5ubzEhMB8GCSqGSIb3DQEJARYSYW5kcmVhc0B1bmluZXR0Lm5vMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDivbhR7P516x/S3BqKxupQe0LONoliupiBOesCO3SHbDrl3+q9IbfnfmE04rNuMcPsIxB161TdDpIesLCn7c8aPHISKOtPlAeTZSnb8QAu7aRjZq3+PbrP5uW3TcfCGPtKTytHOge/OlJbo078dVhXQ14d1EDwXJW1rRXuUt4C8QIDAQABMA0GCSqGSIb3DQEBBQUAA4GBACDVfp86HObqY+e8BUoWQ9+VMQx1ASDohBjwOsg2WykUqRXF+dLfcUH9dWR63CtZIKFDbStNomPnQz7nbK+onygwBspVEbnHuUihZq3ZUdmumQqCw4Uvs/1Uvq3orOo/WJVhTyvLgFVK2QarQ4/67OZfHd7R+POBXhophSMv1ZOo',
 );
 
-$metadata['https://betawayf.wayf.dk'] = array(
-	'name' => array(
-		'en' => 'DK-WAYF Quality Assurance',
-		'da' => 'DK-WAYF Quality Assurance miljøet',
-	),
-	'description'          => 'Login with your identity from a danish school, university or library.',
-	'send_metadata_email'  => 'sekretariat@wayf.dk',
-	'SingleSignOnService'  => 'https://betawayf.wayf.dk/saml2/idp/SSOService.php',
-	'SingleLogoutService'  => 'https://betawayf.wayf.dk/saml2/idp/SingleLogoutService.php',
-	'certFingerprint'      => 'c215d7bf9d51c7805055239f66b957d9a72ff44b'
+/*
+ * PROD enginbblock IdP
+ */
+$metadata['https://engine.surfconext.nl/authentication/idp/metadata'] = array (
+  'entityid' => 'https://engine.surfconext.nl/authentication/idp/metadata',
+  'metadata-set' => 'saml20-idp-remote',
+  'expire' => 1301349600,
+  'SingleSignOnService' => 
+  array (
+    0 => 
+    array (
+      'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
+      'Location' => 'https://engine.surfconext.nl/authentication/idp/single-sign-on',
+    ),
+  ),
+  'SingleLogoutService' => 
+  array (
+  ),
+  'ArtifactResolutionService' => 
+  array (
+  ),
+  'certFingerprint' => 
+  array (
+    0 => 'a36aac83b9a552b3dc724bfc0d7bba6283af5f8e',
+  ),
+  'certData' => 'MIIDyzCCArOgAwIBAgIJAMzixtXMUH1NMA0GCSqGSIb3DQEBBQUAMHwxCzAJBgNVBAYTAk5MMRAwDgYDVQQIDAdVdHJlY2h0MRAwDgYDVQQHDAdVdHJlY2h0MRUwEwYDVQQKDAxTVVJGbmV0IEIuVi4xEzARBgNVBAsMClNVUkZjb25leHQxHTAbBgNVBAMMFGVuZ2luZS5zdXJmY29uZXh0Lm5sMB4XDTExMDEyNDEwMTg1N1oXDTIxMDEyMzEwMTg1N1owfDELMAkGA1UEBhMCTkwxEDAOBgNVBAgMB1V0cmVjaHQxEDAOBgNVBAcMB1V0cmVjaHQxFTATBgNVBAoMDFNVUkZuZXQgQi5WLjETMBEGA1UECwwKU1VSRmNvbmV4dDEdMBsGA1UEAwwUZW5naW5lLnN1cmZjb25leHQubmwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJ6v+f3owS3KR5IXSil+3XFwGvCVeYx3jDOFKAnwvXlDpTu+t730b8/spHtlopyJVAlb6qBIPN7R4TGTLqiu0zebYsYx/PtqCk5cbu9qs3h+p2BBoTXVwXA/ZYi0tqtxp04hcNrRj1TAgLyC0S+KASTF+zzccAcjTBid5EMioo+YllgSEobWJ4X33XVRqNrikAPDsNmDrdKUi257JSO2xhVIG5lbtmDaL5ORCD56oRmVdp7VQTEQ3Yass8J5Rn+Ub6WmRBYeG+KzFBvtyBput2o0/gvtJn9L+NWeDB0LyUPaUYG/X4GF14FcmFQfz7I5jBCNHtPcLJbPYbZKQNhz/AgMBAAGjUDBOMB0GA1UdDgQWBBS9QqP8gtMM6nm4oYzNbgqhEDP1aDAfBgNVHSMEGDAWgBS9QqP8gtMM6nm4oYzNbgqhEDP1aDAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUAA4IBAQBH2qyYwLwesIOxUTj+NJ0VXRBDH8VecNLiUUs9Np4x8A0pxLvlNnv5TdJAruEg1LSVmAqqPUdAB2m7CKDeUVM9cwOB7vqelV2GNgOfevXi+DZRMffyyE8qyIcnTqvDOgcR8qGTPSVT+SIsOkV9bYrjltrbnal7cJermsA8SC5w/pjLaOHI1xIZHquZzymWoN3Zfz2CQg2r5o+AURYd74GrHhHqVa9VrdWtcimB+vTQQihoLt8YciehpJjOMpx2D66eFfpC8ix31RRdjAVIo1y33h1yU3gEHePDbOthZE+lpXi2WJqO85H85LqJOtgn2WPI3P2Tx32Cq1WXCYkxLaPI',
 );
 
-$metadata['https://testidp.wayf.dk'] = array(
-	'name' => array(
-		'en' => 'DK-WAYF Test Server',
-		'da' => 'DK-WAYF Test Miljøet',
-	),
-	'description'          => 'Login with your identity from a danish school, university or library.',
-	'send_metadata_email'  => 'sekretariat@wayf.dk',
-	'SingleSignOnService'  => 'https://testidp.wayf.dk/saml2/idp/SSOService.php',
-	'SingleLogoutService'  => 'https://testidp.wayf.dk/saml2/idp/SingleLogoutService.php',
-	'certFingerprint'      => '04b3b08bce004c27458b3e85b125273e67ef062b'
-);
+
