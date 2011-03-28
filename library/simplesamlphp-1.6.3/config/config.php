@@ -43,7 +43,7 @@ $config = array (
 	 * This password will give access to the installation page of simpleSAMLphp with
 	 * metadata listing and diagnostics pages.
 	 */
-	'auth.adminpassword'		=> '123',
+	'auth.adminpassword'		=> 'OWd81WMVNwZWxgWmy4QK',   // CHANGE ME! 
 	'admin.protectindexpage'	=> false,
 	'admin.protectmetadata'		=> false,
 
@@ -55,15 +55,15 @@ $config = array (
 	 * A possible way to generate a random salt is by running the following command from a unix shell:
 	 * tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
 	 */
-	'secretsalt' => 'defaultsecretsalt',
+	'secretsalt' => 'prjtfyb0vt2wegysabs6mxp59naev2wq',		   // CHANGE ME!
 	
 	/*
 	 * Some information about the technical persons running this installation.
 	 * The email address will be used as the recipient address for error reports, and
 	 * also as the technical contact in generated metadata.
 	 */
-	'technicalcontact_name'     => 'Administrator',
-	'technicalcontact_email'    => 'na@example.org',
+	'technicalcontact_name'     => 'SURFconext Beheer',
+	'technicalcontact_email'    => 'surfconext-beheer@surfnet.nl',
 
 	/*
 	 * The timezone of the server. This option should be set to the timezone you want
@@ -72,7 +72,7 @@ $config = array (
 	 *
 	 * See this page for a list of valid timezones: http://php.net/manual/en/timezones.php
 	 */
-	'timezone' => NULL,
+	'timezone' => "Europe/Amsterdam",
 
 	/*
 	 * Logging.
