@@ -14,7 +14,5 @@ class Surfnet_Auth_Adapter_Saml implements Zend_Auth_Adapter_Interface
         $as = new SimpleSAML_Auth_Simple('default-sp');
         $as->requireAuth();
         $attributes = $as->getAttributes();
-        print_r($attributes);
-
     }
 }
