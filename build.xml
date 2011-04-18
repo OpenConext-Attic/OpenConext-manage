@@ -13,7 +13,7 @@
  
     <target name="phpcs">
         <exec dir="${basedir}" executable="phpcs" failonerror="false" output="/dev/null">
-            <arg line="--extensions=php --ignore=build,tests,library/Zend,library/shindig,library/Corto --standard=Zend --tab-width=4 --report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml ." />
+            <arg line="--extensions=php --ignore=build,tests,library/Zend,library/simplesamlphp --standard=Zend --tab-width=4 --report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml ." />
         </exec>
     </target>
  
@@ -25,7 +25,7 @@
  
     <target name="phpcpd">
         <exec dir="${basedir}" executable="phpcpd" failonerror="false">
-            <arg line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml --exclude build --exclude tests --exclude library/Zend --exclude library/shindig --exclude library/Corto ." />
+            <arg line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml --exclude build --exclude tests --exclude library/Zend --exclude library/simplesamlphp ." />
         </exec>
         <exec dir="${basedir}/build/logs" executable="xsltproc" failonerror="false" output="${basedir}/build/cpd/index.html">
             <arg line="${basedir}/ci/cpd.xsl ${basedir}/build/logs/pmd-cpd.xml" />
@@ -38,7 +38,7 @@
                        --jdepend-chart=${basedir}/build/dependencies/jdepend.svg
                        --overview-pyramid=${basedir}/build/dependencies/pyramid.svg
                        --optimization=best
-                       --exclude=build,tests,library/Zend,library/shindig,library/Corto
+                       --exclude=build,tests,library/Zend,library/simplesamlphp
                        ." />
         </exec>
         <exec dir="${basedir}/build/dependencies" executable="cp" failonerror="false">
