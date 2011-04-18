@@ -18,7 +18,7 @@ $metadata['https://engine.dev.surfconext.nl/authentication/idp/metadata'] = arra
         'nl' => 'Engineblock',
     ),
   'description'          => 'SURFnet Conext Engineblock',
-  'SingleSignOnService'  => 'https://engine.dev.surfconext.nl/authentication/idp/single-sign-on'
+  'SingleSignOnService'  => 'https://engine.dev.surfconext.nl/authentication/idp/single-sign-on',
   'entityid' => 'https://engine.dev.surfconext.nl/authentication/idp/metadata',
   'contacts' =>
   array (
