@@ -1,9 +1,15 @@
 <?php
 
+require_once('Surfnet/Auth/Adapter/Saml.php');
+
 class EngineBlockController extends Zend_Controller_Action
 {
     public function init ()
     {
+        $adapter = new Surfnet_Auth_Adapter_Saml();
+        $auth = Zend_Auth::getInstance();
+        $auth->setStorage(new Zend_Auth_Storage_NonPersistent());
+        $auth->authenticate($adapter);
         $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
                                      ->addActionContext('availableidps', 'json')
                                      ->addActionContext('availablesps', 'json')
