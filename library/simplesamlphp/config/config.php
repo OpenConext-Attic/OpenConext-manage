@@ -1,10 +1,17 @@
 <?php
 /* 
  * The configuration of simpleSAMLphp
- * @todo Get config data from a Zend_Config object.
- * 
+ * To keep all configuration as much as possible in one place:
+ * Use the applications authentication.ini
+ *
  * $Id$
  */
+
+require_once 'Zend/Config/Ini.php';
+$appConfig = new Zend_Config_Ini(
+                     APPLICATION_PATH . '/configs/authentication.ini',
+                     APPLICATION_ENV
+                 );
 
 $config = array (
 
@@ -15,13 +22,7 @@ $config = array (
              * The entity ID of the IdP this should SP should contact.
             * Can be NULL/unset, in which case the user will be shown a list of available IdPs.
             */
-            'idp' => 'https://engine.dev.surfconext.nl/authentication/idp/metadata',
-            'authproc' => array(
-                20 => array(
-                    'class' => 'saml:NameIDAttribute',
-                    'format' => '%V',
-                ),
-            ),
+            'idp' => null,
         ),
 
 	/**
