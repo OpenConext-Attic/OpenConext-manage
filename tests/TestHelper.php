@@ -22,6 +22,8 @@ date_default_timezone_set('GMT');
 define('BASE_PATH', realpath(dirname(__FILE__). '/../'));
 defined('APPLICATION_PATH')
     or define('APPLICATION_PATH', BASE_PATH . '/application/');
+defined('LIBRARY_PATH')
+    or define('LIBRARY_PATH', BASE_PATH . '/library');
 defined('TEST_PATH')
     or define('TEST_PATH', BASE_PATH . '/tests/');
 /*
