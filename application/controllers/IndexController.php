@@ -5,7 +5,8 @@ class IndexController extends Zend_Controller_Action
 
     public function init()
     {
-        /* Initialize action controller here */
+        //Get the identity
+        $this->view->identity = $this->_helper->Authenticate('portal');
     }
 
     public function indexAction()

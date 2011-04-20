@@ -4,7 +4,10 @@
 class PortalController extends Zend_Controller_Action
 {
     public function init ()
-    {    
+    {
+        //Get the identity
+        $this->view->identity = $this->_helper->Authenticate('portal');
+
         $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
                                      ->addActionContext('gadgetavailable', 'json')
                                      ->addActionContext('gadgetcount', 'json')
