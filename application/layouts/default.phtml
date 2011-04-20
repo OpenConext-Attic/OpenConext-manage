@@ -40,8 +40,12 @@
             <div class="nav" id="TopNav"></div>
             <a href="/" id="Logo"><img src="/media/logo-surfnet.gif" alt="SURFNET - We make innovation work"></a>
         </header>
-
+        
         <nav>
+            <div class="identity">
+                Ingelogd als :<br />
+                <?php echo($this->identity->displayName); ?>
+            </div>
             <?php echo $this->navigation();?>
         </nav>
         <div class='content'>

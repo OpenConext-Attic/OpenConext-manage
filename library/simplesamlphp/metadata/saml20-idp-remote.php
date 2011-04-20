@@ -12,25 +12,27 @@
  *
  * @todo Get metadata from Zend_Config object.
  */
-$metadata['https://engine.dev.surfconext.nl/authentication/idp/metadata'] = array (
+$metadata['https://engine.dev.surfconext.nl/authentication/idp/metadata/vo:managementvo'] = array (
+
     'name' => array(
-        'en' => 'Engineblock',
-        'nl' => 'Engineblock',
+        'en' => 'VO Management',
+        'nl' => 'VO Management',
     ),
-  'description'          => 'SURFnet Conext Engineblock',
-  'SingleSignOnService'  => 'https://engine.dev.surfconext.nl/authentication/idp/single-sign-on',
-  'entityid' => 'https://engine.dev.surfconext.nl/authentication/idp/metadata',
+  'description'          => 'Virtual Organization for SURFconext management interface',
+
+  'entityid' => 'https://engine.dev.surfconext.nl/authentication/idp/metadata/vo:managementvo',
   'contacts' =>
   array (
   ),
   'metadata-set' => 'saml20-idp-remote',
-  'expire' => 1303164000,
+  /* Disable Expire, it does not work properly. */
+  //'expire' => 1303250400,
   'SingleSignOnService' =>
   array (
     0 =>
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-      'Location' => 'https://engine.dev.surfconext.nl/authentication/idp/single-sign-on',
+      'Location' => 'https://engine.dev.surfconext.nl/authentication/idp/single-sign-on/vo:managementvo',
     ),
   ),
   'SingleLogoutService' =>

@@ -33,7 +33,7 @@ header #Logo {
 
 nav {
     background: url("/media/background-content-top.png") no-repeat scroll 0 0 transparent;
-    padding-top: 50px;
+    padding-top: 3px;
     float: left;
     width: 150px;
     min-height: 30px;
@@ -81,6 +81,17 @@ nav ul.navigation li ul li a.sub-item:hover {
 }
 
 
+nav div.identity {
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 15px;
+    margin: 1px 0 7px;
+    min-height: 23px;
+    padding: 4px 7px 0;
+    position: relative;
+    width: 136px;
+}
 
 nav ul.navigation li ul li a.sub-item {
     padding-left: 27px;
