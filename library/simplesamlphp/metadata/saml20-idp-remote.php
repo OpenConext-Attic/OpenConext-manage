@@ -101,7 +101,7 @@ $metadata['https://engine.test.surfconext.nl/authentication/idp/metadata/vo:mana
     ),
   'description'          => 'Virtual Organization for SURFconext management interface',
 
-  'entityid' => 'https://engine.dev.surfconext.nl/authentication/idp/metadata/vo:managementvo',
+  'entityid' => 'https://engine.test.surfconext.nl/authentication/idp/metadata/vo:managementvo',
   'contacts' =>
   array (
   ),
@@ -113,7 +113,7 @@ $metadata['https://engine.test.surfconext.nl/authentication/idp/metadata/vo:mana
     0 =>
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-      'Location' => 'https://engine.dev.surfconext.nl/authentication/idp/single-sign-on/vo:managementvo',
+      'Location' => 'https://engine.test.surfconext.nl/authentication/idp/single-sign-on/vo:managementvo',
     ),
   ),
   'SingleLogoutService' =>
