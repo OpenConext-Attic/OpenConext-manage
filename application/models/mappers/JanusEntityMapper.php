@@ -111,6 +111,7 @@ class Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
         $result = array();
         foreach ($rows as $row) {
             $result[] = array(
+                'valid'  => $row['entityid'],
                 $entityType => $row[$entityType],
                 'state' => $row['state'],
                 'metadataurl' => $row['metadataurl'],
