@@ -67,6 +67,11 @@ class Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
             'created' => 'created',
             'user' => 'user'
         );
+
+        $entityType = 'idp';
+        if ($type==='saml20-sp') {
+            $entityType = 'sp';
+        }
         
         $select = $db->select();
         $select->from(
@@ -80,7 +85,7 @@ class Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
                 ->join(
                         array('jm' => 'janus__metadata'),
                         '(ent.eid=jm.eid AND jm.revisionid=entgrp.maxrev)',
-                        array('idp'=>'value', 'key' =>'key')
+                        array($entityType=>'value', 'key' =>'key')
                       )
                 ->join(
                         array('ju' => 'janus__user'),
@@ -103,11 +108,10 @@ class Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
         if ($countOnly) {
             return count($rows);
         }
-
         $result = array();
         foreach ($rows as $row) {
             $result[] = array(
-                'idp' => $row['idp'],
+                $entityType => $row[$entityType],
                 'state' => $row['state'],
                 'metadataurl' => $row['metadataurl'],
                 'created' => $row['created'],
