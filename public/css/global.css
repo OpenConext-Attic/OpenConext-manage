@@ -31,6 +31,17 @@ header #Logo {
     width: 520px;
 }
 
+#TopNav {
+    background: url("/media/bg-utility-nav.png") repeat-y scroll 0 0 transparent;
+    min-height: 25px;
+    overflow: hidden;
+    width: 100%;
+    color: white;
+    font-weight: bold;
+    text-align: right;
+    font-size: medium;
+}
+
 nav {
     background: url("/media/background-content-top.png") no-repeat scroll 0 0 transparent;
     padding-top: 3px;
