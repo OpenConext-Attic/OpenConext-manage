@@ -39,17 +39,16 @@ class EngineBlockController extends Zend_Controller_Action
         $janusEntity = new Model_JanusEntity();
         $input = $this->_helper->FilterLoader('engineblock');
         
-        $Result = $janusEntity->getAvailableIdps(
-                                                 $input->sort,
-                                                 $input->dir,
-                                                 $input->results,
-                                                 $input->startIndex
-                                                );
-        $this->view->totalRecords = $janusEntity->getAvailableIdps(
-                null, null, null, null, true);
+        $result = $janusEntity->getAvailableIdps(
+            $input->sort,
+            $input->dir,
+            $input->results,
+            $input->startIndex
+        );
+        $this->view->totalRecords = $janusEntity->getAvailableIdps(null, null, null, null, true);
         
-        $this->view->ResultSet = $Result;
-        $this->view->recordsReturned = count($Result);
+        $this->view->ResultSet = $result;
+        $this->view->recordsReturned = count($result);
         $this->view->startIndex = $input->startIndex;
 
     }
@@ -68,17 +67,16 @@ class EngineBlockController extends Zend_Controller_Action
         $janusEntity = new Model_JanusEntity();
         $input = $this->_helper->FilterLoader('engineblock');
 
-        $Result = $janusEntity->getAvailableSps(
-                                                $input->sort,
-                                                $input->dir,
-                                                $input->results,
-                                                $input->startIndex
-                                               );
-        $this->view->totalRecords = $janusEntity->getAvailableSps(
-                null, null, null, null, true);
+        $result = $janusEntity->getAvailableSps(
+            $input->sort,
+            $input->dir,
+            $input->results,
+            $input->startIndex
+        );
+        $this->view->totalRecords = $janusEntity->getAvailableSps(null, null, null, null, true);
 
-        $this->view->ResultSet = $Result;
-        $this->view->recordsReturned = count($Result);
+        $this->view->ResultSet = $result;
+        $this->view->recordsReturned = count($result);
         $this->view->startIndex = $input->startIndex;
     }
 
@@ -96,16 +94,16 @@ class EngineBlockController extends Zend_Controller_Action
 
         $input = $this->_helper->FilterLoader('engineblock');
 
-        $Result = $logLogin->getByIdp(
-                                      $input->sort,
-                                      $input->dir,
-                                      $input->results,
-                                      $input->startIndex
-                                     );
+        $result = $logLogin->getByIdp(
+            $input->sort,
+            $input->dir,
+            $input->results,
+            $input->startIndex
+        );
         $this->view->totalRecords = $logLogin->getCount(null, null, null, null, true);
 
-        $this->view->ResultSet = $Result;
-        $this->view->recordsReturned = count($Result);
+        $this->view->ResultSet = $result;
+        $this->view->recordsReturned = count($result);
         $this->view->startIndex = 0;
     }
 
@@ -123,16 +121,16 @@ class EngineBlockController extends Zend_Controller_Action
 
         $input = $this->_helper->FilterLoader('engineblock');
 
-        $Result = $logLogin->getBySP(
-                                      $input->sort,
-                                      $input->dir,
-                                      $input->results,
-                                      $input->startIndex
-                                     );
+        $result = $logLogin->getBySP(
+            $input->sort,
+            $input->dir,
+            $input->results,
+            $input->startIndex
+        );
         $this->view->totalRecords = $logLogin->getCount(null, null, null, null, true);
 
-        $this->view->ResultSet = $Result;
-        $this->view->recordsReturned = count($Result);
+        $this->view->ResultSet = $result;
+        $this->view->recordsReturned = count($result);
         $this->view->startIndex = 0;
     }
 
@@ -149,16 +147,16 @@ class EngineBlockController extends Zend_Controller_Action
 
         $LogLogin = new Model_LogLogin();
 
-        $Result = $LogLogin->getCount(
-                                       $input->sort,
-                                       $input->dir,
-                                       $input->results,
-                                       $input->startIndex
-                                     );
+        $result = $LogLogin->getCount(
+            $input->sort,
+            $input->dir,
+            $input->results,
+            $input->startIndex
+        );
 
-        $this->view->ResultSet = $Result;
+        $this->view->ResultSet = $result;
         $this->view->totalRecords = $LogLogin->getCount(null,null,null,null,true);
-        $this->view->recordsReturned = count($Result);
+        $this->view->recordsReturned = count($result);
         $this->view->startIndex = 0;
 
     }
@@ -168,25 +166,23 @@ class EngineBlockController extends Zend_Controller_Action
      */
     public function idpandspcountAction()
     {
-        if($this->getRequest()->getParam('download', false))
-        {
+        if ($this->getRequest()->getParam('download', false)) {
             header("Content-disposition: attachment; filename=json.txt");
         }
 
         $janusEntity = new Model_JanusEntity();
         $input = $this->_helper->FilterLoader('engineblock');
 
-        $Result = $janusEntity->getIdpAndSpCount(
-                                                $input->sort,
-                                                $input->dir,
-                                                $input->results,
-                                                $input->startIndex
-                                               );
-        $this->view->totalRecords = $janusEntity->getIdpAndSpCount(
-                null, null, null, null, true);
+        $result = $janusEntity->getIdpAndSpCount(
+            $input->sort,
+            $input->dir,
+            $input->results,
+            $input->startIndex
+        );
+        $this->view->totalRecords = $janusEntity->getIdpAndSpCount(null, null, null, null, true);
 
-        $this->view->ResultSet = $Result;
-        $this->view->recordsReturned = count($Result);
+        $this->view->ResultSet = $result;
+        $this->view->recordsReturned = count($result);
         $this->view->startIndex = $input->startIndex;
     }
 }
