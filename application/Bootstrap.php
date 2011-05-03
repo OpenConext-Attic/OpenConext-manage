@@ -32,6 +32,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     }
 
+    protected function _initRegistry()
+    {
+        Zend_Registry::set('config', $this->getApplication()->getOptions());
+    }
+
     protected function _initDoctype()
     {
         $this->bootstrap('view');
@@ -47,7 +52,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initViewHelpers()
     {
         $this->bootstrap ( 'view' );
-	$view = $this->getResource ( 'view' );
+        $view = $this->getResource ( 'view' );
 
         $view->addHelperPath(APPLICATION_PATH . '/views/helpers/', 'Application_View_Helper');
     }
