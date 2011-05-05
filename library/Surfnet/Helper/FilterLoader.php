@@ -22,6 +22,9 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
                                       APPLICATION_ENV,
                                       true
                                      );
+        if (!isset($config->{$controller}) || !isset($config->{$controller}->{$action})) {
+            return false; // Page not found probably
+        }
         $options = $config->{$controller}->{$action};
 
         $sortOptions = array(

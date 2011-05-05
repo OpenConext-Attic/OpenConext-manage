@@ -29,7 +29,7 @@ class ErrorController extends Zend_Controller_Action
             default:
                 // application error
                 $this->getResponse()->setHttpResponseCode(500);
-                $this->view->message = 'Application error';
+                $this->view->message = 'The application encountered an error, please contact the application support.';
                 break;
         }
         
