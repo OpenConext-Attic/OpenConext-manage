@@ -1,20 +1,18 @@
 <?php
-/* 
- */
 
 /**
  * The Surfnet_Identity class is responsible for storing
- * the metadata of a
+ * the metadata of a user.
  *
  * Usually the metadata is provided by an external source
- * like an IdP.
+ * like an Identity Provider.
  *
  * @author marc
  */
 class Surfnet_Identity
 {
     /**
-     * 
+     * Display name to use in the interface for this user.
      * 
      * @var String
      */
@@ -28,12 +26,10 @@ class Surfnet_Identity
     public $id;
 
     /**
-     *
      * @param mixed $id Unique Identifier
      */
     public function __construct($id)
     {
         $this->id = $id;
     }
-
 }

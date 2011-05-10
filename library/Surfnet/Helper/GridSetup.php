@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Action helper to load standard filters.
  *
@@ -6,36 +7,48 @@
  */
 class Surfnet_Helper_GridSetup extends Zend_Controller_Action_Helper_Abstract
 {
+    const GRID_CONFIG_APPLICATION_PATH = '/configs/grid.ini';
+
+    /**
+     *
+     * @param  string $name
+     * @return Zend_Config
+     */
+    public function direct($name)
+    {
+        return $this->_setupGrid($name);
+    }
 
     protected function _setupGrid($input)
     {
-        $config = new Zend_Config_Ini(
-                                      APPLICATION_PATH . '/configs/grid.ini',
-                                      APPLICATION_ENV,
-                                      true
-                                     );
+        $config = $this->_getGridConfig();
 
-        /**
-         * Get controller and action.
-         */
         $controller = $this->getRequest()->getControllerName();
-        $action = $this->getRequest()->getActionName();
+        $action     = $this->getRequest()->getActionName();
+
+        if (!isset($config->$controller) || !isset($config->{$controller}->$action)) {
+            return false;
+        }
+
         $gridConfig = $config->{$controller}->{$action};
-        $gridConfig->dir = $input->dir;
+
+        $gridConfig->dir        = $input->dir;
         $gridConfig->startIndex = $input->startIndex;
-        $gridConfig->pageSize = $config->pageSize;
+        $gridConfig->pageSize   = $config->pageSize;
 
         return $gridConfig;
     }
 
     /**
-     *
-     * @param  string $name 
-     * @param  array|Zend_Config $options 
-     * @return Zend_Config
+     * @return Zend_Config_Ini
      */
-    public function direct($input)
+    protected function _getGridConfig()
     {
-        return $this->_setupGrid($input);
+        return new Zend_Config_Ini(
+            APPLICATION_PATH .
+            self::GRID_CONFIG_APPLICATION_PATH,
+            APPLICATION_ENV,
+            true
+        );
     }
 }

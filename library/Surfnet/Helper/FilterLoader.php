@@ -9,36 +9,15 @@ require_once 'Surfnet/Filter/InArray.php';
  */
 class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
 {
-   /**
+    const GRID_CONFIG_APPLICATION_PATH = '/configs/grid.ini';
+
+    /**
      *
-     * @param String $controller Front controller
-     * @param String $action     Action
+     * @return Zend_Filter_Input
      */
-    protected function _getSortOptions($controller, $action)
+    public function direct()
     {
-        $config = new Zend_Config_Ini(
-                                      APPLICATION_PATH .
-                                      '/configs/grid.ini',
-                                      APPLICATION_ENV,
-                                      true
-                                     );
-        if (!isset($config->{$controller}) || !isset($config->{$controller}->{$action})) {
-            return false; // Page not found probably
-        }
-        $options = $config->{$controller}->{$action};
-
-        $sortOptions = array(
-            'default' => $options->defaultsortfield,
-        );
-
-        $fields = array();
-        foreach ($options->columns->toArray() as $name => $options) {
-            if ($options['sort']) {
-                $fields[] = $name;
-            }
-        }
-        $sortOptions['fields'] = $fields;
-        return $sortOptions;
+        return $this->_loadFilter();
     }
 
     /**
@@ -48,54 +27,90 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
      */
     protected function _loadFilter()
     {
-
         $sortOptions = $this->_getSortOptions(
-                    $this->getRequest()->getControllerName(),
-                    $this->getRequest()->getActionName()
-                );
+            $this->getRequest()->getControllerName(),
+            $this->getRequest()->getActionName()
+        );
+
+        if ($sortOptions === false) {
+            return false;
+        }
 
         /**
          * Input filtering/validation.
          */
         $filters = array(
-            'results' => array('Int'),
+            'results'    => array('Int'),
             'startIndex' => array('Int'),
             'dir' =>array(
-                             new Surfnet_Filter_InArray(
-                                        array('asc', 'desc'),
-                                        'desc'
-                                     )
-                         ),
+                new Surfnet_Filter_InArray(
+                    array('asc', 'desc'),
+                    'desc'
+                )
+            ),
             'sort' => array(
-                             new Surfnet_Filter_InArray(
-                                        $sortOptions['fields'],
-                                        $sortOptions['default']
-                                     )
-                           ),
+                new Surfnet_Filter_InArray(
+                    $sortOptions['fields'],
+                    $sortOptions['default']
+                )
+            ),
         );
 
-        $validators = array('*' => array());
         $validators = null;
         $options = array(
-                         'filterNamespace' => 'Surfnet_Filter',
-                         'allowEmpty' => true
-                        );
+            'filterNamespace'   => 'Surfnet_Filter',
+            'allowEmpty'        => true
+        );
         return new Zend_Filter_Input(
-                                      $filters,
-                                      $validators,
-                                      $this->getRequest()->getParams(),
-                                      $options
-                                    );
+            $filters,
+            $validators,
+            $this->getRequest()->getParams(),
+            $options
+        );
     }
 
     /**
      *
-     * @param  string $name 
-     * @param  array|Zend_Config $options 
-     * @return Zend_Filter_Input
+     * @param String $controller Front controller
+     * @param String $action     Action
      */
-    public function direct($name, $options=null)
+    protected function _getSortOptions($controller, $action)
     {
-        return $this->_loadFilter();
+        $config = $this->_getGridConfig();
+
+        if (!isset($config->{$controller}) || !isset($config->{$controller}->{$action})) {
+            return false; // Page not found probably
+        }
+
+        $gridSortConfig = $config->{$controller}->{$action};
+
+        return array(
+            'default' => $gridSortConfig->defaultsortfield,
+            'fields'  => $this->_getGridSortFields($gridSortConfig),
+        );
+    }
+
+    /**
+     * @return Zend_Config_Ini
+     */
+    protected function _getGridConfig()
+    {
+        return new Zend_Config_Ini(
+            APPLICATION_PATH .
+            self::GRID_CONFIG_APPLICATION_PATH,
+            APPLICATION_ENV,
+            true
+        );
+    }
+
+    protected function _getGridSortFields(Zend_Config $gridSortConfig)
+    {
+        $sortFields = array();
+        foreach ($gridSortConfig->columns->toArray() as $name => $gridSortConfig) {
+            if ($gridSortConfig['sort']) {
+                $sortFields[] = $name;
+            }
+        }
+        return $sortFields;
     }
 }
