@@ -24,12 +24,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initDbRegistry()
     {
         $this->bootstrap('multidb');
-        $multidb = $this->getPluginResource('multidb');
+        $multiDb = $this->getPluginResource('multidb');
 
-        Zend_Registry::set('db_coin_portal', $multidb->getDb('coin_portal'));
-        Zend_Registry::set('db_engine_block', $multidb->getDb('engine_block'));
-        Zend_Registry::set('db_service_registry', $multidb->getDb('service_registry'));
-
+        Zend_Registry::set('db_coin_portal', $multiDb->getDb('coin_portal'));
+        Zend_Registry::set('db_engine_block', $multiDb->getDb('engine_block'));
+        Zend_Registry::set('db_service_registry', $multiDb->getDb('service_registry'));
     }
 
     protected function _initRegistry()

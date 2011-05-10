@@ -14,31 +14,40 @@ class Surfnet_Helper_ExportSetup extends Zend_Controller_Action_Helper_Abstract
      */
     public function direct()
     {
-        return $this->_setupExport();
+        return $this->_getExportConfigForCurrentAction();
     }
 
-    protected function _setupExport()
+    protected function _getExportConfigForCurrentAction()
     {
-        $config = $this->_getExportConfig();
+        $config = $this->_getExportConfigFile();
 
-        $controller = $this->getRequest()->getControllerName();
-        $action     = $this->getRequest()->getActionName();
+        $currentRequest = $this->getRequest();
+        $module         = $currentRequest->getModuleName();
+        $controller     = $currentRequest->getControllerName();
+        $action         = $currentRequest->getActionName();
 
-        if (!isset($config->{$controller}) || !isset($config->{$controller}->{$action})) {
-            return false; // Page not found probably
+        if (!isset($config->$module)) {
+            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get export options, unknown module: '$module'");
         }
+        $config = $config->$module;
 
-        $exportConfig = $config->{$controller}->{$action};
+        if (!isset($config->$controller)) {
+            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get export options, unknown controller: '$controller'");
+        }
+        $config = $config->$controller;
 
-        $exportConfig->title = "Exporteer";
+        if (!isset($config->$action)) {
+            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get export options, unknown action: '$action'");
+        }
+        $config = $config->$action;
 
-        return $exportConfig;
+        return $this->_postProcessing($config);
     }
 
     /**
      * @return Zend_Config_Ini
      */
-    protected function _getExportConfig()
+    protected function _getExportConfigFile()
     {
         return new Zend_Config_Ini(
             APPLICATION_PATH .
@@ -46,5 +55,11 @@ class Surfnet_Helper_ExportSetup extends Zend_Controller_Action_Helper_Abstract
             APPLICATION_ENV,
             true
         );
+    }
+
+    protected function _postProcessing($config)
+    {
+        $config->title = "Exporteer";
+        return $config;
     }
 }

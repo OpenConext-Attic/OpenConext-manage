@@ -1,14 +1,5 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- * Description of GadgetMapper
- *
- * @author marc
- */
 class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
 {
     /**
@@ -32,14 +23,16 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
     /**
      * @todo Make this actually do something.
      */
-    protected function createObjectArray(Zend_Db_Table_Rowset_Abstract $rowset)
+    protected function createObjectArray(Zend_Db_Table_Rowset_Abstract $rowSet)
     {
         $result = array();
-        foreach ($rowset as $row) {
+        foreach ($rowSet as $row) {
             $gadget = new Model_Gadget();
-            $gadget->id = $row['id'];
-            $gadget->title = $row['title'];
-            $gadget->description = $row['description'];
+
+            $gadget->id             = $row['id'];
+            $gadget->title          = $row['title'];
+            $gadget->description    = $row['description'];
+
             $result[] = $gadget;
         }
         return $result;
@@ -64,10 +57,10 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
             $fields = array('count' => 'COUNT(*)');
         } else {
             $fields = array(
-                            'title', 'author', 'added', 'description',
-                            'install_count', 'screenshot', 'url',
-                            'approved', 'supportssso', 'supports_groups'
-                           );
+                'title', 'author', 'added', 'description',
+                'install_count', 'screenshot', 'url',
+                'approved', 'supportssso', 'supports_groups'
+            );
         }
         
         $select->from($this->_dao,$fields);
@@ -120,28 +113,36 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
 
         $this->setDao('Model_Dao_GadgetDefinition');
         $selectTotal = $this->_dao->select();
-        $selectTotal->from($this->_dao,
-                      array("num" => "COUNT(id)",
-                            'type' => new Zend_Db_Expr("'Total'"))
-                     );
+        $selectTotal->from(
+            $this->_dao,
+            array(
+                 "num" => "COUNT(id)",
+                'type' => new Zend_Db_Expr("'Totaal'"))
+        );
 
         $selectGroupEnabled = $this->_dao->select();
-        $selectGroupEnabled->from($this->_dao,
-                                array("num" => "COUNT(id)",
-                                      'type' => new Zend_Db_Expr("'Group enabled'")))
-                           ->where("UPPER(supports_groups) = 'T'");
+        $selectGroupEnabled->from(
+            $this->_dao,
+            array(
+                 "num" => "COUNT(id)",
+                 'type' => new Zend_Db_Expr("'Group enabled'"))
+        )->where("UPPER(supports_groups) = 'T'");
 
         $selectSsoEnabled = $this->_dao->select();
-        $selectSsoEnabled->from($this->_dao,
-                                array("num" => "COUNT(id)",
-                                      'type' => new Zend_Db_Expr("'SSO Enabled'")))
-                         ->where("UPPER(supportssso) = 'T'");
+        $selectSsoEnabled->from(
+            $this->_dao,
+            array(
+                 'num'  => "COUNT(id)",
+                 'type' => new Zend_Db_Expr("'SSO Enabled'"))
+        )->where("UPPER(supportssso) = 'T'");
 
         $selectSsoGroupEnabled = $this->_dao->select();
-        $selectSsoGroupEnabled->from($this->_dao,
-                                array("num" => "COUNT(id)",
-                                      'type' => new Zend_Db_Expr("'SSO and Group Enabled'")))
-                              ->where("UPPER(supportssso) = 'T' AND upper(supports_groups) = 'T'");
+        $selectSsoGroupEnabled->from(
+            $this->_dao,
+            array(
+                 "num" => "COUNT(id)",
+                 'type' => new Zend_Db_Expr("'SSO and Group Enabled'"))
+        )->where("UPPER(supportssso) = 'T' AND upper(supports_groups) = 'T'");
 
 
         $select = $this->_dao->select()
@@ -150,7 +151,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
                     $selectSsoGroupEnabled,
                     $selectSsoEnabled,
                     $selectGroupEnabled
-                ));
+        ));
         if ($order != '' && !$countOnly) {
             $select->order($order
                            . (empty($dir) ? '' : ' ')
@@ -188,7 +189,6 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
      */
     public function fetchUsage($order='num', $dir='desc', $limit=null, $offset=0, $countOnly=false)
     {
-
         if (empty($order)) {
             $order = 'num';
         }
@@ -294,22 +294,25 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
          */
         $this->setDao('Model_Dao_Tab');
         $selectTotal = $this->_dao->select();
-        $selectTotal->from($this->_dao,
-                      array("num" => "COUNT(id)",
-                            'type' => new Zend_Db_Expr("'Total'"))
-                     );
+        $selectTotal->from(
+            $this->_dao,
+            array(
+                 "num" => "COUNT(id)",
+                 'type' => new Zend_Db_Expr("'Totaal'")
+            )
+        );
 
         $selectShared = $this->_dao->select();
         $selectShared->from($this->_dao,
                         array("num" => "COUNT(id)",
-                              'type' => new Zend_Db_Expr("'Shared'"))
+                              'type' => new Zend_Db_Expr("'Gedeeld'"))
                        )
                       ->where('team IS NOT NULL');
 
         $selectNotShared = $this->_dao->select();
         $selectNotShared->from($this->_dao,
                            array("num" => "COUNT(id)",
-                                 'type' => new Zend_Db_Expr("'Not Shared'"))
+                                 'type' => new Zend_Db_Expr("'Niet gedeeld'"))
                           )
                           ->where('team IS NULL');
 
@@ -328,9 +331,8 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
             $select->order($order
                            . (empty($dir) ? '' : ' ')
                            . $dir
-                          );
+            );
         }
-
 
         $rows = $this->_dao->fetchAll(
             $select
@@ -339,12 +341,10 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         $result = array();
         foreach ($rows as $row) {
             $result[] = array(
-                'num' => $row['num'],
+                'num'  => $row['num'],
                 'type' => $row['type']
             );
         }
         return $result;
-
-
     }
 }

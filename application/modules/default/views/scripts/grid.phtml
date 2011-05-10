@@ -1,12 +1,3 @@
-<?php
-/**
- * 
- * User: dennisjan
- * Date: 2/18/11
- * Time: 4:48 PM
- */
- ?>
-
 <div id="dataGrid"></div>
 
 <script type="text/javascript">
@@ -85,20 +76,21 @@ YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.datagrid = function() {
         var ColumnDefs = [
         <?php
-            foreach($this->config->columns->toArray() as $column => $options)
-            {
-                $editor = '';
-                if ($options['edit'])
-                {
-                    $editor  = 'editor: new YAHOO.widget.TextboxCellEditor()';
-                }
+            if (isset($this->config->columns)) {
+                foreach($this->config->columns->toArray() as $column => $options) {
+                    $editor = '';
+                    if ($options['edit'])
+                    {
+                        $editor  = 'editor: new YAHOO.widget.TextboxCellEditor()';
+                    }
 
-                echo '{key:"' . $column . '", sortable:'
-                     . ($options['sort'] ? 'true' : 'false')
-                     . (!empty($editor) ? ', '. $editor : '')
-                     . (isset($options['formatter']) ? ', formatter:"' . $options['formatter'] . '"' : '')
-                     . (isset($options['label']) ? ', label:"' . $options['label'] . '"' : '')
-                     . '},';
+                    echo '{key:"' . $column . '", sortable:'
+                         . ($options['sort'] ? 'true' : 'false')
+                         . (!empty($editor) ? ', '. $editor : '')
+                         . (isset($options['formatter']) ? ', formatter:"' . $options['formatter'] . '"' : '')
+                         . (isset($options['label']) ? ', label:"' . $options['label'] . '"' : '')
+                         . '},';
+                }
             }
         ?>
 
@@ -109,7 +101,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
         this.DataSource.connXhrMode = "queueRequests";
         this.DataSource.responseSchema = {
             resultsList: "ResultSet",
-            fields: [<?php echo '"'.implode('","', array_keys($this->config->columns->toArray())).'"';?>],
+            fields: [<?php if (isset($this->config->columns)) {
+                echo '"'.implode('","', array_keys($this->config->columns->toArray())) . '"';
+            }?>],
             metaFields: {
                 totalRecords: "totalRecords" // Access to value in the server response
             }
@@ -120,7 +114,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
             initialRequest: "", // Initial request for first page of data
             dynamicData: true, // Enables dynamic server-driven data
             sortedBy : {key:"<?php echo $this->config->defaultsortfield; ?>", dir:<?php if ($this->config->dir == 'desc') echo 'YAHOO.widget.DataTable.CLASS_DESC'; else echo 'YAHOO.widget.DataTable.CLASS_ASC'; ?>}, // Sets UI initial sort arrow
-            paginator: new YAHOO.widget.Paginator({ rowsPerPage:<?php echo $this->config->pageSize; ?> }) // Enables pagination
+            paginator: new YAHOO.widget.Paginator({ rowsPerPage:<?php echo (int)$this->config->pageSize; ?> }) // Enables pagination
         };
 
         var DataTable = new YAHOO.widget.DataTable("dataGrid", ColumnDefs, this.DataSource, Configs);

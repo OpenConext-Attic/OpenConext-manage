@@ -1,9 +1,5 @@
 <?php
-/**
- * Dao class for Gadgets.
- *
- * @author marc
- */
+
 class Model_Dao_Invite extends Model_Dao_Abstract
 {
    protected $_name = 'invite';

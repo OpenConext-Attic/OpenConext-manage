@@ -91,5 +91,5 @@ abstract class Model_Mapper_Abstract
 
     abstract public function save($model);
     abstract public function find($id, $model = null);
-    abstract protected function createObjectArray(Zend_Db_Table_Rowset_Abstract $rowset);
+    abstract protected function createObjectArray(Zend_Db_Table_Rowset_Abstract $rowSet);
 }

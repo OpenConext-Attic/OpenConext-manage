@@ -16,21 +16,32 @@ class Surfnet_Helper_GridSetup extends Zend_Controller_Action_Helper_Abstract
      */
     public function direct($name)
     {
-        return $this->_setupGrid($name);
+        return $this->_getGridConfigForAction($name);
     }
 
-    protected function _setupGrid($input)
+    protected function _getGridConfigForAction($input)
     {
         $config = $this->_getGridConfig();
 
-        $controller = $this->getRequest()->getControllerName();
-        $action     = $this->getRequest()->getActionName();
+        $currentRequest = $this->getRequest();
+        $module         = $currentRequest->getModuleName();
+        $controller     = $currentRequest->getControllerName();
+        $action         = $currentRequest->getActionName();
 
-        if (!isset($config->$controller) || !isset($config->{$controller}->$action)) {
-            return false;
+        if (!isset($config->$module)) {
+            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown module: '$module'");
         }
+        $gridConfig = $config->$module;
 
-        $gridConfig = $config->{$controller}->{$action};
+        if (!isset($gridConfig->$controller)) {
+            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown controller: '$controller'");
+        }
+        $gridConfig = $gridConfig->$controller;
+
+        if (!isset($gridConfig->$action)) {
+            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown action: '$action'");
+        }
+        $gridConfig = $gridConfig->$action;
 
         $gridConfig->dir        = $input->dir;
         $gridConfig->startIndex = $input->startIndex;

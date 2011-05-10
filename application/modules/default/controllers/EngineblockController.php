@@ -1,8 +1,6 @@
 <?php
 
-
-
-class EngineBlockController extends Zend_Controller_Action
+class Default_EngineBlockController extends Zend_Controller_Action
 {
     public function init ()
     {

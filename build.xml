@@ -1,4 +1,7 @@
 <project name="COIN EngineBlock" default="build">
+    <target name="build" depends="clean,prepare,lint,phpunit,phpqa" />
+    <target name="test" depends="clean,prepare,lint,phpunit" />
+
     <target name="clean">
         <delete dir="${basedir}/build" />
     </target>
@@ -9,6 +12,21 @@
         <mkdir dir="${basedir}/build/coverage" />
         <mkdir dir="${basedir}/build/cpd" />
         <mkdir dir="${basedir}/build/dependencies" />
+    </target>
+
+    <target name="lint" description="Run syntax check for all classes" >
+        <apply dir="${basedir}" executable="php" failonerror="true" output="/dev/null">
+            <arg value="-l" />
+            <fileset dir="${basedir}">
+                <include name="**/*.php"/>
+                <include name="**/*.html"/>
+                <include name="**/*.phtml"/>
+                <exclude name=".svn/**"/>
+                <exclude name="library/simplesamlphp/**"/>
+                <exclude name="library/Zend/**"/>
+                <exclude name="library/ZendX/**"/>
+            </fileset>
+        </apply>
     </target>
  
     <target name="phpcs">
@@ -61,15 +79,13 @@
         </exec>
     </target>
 
-    <target name="parallel">
+    <target name="phpqa">
         <parallel>
             <antcall target="phpcs" />
             <antcall target="phpmd" />
+            <antcall target="phpcb" />
             <antcall target="phpcpd" />
             <antcall target="pdepend" />
         </parallel>
     </target>
-
- 
-    <target name="build" depends="clean,prepare,phpcpd,phpunit,phpcs,phpcb" />
 </project>

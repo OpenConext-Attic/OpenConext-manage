@@ -27,7 +27,7 @@ class Model_Mapper_LogLoginMapper extends Model_Mapper_Abstract
     /**
      * @todo Make this actually do something.
      */
-    protected function createObjectArray(Zend_Db_Table_Rowset_Abstract $rowset)
+    protected function createObjectArray(Zend_Db_Table_Rowset_Abstract $rowSet)
     {
     }
 

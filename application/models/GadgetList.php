@@ -1,9 +1,5 @@
 <?php
-/**
- * Description of GadgetList
- *
- * @author marc
- */
+
 class Model_GadgetList extends Model_Abstract
 {
     /**
@@ -86,4 +82,3 @@ class Model_GadgetList extends Model_Abstract
         $this->_gadgets = $gadgets;
     }
 }
-?>

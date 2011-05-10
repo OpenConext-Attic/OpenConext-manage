@@ -1,9 +1,5 @@
 <?php
-/**
- * Abstract Model
- *
- * @author marc
- */
+
 class Model_Abstract
 {
     /**
@@ -32,9 +28,6 @@ class Model_Abstract
      */
     public function getMapper()
     {
-        if (null === $this->_mapper) {
-            $this->setMapper();
-        }
         return $this->_mapper;
     }
 

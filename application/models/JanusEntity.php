@@ -1,9 +1,5 @@
 <?php
-/**
- * Janus Entity model
- *
- * @author marc
- */
+
 class Model_JanusEntity extends Model_Abstract
 {
 

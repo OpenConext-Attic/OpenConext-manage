@@ -1,8 +1,5 @@
 <?php
-/**
- * Gadget
- *
- */
+
 class Model_Gadget extends Model_Abstract
 {
     /**

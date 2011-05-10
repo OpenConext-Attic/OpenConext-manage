@@ -6,7 +6,7 @@
 /**
  *
  */ 
-class ServiceRegistryController extends Zend_Controller_Action
+class Default_ServiceRegistryController extends Zend_Controller_Action
 {
     public function init()
     {

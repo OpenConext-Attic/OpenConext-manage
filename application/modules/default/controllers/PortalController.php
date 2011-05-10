@@ -1,13 +1,10 @@
 <?php
 
 
-class PortalController extends Zend_Controller_Action
+class Default_PortalController extends Zend_Controller_Action
 {
     public function init ()
     {
-        //Get the identity
-        $this->view->identity = $this->_helper->Authenticate('portal');
-
         $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
                                      ->addActionContext('gadgetavailable', 'json')
                                      ->addActionContext('gadgetcount', 'json')
@@ -15,10 +12,8 @@ class PortalController extends Zend_Controller_Action
                                      ->addActionContext('invitestatus', 'json')
                                      ->addActionContext('teamtabs', 'json')
                                      ->initContext();
-        //Filter and sanitize input and set up grid.
-        $input = $this->_helper->FilterLoader('portal');
 
-        $this->view->config = $this->_helper->gridSetup($input);
+        $this->view->config = $this->_helper->gridSetup($this->_helper->FilterLoader());
     }
     
     public function indexAction ()
@@ -28,26 +23,7 @@ class PortalController extends Zend_Controller_Action
     
     public function gadgetcountAction ()
     {
-        if($this->getRequest()->getParam('download', false))
-        {
-            header("Content-disposition: attachment; filename=json.txt");
-        }
-
-        $gadgetList = new Model_GadgetList();
-
-        $input = $this->_helper->FilterLoader('portal');
-
-        $Result = $gadgetList->getCount(
-                                        $input->sort,
-                                        $input->dir,
-                                        $input->results,
-                                        $input->startIndex
-                                       );
-
-        $this->view->ResultSet = $Result;
-        $this->view->totalRecords = $gadgetList->getCount(null, null, null,0,true);
-        $this->view->recordsReturned = count($Result);
-        $this->view->startIndex = 0;
+        
     }
     
     public function gadgetavailableAction()

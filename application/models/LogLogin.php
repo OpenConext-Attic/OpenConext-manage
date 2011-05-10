@@ -1,9 +1,5 @@
 <?php
-/**
- * Login log model
- *
- * @author marc
- */
+
 class Model_LogLogin extends Model_Abstract
 {
 

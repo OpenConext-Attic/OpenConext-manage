@@ -1,7 +1,8 @@
 <?php
 
-class LoginController extends Zend_Controller_Action
+class Default_IndexController extends Zend_Controller_Action
 {
+
     public function init()
     {
         //Get the identity
@@ -10,5 +11,8 @@ class LoginController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        //As default the index/index must redirect to /dashboard/index
+        $this->_helper->redirector('index', 'dashboard');
     }
 }
+

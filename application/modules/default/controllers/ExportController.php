@@ -1,6 +1,6 @@
 <?php
 
-class ExportController extends Zend_Controller_Action
+class Default_ExportController extends Zend_Controller_Action
 {
     public function init ()
     {

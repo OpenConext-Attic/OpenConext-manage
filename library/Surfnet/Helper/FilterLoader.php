@@ -17,7 +17,7 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
      */
     public function direct()
     {
-        return $this->_loadFilter();
+        return $this->_getFilterForCurrentAction();
     }
 
     /**
@@ -25,16 +25,9 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
      *
      * @return Zend_Filter_Input
      */
-    protected function _loadFilter()
+    protected function _getFilterForCurrentAction()
     {
-        $sortOptions = $this->_getSortOptions(
-            $this->getRequest()->getControllerName(),
-            $this->getRequest()->getActionName()
-        );
-
-        if ($sortOptions === false) {
-            return false;
-        }
+        $sortOptions = $this->_getSortOptions();
 
         /**
          * Input filtering/validation.
@@ -74,19 +67,33 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
      * @param String $controller Front controller
      * @param String $action     Action
      */
-    protected function _getSortOptions($controller, $action)
+    protected function _getSortOptions()
     {
         $config = $this->_getGridConfig();
 
-        if (!isset($config->{$controller}) || !isset($config->{$controller}->{$action})) {
-            return false; // Page not found probably
-        }
+        $currentRequest = $this->getRequest();
+        $module         = $currentRequest->getModuleName();
+        $controller     = $currentRequest->getControllerName();
+        $action         = $currentRequest->getActionName();
 
-        $gridSortConfig = $config->{$controller}->{$action};
+        if (!isset($config->$module)) {
+            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown module: '$module'");
+        }
+        $config = $config->$module;
+
+        if (!isset($config->$controller)) {
+            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown controller: '$controller'");
+        }
+        $config = $config->$controller;
+
+        if (!isset($config->$action)) {
+            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown action: '$action'");
+        }
+        $config = $config->$action;
 
         return array(
-            'default' => $gridSortConfig->defaultsortfield,
-            'fields'  => $this->_getGridSortFields($gridSortConfig),
+            'default' => $config->defaultSortField,
+            'fields'  => $this->_getGridSortFields($config),
         );
     }
 
