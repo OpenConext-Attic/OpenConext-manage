@@ -43,9 +43,35 @@ class Model_GadgetList extends Model_Abstract
      * @param Boolean $countOnly Return only the number of rows instead of the
      *                           full dataset.
      */
-    public function getAvailable($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    public function getAll($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
        return $this->getMapper()->fetchAvailable($order, $dir, $limit, $offset, $countOnly);
+    }
+
+    /**
+     * Get a list of the amount of available gadgets
+     *
+     * @param Integer $limit
+     * @param Integer $offset
+     * @param Boolean $countOnly Return only the number of rows instead of the
+     *                           full dataset.
+     */
+    public function getAllNonCustom($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    {
+       return $this->getMapper()->fetchAllCustom($order, $dir, $limit, $offset, $countOnly);
+    }
+
+    /**
+     * Get a list of the amount of available gadgets
+     *
+     * @param Integer $limit
+     * @param Integer $offset
+     * @param Boolean $countOnly Return only the number of rows instead of the
+     *                           full dataset.
+     */
+    public function getAllCustom($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    {
+       return $this->getMapper()->fetchAllNonCustom($order, $dir, $limit, $offset, $countOnly);
     }
 
     /**
@@ -53,8 +79,7 @@ class Model_GadgetList extends Model_Abstract
      *
      * @param Integer $limit
      * @param Integer $offset
-     * @param Boolean $countOnly Return only the number of rows instead of the
-     *                           full dataset.
+     * @param Boolean $countOnly Return only the number of rows instead of the full dataset.
      */
     public function getUsage($order='num', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
@@ -70,7 +95,6 @@ class Model_GadgetList extends Model_Abstract
     {
        return $this->getMapper()->fetchTeamTabs($order, $dir, $limit, $offset, $countOnly);
     }
-
 
     /**
      * Populate the gadget list.

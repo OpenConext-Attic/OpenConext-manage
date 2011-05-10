@@ -27,7 +27,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
     {
         $result = array();
         foreach ($rowSet as $row) {
-            $gadget = new Model_Gadget();
+            $gadget = new Model_GadgetDefinition();
 
             $gadget->id             = $row['id'];
             $gadget->title          = $row['title'];
@@ -43,15 +43,14 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
      *
      * @param Integer $limit
      * @param Integer $offset
-     * @param Boolean $countOnly Return only the number of rows instead of the
-     *                           full dataset.
+     * @param Boolean $countOnly Return only the number of rows instead of the full dataset.
      *
-     * @return Array|Integer Array with gagdet usage data or row count.
+     * @return Array|Integer Array with gadget usage data or row count.
      */
-    public function fetchAvailable($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    public function fetchAll($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
-
         $this->setDao('Model_Dao_GadgetDefinition');
+
         $select = $this->_dao->select();
         if ($countOnly) {
             $fields = array('count' => 'COUNT(*)');
@@ -63,7 +62,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
             );
         }
         
-        $select->from($this->_dao,$fields);
+        $select->from($this->_dao, $fields);
         
         if (isset($limit)) {
             $select->limit($limit, $offset);
@@ -74,6 +73,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         }
 
         $rows = $this->_dao->fetchAll($select);
+        
         if ($countOnly) {
             return $rows[0]['count'];
         }
@@ -81,21 +81,126 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         $result = array();
         foreach ($rows as $row) {
             $result[] = array(
-                'title' => $row['title'],
-                'author' => $row['author'],
-                'added' => $row['added'],
-                'description' => $row['description'],
-                'install_count' => $row['install_count'],
-                'screenshot' => $row['screenshot'],
-                'url' => $row['url'],
-                'approved' => $row['approved'],
-                'supportssso' => $row['supportssso'],
-                'supports_groups' => $row['supports_groups']
+                'title'             => $row['title'],
+                'author'            => $row['author'],
+                'added'             => $row['added'],
+                'description'       => $row['description'],
+                'install_count'     => $row['install_count'],
+                'screenshot'        => $row['screenshot'],
+                'url'               => $row['url'],
+                'approved'          => $row['approved'],
+                'supportssso'       => $row['supportssso'],
+                'supports_groups'   => $row['supports_groups']
             );
         }
 
         return $result;
     }
+
+    public function fetchAllCustom($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    {
+        $this->setDao('Model_Dao_GadgetDefinition');
+
+        $select = $this->_dao->select();
+        if ($countOnly) {
+            $fields = array('count' => 'COUNT(*)');
+        } else {
+            $fields = array(
+                'title', 'author', 'added', 'description',
+                'install_count', 'screenshot', 'url',
+                'approved', 'supportssso', 'supports_groups'
+            );
+        }
+
+        $select->from($this->_dao, $fields);
+
+        $select->where('custom_gadget=?', 'F');
+
+        if (isset($limit)) {
+            $select->limit($limit, $offset);
+        }
+
+        if ($order != '' && !$countOnly) {
+            $select->order($order . ' ' . $dir);
+        }
+
+        $rows = $this->_dao->fetchAll($select);
+
+        if ($countOnly) {
+            return $rows[0]['count'];
+        }
+
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = array(
+                'title'             => $row['title'],
+                'author'            => $row['author'],
+                'added'             => $row['added'],
+                'description'       => $row['description'],
+                'install_count'     => $row['install_count'],
+                'screenshot'        => $row['screenshot'],
+                'url'               => $row['url'],
+                'approved'          => $row['approved'],
+                'supportssso'       => $row['supportssso'],
+                'supports_groups'   => $row['supports_groups']
+            );
+        }
+
+        return $result;
+    }
+
+    public function fetchAllNonCustom($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    {
+        $this->setDao('Model_Dao_GadgetDefinition');
+
+        $select = $this->_dao->select();
+        if ($countOnly) {
+            $fields = array('count' => 'COUNT(*)');
+        } else {
+            $fields = array(
+                'title', 'author', 'added', 'description',
+                'install_count', 'screenshot', 'url',
+                'approved', 'supportssso', 'supports_groups'
+            );
+        }
+
+        $select->from($this->_dao, $fields);
+
+        $select->where('custom_gadget=?', 'T');
+
+        if (isset($limit)) {
+            $select->limit($limit, $offset);
+        }
+
+        if ($order != '' && !$countOnly) {
+            $select->order($order . ' ' . $dir);
+        }
+
+        $rows = $this->_dao->fetchAll($select);
+
+        if ($countOnly) {
+            return $rows[0]['count'];
+        }
+
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = array(
+                'title'             => $row['title'],
+                'author'            => $row['author'],
+                'added'             => $row['added'],
+                'description'       => $row['description'],
+                'install_count'     => $row['install_count'],
+                'screenshot'        => $row['screenshot'],
+                'url'               => $row['url'],
+                'approved'          => $row['approved'],
+                'supportssso'       => $row['supportssso'],
+                'supports_groups'   => $row['supports_groups']
+            );
+        }
+
+        return $result;
+    }
+
     /**
      * Gets the counts for different types of
      *
@@ -112,6 +217,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         }
 
         $this->setDao('Model_Dao_GadgetDefinition');
+        
         $selectTotal = $this->_dao->select();
         $selectTotal->from(
             $this->_dao,
@@ -152,6 +258,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
                     $selectSsoEnabled,
                     $selectGroupEnabled
         ));
+
         if ($order != '' && !$countOnly) {
             $select->order($order
                            . (empty($dir) ? '' : ' ')
@@ -159,9 +266,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
                           );
         }
 
-        $rows = $this->_dao->fetchAll(
-            $select
-        );
+        $rows = $this->_dao->fetchAll($select);
 
         if ($countOnly) {
             return count($rows);
@@ -242,6 +347,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
     public function fetchInvites($order='num', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
         $this->setDao('Model_Dao_Invite');
+
         /**
          * $qry = "select COUNT(id) as num, status from coin_portal.invite group by status";
          */

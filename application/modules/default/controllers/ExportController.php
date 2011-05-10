@@ -25,8 +25,8 @@ class Default_ExportController extends Zend_Controller_Action
     {
         $janusEntity = new Model_JanusEntity();
 
-        $Result = $janusEntity->getAvailableSps();
+        $result = $janusEntity->getAvailableIdps();
 
-        $this->view->ResultSet = $Result;
+        $this->view->ResultSet = $result;
     }
 }

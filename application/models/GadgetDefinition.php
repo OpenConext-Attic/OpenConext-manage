@@ -1,6 +1,6 @@
 <?php
 
-class Model_Gadget extends Model_Abstract
+class Model_GadgetDefinition extends Model_Abstract
 {
     /**
      * Gadget identifier
