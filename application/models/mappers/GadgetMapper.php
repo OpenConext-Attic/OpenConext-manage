@@ -2,22 +2,39 @@
 
 class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
 {
-    /**
-     *
-     * @todo Make this actually do something.
-     * @param Model_Abstract $model
-     */
-    public function save($model)
+    public function save(Model_Abstract $model)
     {
 
     }
 
     /**
-     * @todo Make this actually do something.
+     *
+     *
+     * @param Model_Abstract $model
+     */
+    public function delete(Model_GadgetDefinition $model)
+    {
+        $this->setDao('Model_Dao_Gadget');
+        $this->_dao->delete('definition=' . $model->id);
+
+        $this->setDao('Model_Dao_GadgetDefinition');
+        return $this->_dao->delete('id=' . $model->id);
+    }
+
+    /**
+     * 
      */
     public function find($id, $model = null)
     {
+        $this->setDao('Model_Dao_GadgetDefinition');
 
+        $row = $this->_dao->fetchRow($this->_dao->select()->from($this->_dao, array('id', 'title', 'description'))->where('id='.$id));
+
+        $gadgetDefinition = new Model_GadgetDefinition();
+        $gadgetDefinition->id             = $row['id'];
+        $gadgetDefinition->title          = $row['title'];
+        $gadgetDefinition->description    = $row['description'];
+        return $gadgetDefinition;
     }
 
     /**
@@ -56,7 +73,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
             $fields = array('count' => 'COUNT(*)');
         } else {
             $fields = array(
-                'title', 'author', 'added', 'description',
+                'id','title', 'author', 'added', 'description',
                 'install_count', 'screenshot', 'url',
                 'approved', 'supportssso', 'supports_groups'
             );
@@ -81,6 +98,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         $result = array();
         foreach ($rows as $row) {
             $result[] = array(
+                'id'                => $row['id'],
                 'title'             => $row['title'],
                 'author'            => $row['author'],
                 'added'             => $row['added'],
@@ -106,7 +124,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
             $fields = array('count' => 'COUNT(*)');
         } else {
             $fields = array(
-                'title', 'author', 'added', 'description',
+                'id','title', 'author', 'added', 'description',
                 'install_count', 'screenshot', 'url',
                 'approved', 'supportssso', 'supports_groups'
             );
@@ -133,6 +151,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         $result = array();
         foreach ($rows as $row) {
             $result[] = array(
+                'id'                => $row['id'],
                 'title'             => $row['title'],
                 'author'            => $row['author'],
                 'added'             => $row['added'],
@@ -158,7 +177,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
             $fields = array('count' => 'COUNT(*)');
         } else {
             $fields = array(
-                'title', 'author', 'added', 'description',
+                'id','title', 'author', 'added', 'description',
                 'install_count', 'screenshot', 'url',
                 'approved', 'supportssso', 'supports_groups'
             );
@@ -185,6 +204,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
         $result = array();
         foreach ($rows as $row) {
             $result[] = array(
+                'id'                => $row['id'],
                 'title'             => $row['title'],
                 'author'            => $row['author'],
                 'added'             => $row['added'],

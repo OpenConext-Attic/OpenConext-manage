@@ -89,8 +89,9 @@ COINMANAGE.AjaxDataTable = function(selector) {
         },
 
         render: function() {
+            var DataTable;
+
             _validate();
-            console.log(_displayColumns);
 
             this.DataSource = new YAHOO.util.XHRDataSource(_dataSourceUrl);
             this.DataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
@@ -125,7 +126,52 @@ COINMANAGE.AjaxDataTable = function(selector) {
                 });
             }
 
-            var DataTable = new YAHOO.widget.DataTable(_node, _displayColumns, this.DataSource, Configs);
+            if (_recordActions && _recordActions.length > 0) {
+                _displayColumns[_displayColumns.length] = {
+                    label: "",
+                    key: 'action',
+                    formatter: function(el, record) {
+                        console.log(arguments);
+                        var actionNode, img, link, recordAction;
+                        for (var i=0; i < _recordActions.length; i++) {
+                            recordAction = _recordActions[i];
+                            actionNode = el.appendChild(document.createElement('span'));
+                            actionNode.className = 'record-action';
+
+                            link = null;
+                            if (recordAction.onClick) {
+                                link = actionNode.appendChild(document.createElement('a'));
+                                link.href = '#';
+                                YAHOO.util.Event.addListener(link, "click", function() {
+                                    recordAction.onClick(el, record, DataTable);
+                                    return false;
+                                });
+                                if (recordAction.title) {
+                                    link.title = recordAction.title;
+                                }
+                            }
+                            if (recordAction.imgSrc) {
+                                if (link) {
+                                    img = link.appendChild(document.createElement('img'));
+                                }
+                                else {
+                                    img = actionNode.appendChild(document.createElement('img'));
+                                }
+                                img.src = recordAction.imgSrc;
+                                if (recordAction.imgAlt) {
+                                    img.alt = recordAction.imgAlt;
+                                }
+                                if (recordAction.title) {
+                                    img.title = recordAction.title;
+                                }
+                            }
+                            el.appendChild(actionNode);
+                        }
+                    }
+                };
+            }
+
+            DataTable = new YAHOO.widget.DataTable(_node, _displayColumns, this.DataSource, Configs);
 
             return DataTable;
         }

@@ -89,7 +89,7 @@ abstract class Model_Mapper_Abstract
         return $this->createObjectArray($this->getDao()->fetchAll($where, $order, $count, $limit));
     }
 
-    abstract public function save($model);
+    abstract public function save(Model_Abstract $model);
     abstract public function find($id, $model = null);
     abstract protected function createObjectArray(Zend_Db_Table_Rowset_Abstract $rowSet);
 }

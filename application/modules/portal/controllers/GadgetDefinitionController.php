@@ -83,7 +83,11 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-        // action body
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $gadgetList = new Model_Mapper_GadgetMapper('Model_Dao_GadgetDefinition');
+        echo $gadgetList->delete($gadgetList->find((int)$this->_getParam('id')));
     }
 
     public function saveAction()

@@ -22,16 +22,28 @@ COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
     setLoadFields(<?php echo json_encode($fields); ?>).
     setDisplayColumns(<?php echo json_encode($columnsDefinition); ?>).
     onRecordClick(function(data) {
-        window.location.href = '<?php echo $this->url(array('action'=>'edit')) . 'id=' + data.id; ?>'
+        window.location.href = '<?php echo $this->url(array('action'=>'edit'))?>id=' + data.getData('id');
     }).
 <?php if (isset($this->config->pageSize)) : ?>
     setLimit(<?php echo $this->config->pageSize; ?>).
 <?php endif; ?>
-<?php if (isset($this->config->deletable) && $this->config->deletable === true) : ?>
+<?php if (isset($this->config->deletable) && $this->config->deletable) : ?>
     addRecordAction('delete', {
-        imgSrc: '/images/delete.png',
-        onClick: function(data) {
-            window.location.href = '<?php echo $this->url(array('action'=>'edit')) . '?id=' + data.id; ?>'
+        imgAlt: 'delete',
+        imgSrc: '/images/icon_trashcan.gif',
+        onClick: function(el, record, DataTable) {
+            if (!confirm('Verwijder rij?')) {
+                return false;
+            }
+
+            var myDataSource = new YAHOO.util.DataSource(
+                '<?php echo $this->url(array('action'=>'delete')); ?>?'
+            );
+            myDataSource.sendRequest('id=' + record.getData('id'), {
+                success : function() {
+                    window.location.reload();
+                }
+            });
         }
     }).
 <?php endif; ?>

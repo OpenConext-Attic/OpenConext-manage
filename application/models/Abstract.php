@@ -44,22 +44,4 @@ class Model_Abstract
             throw new InvalidArgumentException('id must be numeric');
         }
     }
-
-    /**
-     * Save data
-     *
-     * @return Void
-     */
-    public function save()
-    {
-        $this->getMapper()->save();
-    }
-
-    /**
-     * Delete data
-     */
-    public static function delete($id)
-    {
-
-    }
 }
