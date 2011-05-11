@@ -21,8 +21,10 @@ COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
     setLoadUrl('<?php echo $this->url(array('format'=>'json'));?>/?').
     setLoadFields(<?php echo json_encode($fields); ?>).
     setDisplayColumns(<?php echo json_encode($columnsDefinition); ?>).
-    onRecordClick(function(data) {
-        window.location.href = '<?php echo $this->url(array('action'=>'edit'))?>id=' + data.getData('id');
+    onRecordClick(function(DataTable) {
+        // Some magic to get the id of the row the use selected
+        var id = DataTable.getRecord(DataTable.getSelectedRows()[0]).getData('id');
+        window.location.href = '<?php echo $this->url(array('action'=>'edit'))?>?id=' + id;
     }).
 <?php if (isset($this->config->pageSize)) : ?>
     setLimit(<?php echo $this->config->pageSize; ?>).

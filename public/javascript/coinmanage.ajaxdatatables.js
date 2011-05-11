@@ -173,6 +173,28 @@ COINMANAGE.AjaxDataTable = function(selector) {
 
             DataTable = new YAHOO.widget.DataTable(_node, _displayColumns, this.DataSource, Configs);
 
+            if (_onRecordClick) {
+                DataTable.subscribe("rowMouseoverEvent", function() {
+                    DataTable.onEventHighlightRow.apply(DataTable, arguments);
+                });
+                DataTable.subscribe("rowMouseoutEvent", function() {
+                    DataTable.onEventUnhighlightRow.apply(DataTable, arguments);
+                });
+
+                DataTable.subscribe("rowClickEvent", function(e) {
+                    DataTable.onEventSelectRow.apply(DataTable, arguments);
+
+                    if (e.target.nodeName === "IMG") {
+                        // Ignore clicks on record actions
+                        return false;
+                    }
+
+                    _onRecordClick(DataTable);
+
+                    return false;
+                });
+            }
+
             return DataTable;
         }
     };
