@@ -38,13 +38,13 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
             'dir' =>array(
                 new Surfnet_Filter_InArray(
                     array('asc', 'desc'),
-                    'desc'
+                    (isset($sortOptions['defaultDir'])?$sortOptions['defaultDir']:'asc')
                 )
             ),
             'sort' => array(
                 new Surfnet_Filter_InArray(
                     $sortOptions['fields'],
-                    $sortOptions['default']
+                    $sortOptions['defaultField']
                 )
             ),
         );
@@ -54,10 +54,12 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
             'filterNamespace'   => 'Surfnet_Filter',
             'allowEmpty'        => true
         );
+        $requestParams = array_merge(array_flip(array_keys($filters)), $this->getRequest()->getParams());
+
         return new Zend_Filter_Input(
             $filters,
             $validators,
-            $this->getRequest()->getParams(),
+            $requestParams,
             $options
         );
     }
@@ -91,10 +93,16 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
         }
         $config = $config->$action;
 
-        return array(
-            'default' => $config->defaultSortField,
-            'fields'  => $this->_getGridSortFields($config),
+        $options = array(
+            'defaultField'  => $config->defaultSortField,
+            'fields'        => $this->_getGridSortFields($config),
         );
+
+        if (isset($config->defaultSortDir)) {
+            $options['defaultDir'] = $config->defaultSortDir;
+        }
+
+        return $options;
     }
 
     /**

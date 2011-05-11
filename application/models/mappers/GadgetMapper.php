@@ -114,7 +114,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
 
         $select->from($this->_dao, $fields);
 
-        $select->where('custom_gadget=?', 'F');
+        $select->where('custom_gadget=?', 'T');
 
         if (isset($limit)) {
             $select->limit($limit, $offset);
@@ -166,7 +166,7 @@ class Model_Mapper_GadgetMapper extends Model_Mapper_Abstract
 
         $select->from($this->_dao, $fields);
 
-        $select->where('custom_gadget=?', 'T');
+        $select->where('custom_gadget=?', 'F');
 
         if (isset($limit)) {
             $select->limit($limit, $offset);

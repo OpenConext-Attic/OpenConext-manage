@@ -58,7 +58,7 @@ class Model_GadgetList extends Model_Abstract
      */
     public function getAllNonCustom($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
-       return $this->getMapper()->fetchAllCustom($order, $dir, $limit, $offset, $countOnly);
+       return $this->getMapper()->fetchAllNonCustom($order, $dir, $limit, $offset, $countOnly);
     }
 
     /**
@@ -71,7 +71,7 @@ class Model_GadgetList extends Model_Abstract
      */
     public function getAllCustom($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
     {
-       return $this->getMapper()->fetchAllNonCustom($order, $dir, $limit, $offset, $countOnly);
+       return $this->getMapper()->fetchAllCustom($order, $dir, $limit, $offset, $countOnly);
     }
 
     /**

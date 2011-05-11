@@ -7,7 +7,7 @@ COINMANAGE.AjaxDataTable = function(selector) {
         _displayColumns,  // required
         _limit,
         _sortedField,
-        _sortedDir = 'desc',
+        _sortedDir = 'asc',
         _onRecordClick,
         _recordActions = [],
         _node;
