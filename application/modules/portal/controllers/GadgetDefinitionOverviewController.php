@@ -18,26 +18,19 @@ class Portal_GadgetDefinitionOverviewController extends Zend_Controller_Action
         }
 
         $inputFilter = $this->_helper->FilterLoader();
-        $gadgetList = new Model_GadgetList();
 
-        $result = $gadgetList->getCount(
-            $inputFilter->sort,
-            $inputFilter->dir,
-            $inputFilter->results,
-            $inputFilter->startIndex
-        );
-        $resultTotal = $gadgetList->getCount(
-            null,
-            null,
-            null,
-            0,
-            true
-        );
+        $params = Surfnet_Search_Parameters::create()
+                ->setLimit($inputFilter->results)
+                ->setOffset($inputFilter->startIndex)
+                ->setSortByField($inputFilter->sort)
+                ->setSortDirection($inputFilter->dir);
+
+        $service = new Portal_Service_GadgetDefinition();
+        $results = $service->searchCountByCapabililty($params);
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
-        $this->view->ResultSet          = $result;
-        $this->view->totalRecords       = $resultTotal;
-        $this->view->recordsReturned    = count($result);
-        $this->view->startIndex         = 0;
+        $this->view->ResultSet          = $results->getResults();
+        $this->view->recordsReturned    = $results->getResultCount();
+        $this->view->totalRecords       = $results->getTotalCount();
     }
 }

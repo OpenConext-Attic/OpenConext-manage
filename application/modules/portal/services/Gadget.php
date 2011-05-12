@@ -1,0 +1,171 @@
+<?php
+
+class Portal_Service_Gadget
+{
+    /**
+     * Search for gadgets with a custom gadgetdefinition.
+     *
+     * @param Surfnet_Search_Parameters $params
+     * @return Surfnet_Search_Result
+     */
+    public function searchCustom(Surfnet_Search_Parameters $params)
+    {
+        $dao = new Portal_Model_DbTable_Gadget();
+
+        $query = $dao->select()->setIntegrityCheck(false)->from($dao,array('id'=>'gadget.id'))
+                    ->join('gadgetdefinition', 'gadget.definition=gadgetdefinition.id')
+                    ->join('tab', 'gadget.tab_id=tab.id')
+                    ->where('custom_gadget="T"')
+                    ->columns();
+        if ($params->getLimit()) {
+            $query->limit($params->getLimit(), $params->getOffset());
+        }
+        if ($params->getSortByField()) {
+            $query->order('gadget.' . $params->getSortByField() . ' ' . $params->getSortDirection());
+        }
+        $results = $dao->fetchAll($query)->toArray();
+
+        $totalCount = $dao->fetchRow(
+            $query->reset(Zend_Db_Select::LIMIT_COUNT)
+                    ->reset(Zend_Db_Select::LIMIT_OFFSET)
+                    ->columns(array('count'=>'COUNT(*)'))
+        )->offsetGet('count');
+
+        return new Surfnet_Search_Results($params, $results, $totalCount);
+    }
+
+    public function searchUsage(Surfnet_Search_Parameters $params)
+    {
+        if ($params->getSortByField()) {
+            $params->setSortByField('num');
+            $params->setSortDirection('desc');
+        }
+
+        $dao = new Portal_Model_DbTable_Gadget();
+        $query = $dao->select()->setIntegrityCheck(false)->from($dao, array('definition'))
+                ->join(array('gd' => 'gadgetdefinition'),
+                       'gadget.definition = gd.id',
+                        array('num' => 'count(gd.id)',
+                              'title' => 'gd.title',
+                              'author' => 'gd.author'))
+                ->join(array('t' => 'tab'),
+                       'gadget.tab_id = t.id')
+                ->group('gadget.definition');
+
+        if ($params->getLimit()) {
+            $query->limit($params->getLimit(), $params->getOffset());
+        }
+        $query->order($params->getSortByField(). ' ' . $params->getSortDirection());
+
+        $results = $dao->fetchAll($query)->toArray();
+
+        $totalCount = $dao->fetchRow(
+            $query->reset(Zend_Db_Select::LIMIT_COUNT)
+                    ->reset(Zend_Db_Select::LIMIT_OFFSET)
+                    ->columns(array('count'=>'COUNT(*)'))
+        )->offsetGet('count');
+
+        return new Surfnet_Search_Results($params, $results, $totalCount);
+    }
+
+    function searchByType()
+    {
+        $selectTotal = $this->_dao->select();
+        $selectTotal->from(
+            $this->_dao,
+            array(
+                 "num" => "COUNT(id)",
+                'type' => new Zend_Db_Expr("'Totaal'"))
+        );
+
+        $selectGroupEnabled = $this->_dao->select();
+        $selectGroupEnabled->from(
+            $this->_dao,
+            array(
+                 "num" => "COUNT(id)",
+                 'type' => new Zend_Db_Expr("'Group enabled'"))
+        )->where("UPPER(supports_groups) = 'T'");
+
+        $selectSsoEnabled = $this->_dao->select();
+        $selectSsoEnabled->from(
+            $this->_dao,
+            array(
+                 'num'  => "COUNT(id)",
+                 'type' => new Zend_Db_Expr("'SSO Enabled'"))
+        )->where("UPPER(supportssso) = 'T'");
+
+        $selectSsoGroupEnabled = $this->_dao->select();
+        $selectSsoGroupEnabled->from(
+            $this->_dao,
+            array(
+                 "num" => "COUNT(id)",
+                 'type' => new Zend_Db_Expr("'SSO and Group Enabled'"))
+        )->where("UPPER(supportssso) = 'T' AND upper(supports_groups) = 'T'");
+
+
+        $select = $this->_dao->select()
+                ->union(array(
+                    $selectTotal,
+                    $selectSsoGroupEnabled,
+                    $selectSsoEnabled,
+                    $selectGroupEnabled
+        ));
+
+        if ($order != '' && !$countOnly) {
+            $select->order($order
+                           . (empty($dir) ? '' : ' ')
+                           . $dir
+                          );
+        }
+
+        $rows = $this->_dao->fetchAll($select);
+
+        if ($countOnly) {
+            return count($rows);
+        }
+
+        $result = array();
+        foreach ($rows as $row) {
+            $result[] = array(
+                'num' => $row['num'],
+                'type' => $row['type']
+            );
+        }
+        return $result;
+    }
+
+    /**
+     * Update the data for a gadget.
+     *
+     * Validate the data, update
+     *
+     * @param  $data
+     * @return array|bool
+     */
+    public function update($data)
+    {
+        $form = new Portal_Form_Gadget();
+        if ($form->isValid($data)) {
+            $gadget = $this->findById($data['id']);
+            $gadget->populate($data);
+
+            $mapper = new Portal_Model_Mapper_GadgetMapper(new Portal_Model_DbTable_Gadget());
+            return $mapper->save($gadget);
+        }
+        return $form->getErrors();
+    }
+
+    /**
+     * Find a gadget for a given id.
+     *
+     * Use the mapper to revive a gadget model
+     *
+     * @param  $id
+     * @return Portal_Model_GadgetDefinition
+     */
+    public function findById($id)
+    {
+        $mapper = new Portal_Model_Mapper_GadgetMapper(new Portal_Model_DbTable_Gadget());
+        return $mapper->find($id);
+    }
+}

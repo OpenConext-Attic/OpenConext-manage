@@ -13,31 +13,25 @@ class Portal_TabOverviewController extends Zend_Controller_Action
 
         public function showByTeamAction()
         {
-            if ($this->getRequest()->getParam('download', false)) {
-                $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
-            }
+        if ($this->getRequest()->getParam('download', false)) {
+            $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
+        }
 
-            $gadgetList = new Model_GadgetList();
-            $inputFilter = $this->_helper->FilterLoader();
+        $inputFilter = $this->_helper->FilterLoader();
 
-            $results = $gadgetList->getTeamTabs(
-                $inputFilter->sort,
-                $inputFilter->dir,
-                $inputFilter->results,
-                $inputFilter->startIndex
-            );
-            $resultTotal = $gadgetList->getTeamTabs(
-                null,
-                null,
-                null,
-                0,
-                true
-            );
+        $params = Surfnet_Search_Parameters::create()
+                ->setLimit($inputFilter->results)
+                ->setOffset($inputFilter->startIndex)
+                ->setSortByField($inputFilter->sort)
+                ->setSortDirection($inputFilter->dir);
 
-            $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
-            $this->view->ResultSet          = $results;
-            $this->view->recordsReturned    = count($results);
-            $this->view->totalRecords       = $resultTotal;
+        $service = new Portal_Service_Tab();
+        $results = $service->searchTeams($params);
+
+        $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
+        $this->view->ResultSet          = $results->getResults();
+        $this->view->recordsReturned    = $results->getResultCount();
+        $this->view->totalRecords       = $results->getTotalCount();
         }
 }
 

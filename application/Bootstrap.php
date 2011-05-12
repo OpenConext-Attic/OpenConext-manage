@@ -3,20 +3,6 @@
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     /**
-     * Set up the autoloaders for the default module
-     *
-     * @return Zend_Application_Module_Autoloader
-     */
-    protected function _initModuleAutoload()
-    {
-        $autoloader = new Zend_Application_Module_Autoloader(array(
-            'namespace' => '',
-            'basePath' => dirname(__FILE__)
-        ));
-        return $autoloader;
-    }
-
-    /**
      * Set up the db adapter
      *
      * @return Void

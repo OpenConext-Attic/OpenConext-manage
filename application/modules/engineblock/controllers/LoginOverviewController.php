@@ -20,27 +20,19 @@ class Engineblock_LoginOverviewController extends Zend_Controller_Action
         }
 
         $inputFilter = $this->_helper->FilterLoader();
-        $gadgetList = new Model_LogLogin();
+        $params = Surfnet_Search_Parameters::create()
+                ->setLimit($inputFilter->results)
+                ->setOffset($inputFilter->startIndex)
+                ->setSortByField($inputFilter->sort)
+                ->setSortDirection($inputFilter->dir);
 
-        $result = $gadgetList->getCount(
-            $inputFilter->sort,
-            $inputFilter->dir,
-            $inputFilter->results,
-            $inputFilter->startIndex
-        );
-        $resultTotal = $gadgetList->getCount(
-            null,
-            null,
-            null,
-            0,
-            true
-        );
+        $service = new EngineBlock_Service_LoginLog();
+        $results = $service->searchCountByType($params);
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
-        $this->view->ResultSet          = $result;
-        $this->view->totalRecords       = $resultTotal;
-        $this->view->recordsReturned    = count($result);
-        $this->view->startIndex         = 0;
+        $this->view->ResultSet          = $results->getResults();
+        $this->view->recordsReturned    = $results->getResultCount();
+        $this->view->totalRecords       = $results->getTotalCount();
     }
 
     public function showByIdpAction()
@@ -50,27 +42,19 @@ class Engineblock_LoginOverviewController extends Zend_Controller_Action
         }
 
         $inputFilter = $this->_helper->FilterLoader();
-        $gadgetList = new Model_LogLogin();
+        $params = Surfnet_Search_Parameters::create()
+                ->setLimit($inputFilter->results)
+                ->setOffset($inputFilter->startIndex)
+                ->setSortByField($inputFilter->sort)
+                ->setSortDirection($inputFilter->dir);
 
-        $result = $gadgetList->getByIdp(
-            $inputFilter->sort,
-            $inputFilter->dir,
-            $inputFilter->results,
-            $inputFilter->startIndex
-        );
-        $resultTotal = $gadgetList->getByIdp(
-            null,
-            null,
-            null,
-            0,
-            true
-        );
+        $service = new EngineBlock_Service_LoginLog();
+        $results = $service->searchCountByIdp($params);
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
-        $this->view->ResultSet          = $result;
-        $this->view->totalRecords       = $resultTotal;
-        $this->view->recordsReturned    = count($result);
-        $this->view->startIndex         = 0;
+        $this->view->ResultSet          = $results->getResults();
+        $this->view->recordsReturned    = $results->getResultCount();
+        $this->view->totalRecords       = $results->getTotalCount();
     }
 
     public function showBySpAction()
@@ -80,26 +64,18 @@ class Engineblock_LoginOverviewController extends Zend_Controller_Action
         }
 
         $inputFilter = $this->_helper->FilterLoader();
-        $gadgetList = new Model_LogLogin();
+        $params = Surfnet_Search_Parameters::create()
+                ->setLimit($inputFilter->results)
+                ->setOffset($inputFilter->startIndex)
+                ->setSortByField($inputFilter->sort)
+                ->setSortDirection($inputFilter->dir);
 
-        $result = $gadgetList->getBySP(
-            $inputFilter->sort,
-            $inputFilter->dir,
-            $inputFilter->results,
-            $inputFilter->startIndex
-        );
-        $resultTotal = $gadgetList->getBySP(
-            null,
-            null,
-            null,
-            0,
-            true
-        );
+        $service = new EngineBlock_Service_LoginLog();
+        $results = $service->searchCountBySp($params);
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
-        $this->view->ResultSet          = $result;
-        $this->view->totalRecords       = $resultTotal;
-        $this->view->recordsReturned    = count($result);
-        $this->view->startIndex         = 0;
+        $this->view->ResultSet          = $results->getResults();
+        $this->view->recordsReturned    = $results->getResultCount();
+        $this->view->totalRecords       = $results->getTotalCount();
     }
 }

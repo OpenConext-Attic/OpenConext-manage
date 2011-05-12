@@ -19,27 +19,20 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
             $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
         }
 
-        $gadgetList = new Model_GadgetList();
         $inputFilter = $this->_helper->FilterLoader();
+        $params = Surfnet_Search_Parameters::create()
+                ->setLimit($inputFilter->results)
+                ->setOffset($inputFilter->startIndex)
+                ->setSortByField($inputFilter->sort)
+                ->setSortDirection($inputFilter->dir);
 
-        $results = $gadgetList->getAllCustom(
-            $inputFilter->sort,
-            $inputFilter->dir,
-            $inputFilter->results,
-            $inputFilter->startIndex
-        );
-        $resultTotal = $gadgetList->getAllCustom(
-            null,
-            null,
-            null,
-            0,
-            true
-        );
+        $service = new Portal_Service_GadgetDefinition();
+        $results = $service->searchCustom($params);
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
-        $this->view->ResultSet          = $results;
-        $this->view->recordsReturned    = count($results);
-        $this->view->totalRecords       = $resultTotal;
+        $this->view->ResultSet          = $results->getResults();
+        $this->view->recordsReturned    = $results->getResultCount();
+        $this->view->totalRecords       = $results->getTotalCount();
     }
 
     public function listOfficialAction()
@@ -48,37 +41,30 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
             $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
         }
 
-        $gadgetList = new Model_GadgetList();
         $inputFilter = $this->_helper->FilterLoader();
+        $params = Surfnet_Search_Parameters::create()
+                ->setLimit($inputFilter->results)
+                ->setOffset($inputFilter->startIndex)
+                ->setSortByField($inputFilter->sort)
+                ->setSortDirection($inputFilter->dir);
 
-        $results = $gadgetList->getAllNonCustom(
-            $inputFilter->sort,
-            $inputFilter->dir,
-            $inputFilter->results,
-            $inputFilter->startIndex
-        );
-        $resultTotal = $gadgetList->getAllNonCustom(
-            null,
-            null,
-            null,
-            0,
-            true
-        );
+        $service = new Portal_Service_GadgetDefinition();
+        $results = $service->searchNonCustom($params);
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
-        $this->view->ResultSet          = $results;
-        $this->view->recordsReturned    = count($results);
-        $this->view->totalRecords       = $resultTotal;
+        $this->view->ResultSet          = $results->getResults();
+        $this->view->recordsReturned    = $results->getResultCount();
+        $this->view->totalRecords       = $results->getTotalCount();
     }
 
     public function addAction()
     {
-        // action body
+        
     }
 
     public function editAction()
     {
-        // action body
+        
     }
 
     public function deleteAction()
@@ -92,11 +78,13 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
 
     public function saveAction()
     {
-        // action body
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
     }
 
     public function updateAction()
     {
-        // action body
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
     }
 }

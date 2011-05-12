@@ -163,6 +163,7 @@ class Zend_Loader_Autoloader_Resource implements Zend_Loader_Autoloader_Interfac
         do {
             $segment    = array_shift($segments);
             $component .= empty($component) ? $segment : '_' . $segment;
+            
             if (isset($this->_components[$component])) {
                 $lastMatch = $component;
             }
