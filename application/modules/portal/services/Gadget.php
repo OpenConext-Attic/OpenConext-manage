@@ -36,7 +36,7 @@ class Portal_Service_Gadget
 
     public function searchUsage(Surfnet_Search_Parameters $params)
     {
-        if ($params->getSortByField()) {
+        if (!$params->getSortByField()) {
             $params->setSortByField('num');
             $params->setSortDirection('desc');
         }

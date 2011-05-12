@@ -7,7 +7,7 @@ class Portal_Service_GadgetDefinition
 {
     public function searchCountByCapabililty(Surfnet_Search_Parameters $params)
     {
-        if ($params->getSortByField()) {
+        if (!$params->getSortByField()) {
             $params->setSortByField('num');
             $params->setSortDirection('desc');
         }
