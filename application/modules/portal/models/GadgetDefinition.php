@@ -17,11 +17,6 @@ class Portal_Model_GadgetDefinition extends Default_Model_Abstract
     public $addedAt;
 
     /**
-     * @var bool
-     */
-    public $isApproved;
-
-    /**
      * Name of the author
      *
      * @var string
@@ -52,7 +47,7 @@ class Portal_Model_GadgetDefinition extends Default_Model_Abstract
      *
      * @var int
      */
-    public $installCount;
+    public $installCount = 0;
 
     /**
      * URL to a screen shot of the gadget.
@@ -66,14 +61,14 @@ class Portal_Model_GadgetDefinition extends Default_Model_Abstract
      *
      * @var bool
      */
-    public $supportsGroups;
+    public $supportsGroups = false;
 
     /**
      * Does this gadget support Signle Sign On?
      *
      * @var bool
      */
-    public $supportsSingleSignOn;
+    public $supportsSingleSignOn = false;
 
     /**
      * URL to a thumbnail to use for the gadget
@@ -90,39 +85,9 @@ class Portal_Model_GadgetDefinition extends Default_Model_Abstract
     public $url;
 
     /**
-     * ??
-     *
-     * @var int
-     */
-    public $status;
-
-    /**
      * Is a user added gadget
      *
      * @var bool
      */
     public $isCustom;
-
-    protected $_populateMapping = array(
-        'added'    => 'addedAt',
-        'approved'  => array(
-            'property'  => 'isApproved',
-            'type'      => 'boolean',
-        ),
-        'author'   => 'authorName',
-        'screenshot'=>'screenShotUrl',
-        'supports_groups' => array(
-            'property'  => 'supportsGroups',
-            'type'      => 'boolean',
-        ),
-        'supportssso'=>array(
-            'property'  => 'supportsSingleSignOn',
-            'type'      => 'boolean',
-        ),
-        'custom_gadget' => array(
-            'property'  => 'isCustom',
-            'type'      => 'boolean',
-        ),
-        'thumbnail' => 'thumbnailUrl',
-    );
 }

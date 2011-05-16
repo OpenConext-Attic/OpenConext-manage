@@ -159,3 +159,15 @@ body {
 .flexigrid {
     margin-top: 10px;
 }
+
+.form-error {
+    color: red;
+}
+
+label {
+    display: block;
+}
+
+fieldset {
+    margin-bottom: 20px;
+}

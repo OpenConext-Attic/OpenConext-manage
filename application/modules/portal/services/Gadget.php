@@ -21,7 +21,7 @@ class Portal_Service_Gadget
             $query->limit($params->getLimit(), $params->getOffset());
         }
         if ($params->getSortByField()) {
-            $query->order('gadget.' . $params->getSortByField() . ' ' . $params->getSortDirection());
+            $query->order($params->getSortByField() . ' ' . $params->getSortDirection());
         }
         $results = $dao->fetchAll($query)->toArray();
 
@@ -66,72 +66,6 @@ class Portal_Service_Gadget
         )->offsetGet('count');
 
         return new Surfnet_Search_Results($params, $results, $totalCount);
-    }
-
-    function searchByType()
-    {
-        $selectTotal = $this->_dao->select();
-        $selectTotal->from(
-            $this->_dao,
-            array(
-                 "num" => "COUNT(id)",
-                'type' => new Zend_Db_Expr("'Totaal'"))
-        );
-
-        $selectGroupEnabled = $this->_dao->select();
-        $selectGroupEnabled->from(
-            $this->_dao,
-            array(
-                 "num" => "COUNT(id)",
-                 'type' => new Zend_Db_Expr("'Group enabled'"))
-        )->where("UPPER(supports_groups) = 'T'");
-
-        $selectSsoEnabled = $this->_dao->select();
-        $selectSsoEnabled->from(
-            $this->_dao,
-            array(
-                 'num'  => "COUNT(id)",
-                 'type' => new Zend_Db_Expr("'SSO Enabled'"))
-        )->where("UPPER(supportssso) = 'T'");
-
-        $selectSsoGroupEnabled = $this->_dao->select();
-        $selectSsoGroupEnabled->from(
-            $this->_dao,
-            array(
-                 "num" => "COUNT(id)",
-                 'type' => new Zend_Db_Expr("'SSO and Group Enabled'"))
-        )->where("UPPER(supportssso) = 'T' AND upper(supports_groups) = 'T'");
-
-
-        $select = $this->_dao->select()
-                ->union(array(
-                    $selectTotal,
-                    $selectSsoGroupEnabled,
-                    $selectSsoEnabled,
-                    $selectGroupEnabled
-        ));
-
-        if ($order != '' && !$countOnly) {
-            $select->order($order
-                           . (empty($dir) ? '' : ' ')
-                           . $dir
-                          );
-        }
-
-        $rows = $this->_dao->fetchAll($select);
-
-        if ($countOnly) {
-            return count($rows);
-        }
-
-        $result = array();
-        foreach ($rows as $row) {
-            $result[] = array(
-                'num' => $row['num'],
-                'type' => $row['type']
-            );
-        }
-        return $result;
     }
 
     /**

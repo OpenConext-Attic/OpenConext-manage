@@ -8,11 +8,9 @@
                                   ->appendStylesheet('/css/fonts.css')
                                   ->appendStylesheet('/css/global.css')
                                   ->appendStylesheet('/css/boxes.css'); 
-                                    
-                  
+
             echo $this->headScript(); 
             echo $this->headStyle();
-            
         ?>
 
         <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/yui/2.8.2r1/build/fonts/fonts.css" />
@@ -44,7 +42,9 @@
                     <?php echo($this->identity->displayName); ?>
                 </p>
             </div>
-            <a href="/" id="Logo"><img src="/media/logo-surfnet.gif" alt="SURFNET - We make innovation work"></a>
+            <a href="/" id="Logo">
+                <img src="/media/logo-surfnet.gif" alt="SURFNET - We make innovation work">
+            </a>
         </header>
         
         <nav>

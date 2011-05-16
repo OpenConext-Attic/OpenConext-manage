@@ -1,0 +1,126 @@
+<?php $model = $this->gadgetDefinition; ?>
+
+<form id="gadgetdefinition-edit"
+      name="gadgetdefinition-edit"
+      action="<?php echo $this->saveUrl;?>"
+      method="POST">
+
+    <input type="hidden" id="id" name="id" value="<?php echo $this->escape($model->id); ?>" />
+
+    <fieldset>
+        <?php if (isset($model->errors['url'])): foreach ($model->errors['url'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="url">XML URL <span class="required-postfix" title="Required field">*</span></label>
+        <input id="url"
+               name="url"
+               type="text"
+               value="<?php echo $this->escape($model->url); ?>"
+               size="100"
+               maxlength="1024"
+                />
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['authorName'])): foreach ($model->errors['authorName'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="authorName">Author name</label>
+        <input id="authorName"
+               name="authorName"
+               type="text"
+               value="<?php echo $this->escape($model->authorName); ?>"
+                />
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['authorEmail'])): foreach ($model->errors['authorEmail'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="authorEmail">Author e-mail</label>
+        <input id="authorEmail"
+               name="authorEmail"
+               type="text"
+               value="<?php echo $this->escape($model->authorEmail); ?>"
+               size="50"
+               maxlength="1024" />
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['titile'])): foreach ($model->errors['title'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="title">Title <span class="required-postfix" title="Required field">*</span></label>
+        <input id="title"
+               name="title"
+               size="80"
+               type="text"
+               value="<?php echo $this->escape($model->title); ?>"
+                />
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['description'])): foreach ($model->errors['description'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="description">Description <span class="required-postfix" title="Required field">*</span></label>
+        <textarea id="description" name="description" rows="5" cols="80"><?php
+            echo $this->escape($model->description);
+        ?></textarea>
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['screenShotUrl'])): foreach ($model->errors['screenShotUrl'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="screenShotUrl">Screenshot URL</label>
+        <input id="screenShotUrl"
+               name="screenShotUrl"
+               type="text"
+               value="<?php echo $this->escape($model->screenShotUrl); ?>"
+               size="100"
+               maxlength="1024"
+                />
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['thumbnailUrl'])): foreach ($model->errors['thumbnailUrl'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="thumbnailUrl">Thumbnail URL <span class="required-postfix" title="Required field">*</span></label>
+        <input id="thumbnailUrl"
+               name="thumbnailUrl"
+               type="text"
+               value="<?php echo $this->escape($model->thumbnailUrl); ?>"
+               size="100"
+               maxlength="1024"
+                />
+    </fieldset>
+
+    <fieldset>
+        <label for="supportsGroups">Does this gadget support external Group providers?</label>
+        <input id="supportsGroups"
+               name="supportsGroups"
+               type="checkbox"<?php if ($model->supportsGroups): ?>
+               checked="checked"<?php endif; ?>
+                />
+    </fieldset>
+
+    <fieldset>
+        <label for="supportsSingleSignOn">Does this gadget support Single Sign On?</label>
+        <input id="supportsSingleSignOn"
+               name="supportsSingleSignOn"
+               type="checkbox"<?php if ($model->supportsSingleSignOn): ?>
+               checked="checked"<?php endif; ?>
+                />
+    </fieldset>
+
+    <?php if ($model->installCount > 0) : ?>
+    <fieldset>
+        <label for="installCount">Number of times this definition had been installed / used</label>
+        <span id="installCount"><strong><?php echo $this->escape((string)(int)$model->installCount); ?></strong></span>
+    </fieldset>
+    <?php endif; ?>
+
+    <input id="submit" name="submit" value="Opslaan" type="submit">
+</form>

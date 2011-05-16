@@ -21,11 +21,13 @@ COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
     setLoadUrl('<?php echo $this->url(array('format'=>'json'));?>/?').
     setLoadFields(<?php echo json_encode($fields); ?>).
     setDisplayColumns(<?php echo json_encode($columnsDefinition); ?>).
+<?php if (isset($this->config->editable) && $this->config->editable): ?>
     onRecordClick(function(DataTable) {
         // Some magic to get the id of the row the use selected
         var id = DataTable.getRecord(DataTable.getSelectedRows()[0]).getData('id');
-        window.location.href = '<?php echo $this->url(array('action'=>'edit'))?>?id=' + id;
+        window.location.href = '<?php echo $this->url($this->config->edit->url->toArray()); ?>?id=' + id;
     }).
+<?php endif; ?>
 <?php if (isset($this->config->pageSize)) : ?>
     setLimit(<?php echo $this->config->pageSize; ?>).
 <?php endif; ?>
@@ -34,7 +36,7 @@ COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
         imgAlt: 'delete',
         imgSrc: '/images/icon_trashcan.gif',
         onClick: function(el, record, DataTable) {
-            if (!confirm('Verwijder rij?')) {
+            if (!window.confirm('Verwijder rij?')) {
                 return false;
             }
 
@@ -48,6 +50,22 @@ COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
             });
         }
     }).
+<?php endif; ?>
+<?php if (isset($this->config->actions) && !empty($this->config->actions)): ?>
+    <?php foreach ($this->config->actions as $actionConfig): ?>
+    addRecordAction('<?php echo $actionConfig->name;?>', {
+        <?php if (isset($actionConfig->imgAlt)): ?>
+        "imgAlt": <?php echo json_encode($actionConfig->imgAlt); ?>,
+        <?php endif; ?>
+        <?php if (isset($actionConfig->imgSrc)): ?>
+        "imgSrc": <?php echo json_encode($actionConfig->imgSrc); ?>,
+        <?php endif; ?>
+        <?php if (isset($actionConfig->url)): ?>
+        "href": <?php echo json_encode($this->url($actionConfig->url->toArray())); ?>,
+        <?php endif; ?>
+        "dummyForTrailingComma": ''
+    }).
+    <?php endforeach; ?>
 <?php endif; ?>
 <?php if (isset($this->config->defaultSortField)): ?>
     setSortedBy('<?php echo $this->config->defaultSortField; ?>').

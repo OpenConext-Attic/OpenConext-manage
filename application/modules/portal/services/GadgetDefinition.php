@@ -75,7 +75,7 @@ class Portal_Service_GadgetDefinition
         return $this->_searchWhere($params, 'custom_gadget="F"');
     }
 
-    protected function _searchWhere($params, $where)
+    protected function _searchWhere(Surfnet_Search_Parameters $params, $where)
     {
         $dao = new Portal_Model_DbTable_GadgetDefinition();
 
@@ -96,5 +96,58 @@ class Portal_Service_GadgetDefinition
         )->offsetGet('count');
 
         return new Surfnet_Search_Results($params, $results, $totalCount);
+    }
+
+    public function fetchById($id)
+    {
+        $mapper = new Portal_Model_Mapper_GadgetDefinition(new Portal_Model_DbTable_GadgetDefinition());
+        return $mapper->fetchById($id);
+    }
+
+    public function save($data, $overwrite = false)
+    {
+        if (isset($data['id']) && !$overwrite) {
+            $id = (int)$data['id'];
+            $gadgetDefinitionService = new Portal_Service_GadgetDefinition();
+            $gadgetDefinition = $gadgetDefinitionService->fetchById($id);
+        }
+        else {
+            $gadgetDefinition = new Portal_Model_GadgetDefinition();
+        }
+        $gadgetDefinition->populate($data);
+
+        $form = new Portal_Form_GadgetDefinition();
+        if (!$form->isValid($data)) {
+            $formErrors = $form->getErrors();
+            $modelErrors = array();
+            foreach ($formErrors as $fieldName => $fieldErrors) {
+                foreach ($fieldErrors as $fieldError) {
+                    switch ($fieldError) {
+                        case 'isEmpty':
+                            $error = 'Field is obligatory, but no input given';
+                            break;
+                        default:
+                            $error = $fieldError;
+                    }
+
+                    if (!isset($modelErrors[$fieldName])) {
+                        $modelErrors[$fieldName] = array();
+                    }
+                    $modelErrors[$fieldName][] = $error;
+                }
+            }
+            $gadgetDefinition->errors = $modelErrors;
+            return $gadgetDefinition;
+        }
+
+        $mapper = new Portal_Model_Mapper_GadgetDefinition(new Portal_Model_DbTable_GadgetDefinition());
+        $mapper->save($gadgetDefinition);
+        return $gadgetDefinition;
+    }
+
+    public function delete($id)
+    {
+        $dao = new Portal_Model_DbTable_GadgetDefinition();
+        return $dao->delete(array('id'=>$id));
     }
 }

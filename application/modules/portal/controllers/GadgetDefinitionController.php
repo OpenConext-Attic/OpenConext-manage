@@ -2,15 +2,15 @@
 
 class Portal_GadgetDefinitionController extends Zend_Controller_Action
 {
-
     public function init()
     {
         $this->view->identity = $this->_helper->Authenticate();
 
         $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
-                             ->addActionContext('list-official', 'json')
-                             ->addActionContext('list-custom', 'json')
-                             ->initContext();
+                                ->addActionContext('list-official', 'json')
+                                ->addActionContext('list-custom', 'json')
+                                ->addActionContext('save', 'json')
+                                ->initContext();
     }
     
     public function listCustomAction()
@@ -33,6 +33,7 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
         $this->view->ResultSet          = $results->getResults();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
+        $this->view->editUrl            = $this->view->url(array('action'=>'edit-custom'));
     }
 
     public function listOfficialAction()
@@ -55,16 +56,32 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
         $this->view->ResultSet          = $results->getResults();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
+        $this->view->addUrl             = $this->view->url(array('action'=>'add-official'));
+        $this->view->editUrl            = $this->view->url(array('action'=>'edit-official'));
     }
 
-    public function addAction()
+    public function addOfficialAction()
     {
-        
+        $gadgetDefinition = new Portal_Model_GadgetDefinition();
+        $gadgetDefinition->isCustom = false;
+        $this->view->gadgetDefinition = $gadgetDefinition;
+        $this->render('edit');
     }
 
-    public function editAction()
+    public function editCustomAction()
     {
-        
+        $service = new Portal_Service_GadgetDefinition();
+        $this->view->gadgetDefinition = $service->fetchById((int)$this->_getParam('id'));
+        $this->view->saveUrl            = $this->view->url(array('action'=>'save-custom'));
+        $this->render('edit');
+    }
+
+    public function editOfficialAction()
+    {
+        $service = new Portal_Service_GadgetDefinition();
+        $this->view->gadgetDefinition = $service->fetchById((int)$this->_getParam('id'));
+        $this->view->saveUrl            = $this->view->url(array('action'=>'save-official'));
+        $this->render('edit');
     }
 
     public function deleteAction()
@@ -72,19 +89,41 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $gadgetList = new Model_Mapper_GadgetMapper('Model_Dao_GadgetDefinition');
-        echo $gadgetList->delete($gadgetList->find((int)$this->_getParam('id')));
+        $service = new Portal_Service_GadgetDefinition();
+        return $service->delete((int)$this->_getParam('id'));
     }
 
-    public function saveAction()
+    public function saveOfficialAction()
     {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+        $service = new Portal_Service_GadgetDefinition();
+        $gadgetDefinition = $service->save($this->_getAllParams(), true);
+
+        if (empty($gadgetDefinition->errors)) {
+            $this->_redirect($this->view->url(array('action'=>'list-official')));
+        }
+        else {
+            $this->view->gadgetDefinition = $gadgetDefinition;
+            $this->render('edit');
+        }
     }
 
-    public function updateAction()
+    public function saveCustomAction()
     {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+        $data = $this->_getAllParams();
+        $data['isCustom'] = true;
+        $service = new Portal_Service_GadgetDefinition();
+        $gadgetDefinition = $service->save($data, true);
+
+        if (empty($gadgetDefinition->errors)) {
+            $this->_redirect($this->view->url(array('action'=>'list-custom')));
+        }
+        else {
+            $this->view->gadgetDefinition = $gadgetDefinition;
+            $this->render('edit');
+        }
+    }
+
+    public function promoteAction()
+    {
     }
 }

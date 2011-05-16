@@ -132,40 +132,51 @@ COINMANAGE.AjaxDataTable = function(selector) {
                     key: 'action',
                     formatter: function(el, record) {
                         console.log(arguments);
-                        var actionNode, img, link, recordAction;
+                        var root, parent, recordAction, recordData = record.getData();
                         for (var i=0; i < _recordActions.length; i++) {
                             recordAction = _recordActions[i];
-                            actionNode = el.appendChild(document.createElement('span'));
-                            actionNode.className = 'record-action';
+                            root = el.appendChild(document.createElement('span'));
+                            root.className = 'record-action';
+                            parent = root;
 
-                            link = null;
-                            if (recordAction.onClick) {
-                                link = actionNode.appendChild(document.createElement('a'));
-                                link.href = '#';
-                                YAHOO.util.Event.addListener(link, "click", function() {
-                                    recordAction.onClick(el, record, DataTable);
-                                    return false;
-                                });
-                                if (recordAction.title) {
-                                    link.title = recordAction.title;
+                            if ("onClick" in recordAction || "href" in recordAction) {
+                                parent = parent.appendChild(document.createElement('a'));
+                                if ('href' in recordAction) {
+                                    parent.href = recordAction.href;
+                                    for (var key in recordData) {
+                                        if (recordData.hasOwnProperty(key)) {
+                                            parent.href = parent.href.replace(
+                                                    '__' + key + '__', recordData[key]
+                                            );
+                                        }
+                                    }
+                                }
+                                else {
+                                    parent.href = '#';
+                                }
+
+                                if ('onClick' in recordAction) {
+                                    YAHOO.util.Event.addListener(parent, "click", function(e) {
+                                        YAHOO.util.Event.preventDefault(e);
+                                        return recordAction.onClick(el, record, DataTable);
+                                    });
+                                }
+
+                                if ('title' in recordAction) {
+                                    parent.title = recordAction.title;
                                 }
                             }
                             if (recordAction.imgSrc) {
-                                if (link) {
-                                    img = link.appendChild(document.createElement('img'));
+                                parent = parent.appendChild(document.createElement('img'));
+                                parent.src = recordAction.imgSrc;
+                                if ('imgAlt' in recordAction) {
+                                    parent.alt = recordAction.imgAlt;
                                 }
-                                else {
-                                    img = actionNode.appendChild(document.createElement('img'));
-                                }
-                                img.src = recordAction.imgSrc;
-                                if (recordAction.imgAlt) {
-                                    img.alt = recordAction.imgAlt;
-                                }
-                                if (recordAction.title) {
-                                    img.title = recordAction.title;
+                                if ('title' in recordAction) {
+                                    parent.title = recordAction.title;
                                 }
                             }
-                            el.appendChild(actionNode);
+                            el.appendChild(root);
                         }
                     }
                 };
