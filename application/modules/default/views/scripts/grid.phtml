@@ -91,6 +91,9 @@ COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>')
         <?php if (isset($actionConfig->imgSrc)): ?>
         "imgSrc": <?php echo json_encode($actionConfig->imgSrc); ?>,
         <?php endif; ?>
+        <?php if (isset($actionConfig->title)): ?>
+        "title": <?php echo json_encode($actionConfig->title); ?>,
+        <?php endif; ?>
         <?php if (isset($actionConfig->url)): ?>
         "href": <?php echo json_encode($this->url($actionConfig->url->toArray())); ?>,
         <?php endif; ?>
