@@ -79,7 +79,7 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
     public function editOfficialAction()
     {
         $service = new Portal_Service_GadgetDefinition();
-        $this->view->gadgetDefinition = $service->fetchById((int)$this->_getParam('id'));
+        $this->view->gadgetDefinition   = $service->fetchById((int)$this->_getParam('id'));
         $this->view->saveUrl            = $this->view->url(array('action'=>'save-official'));
         $this->render('edit');
     }
@@ -125,5 +125,14 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
 
     public function promoteAction()
     {
+        $service = new Portal_Service_GadgetDefinition();
+        $gadgetDefinition = $service->promoteCustomToNonCustom((int)$this->_getParam('id'));
+
+        if (empty($gadgetDefinition->errors)) {
+            $this->_redirect($this->view->url(array('action'=>'list-custom', 'id'=>null)));
+        }
+        else {
+            $this->view->gadgetDefinition = $gadgetDefinition;
+        }
     }
 }

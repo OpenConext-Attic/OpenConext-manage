@@ -10,12 +10,12 @@ YAHOO.widget.DataTable.Formatter.entityValid = function(el, oRecord, oColumn, oD
 
         var mySuccessHandler = function(entityId, response) {
             if (response.results[0].Errors.length > 0) {
-                el.innerHTML += '<a href="' + response.meta.link + '" target="_blank"><img src="/images/icon_error_16.gif" alt="Errors!" title="' +
+                el.innerHTML += '<a href="' + response.meta.link + '" target="_blank"><img src="/images/icons/bullet_red.png" alt="Errors!" title="' +
                         response.results[0].Errors.join(" | \n") +
                 '" /></a>';
             }
             if (response.results[0].Warnings.length > 0) {
-                el.innerHTML += '<a href="' + response.meta.link + '" target="_blank"><img src="/images/icon_warning_16.gif" alt="Warnings!" title="' +
+                el.innerHTML += '<a href="' + response.meta.link + '" target="_blank"><img src="/images/icons/bullet_orange.png" alt="Warnings!" title="' +
                         response.results[0].Warnings.join(" | \n") +
                 '" /></a>';
             }
@@ -33,11 +33,13 @@ YAHOO.widget.DataTable.Formatter.entityValid = function(el, oRecord, oColumn, oD
 
 YAHOO.widget.DataTable.Formatter.accepticon = function(el, oRecord, oColumn, oData) {
     if (YAHOO.lang.isString(oData)) {
-        var icon = 'cancel.png';
+        var alt = "No";
+        var icon = 'bullet_red.png';
         if (oData == 'T') {
-            icon = 'accept.png';
+            alt = "Yes";
+            icon = 'bullet_green.png';
         }
-        el.innerHTML = '<img src="/images/' + icon + '" />';
+        el.innerHTML = '<img src="/images/icons/' + icon + '" alt="' + alt + '" />';
     } else {
         el.innerHTML = YAHOO.lang.isValue(oData) ? oData : "";
     }

@@ -1,0 +1,21 @@
+<h1>Unable to promote custom gadgetdefinition</h1>
+<br />
+<p>Gadgetdefinition has the following errors:</p>
+<br />
+<ul style="margin-left: 15px;">
+    <?php foreach ($this->gadgetDefinition->errors as $fieldName=>$fieldErrors): if (!empty($fieldErrors)): ?>
+        <li>
+            <h3><?php echo $fieldName; ?></h3>
+            <ul>
+            <?php foreach ($fieldErrors as $fieldError): ?>
+                <li><?php echo $fieldError; ?></li>
+            <?php endforeach; ?>
+            </ul>
+            <br />
+        </li>
+    <?php endif; endforeach; ?>
+</ul>
+<br />
+<p>
+    <a href="<?php echo $this->url(array('action'=>'list-custom'));?>">Go back</a>
+</p>

@@ -117,7 +117,7 @@ class Portal_Service_GadgetDefinition
         $gadgetDefinition->populate($data);
 
         $form = new Portal_Form_GadgetDefinition();
-        if (!$form->isValid($data)) {
+        if (!$form->isValid($gadgetDefinition->toArray())) {
             $formErrors = $form->getErrors();
             $modelErrors = array();
             foreach ($formErrors as $fieldName => $fieldErrors) {
@@ -143,6 +143,11 @@ class Portal_Service_GadgetDefinition
         $mapper = new Portal_Model_Mapper_GadgetDefinition(new Portal_Model_DbTable_GadgetDefinition());
         $mapper->save($gadgetDefinition);
         return $gadgetDefinition;
+    }
+
+    public function promoteCustomToNonCustom($id)
+    {
+        return $this->save(array('id'=>$id, 'isCustom'=>false));
     }
 
     public function delete($id)

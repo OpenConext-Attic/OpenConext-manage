@@ -34,7 +34,7 @@ COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
 <?php if (isset($this->config->deletable) && $this->config->deletable) : ?>
     addRecordAction('delete', {
         imgAlt: 'delete',
-        imgSrc: '/images/icon_trashcan.gif',
+        imgSrc: '/images/icons/delete.png',
         onClick: function(el, record, DataTable) {
             if (!window.confirm('Verwijder rij?')) {
                 return false;
