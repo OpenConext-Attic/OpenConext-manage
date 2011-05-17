@@ -17,6 +17,16 @@ class Portal_Service_Gadget
                     ->join('tab', 'gadget.tab_id=tab.id')
                     ->where('custom_gadget="T"')
                     ->columns();
+
+        $searchParams = $params->getSearchParams();
+        foreach ($searchParams as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+            
+            $query->where($key . ' LIKE ' . $dao->getAdapter()->quote('%' . $value . '%'));
+        }
+
         if ($params->getLimit()) {
             $query->limit($params->getLimit(), $params->getOffset());
         }

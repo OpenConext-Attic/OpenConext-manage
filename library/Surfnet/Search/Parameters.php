@@ -16,6 +16,8 @@ class Surfnet_Search_Parameters
 
     protected $_sortDirection = self::SORT_DIRECTION_ASC;
 
+    protected $_searchParams = array();
+
     protected function __construct()
     {
     }
@@ -73,6 +75,17 @@ class Surfnet_Search_Parameters
     public function getSortDirection()
     {
         return $this->_sortDirection;
+    }
+
+    public function addSearchParam($name, $value)
+    {
+        $this->_searchParams[$name] = $value;
+        return $this;
+    }
+
+    public function getSearchParams()
+    {
+        return $this->_searchParams;
     }
 
     /**

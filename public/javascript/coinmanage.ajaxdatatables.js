@@ -8,6 +8,7 @@ COINMANAGE.AjaxDataTable = function(selector) {
         _limit,
         _sortedField,
         _sortedDir = 'asc',
+        _searchFormId,
         _onRecordClick,
         _recordActions = [],
         _node;
@@ -88,6 +89,11 @@ COINMANAGE.AjaxDataTable = function(selector) {
             return this;
         },
 
+        registerSearchForm: function(id) {
+            _searchFormId = id;
+            return this;
+        },
+
         render: function() {
             var DataTable;
 
@@ -100,13 +106,58 @@ COINMANAGE.AjaxDataTable = function(selector) {
                 resultsList: "ResultSet",
                 fields: _dataSourceFields,
                 metaFields: {
+                    startIndex: "startIndex",
                     totalRecords: "totalRecords" // Access to value in the server response
                 }
             };
 
+            var searchQuery = "";
+            if (_searchFormId) {
+                var searchFormEl = YAHOO.util.Dom.get(_searchFormId);
+                var formInputs = searchFormEl.getElementsByTagName('input');
+                YAHOO.util.Event.addListener(searchFormEl, "submit", function(e) {
+                    var key, value;
+
+                    searchQuery = "";
+                    for (var i=0; i < formInputs.length; i++) {
+                        if (formInputs[i].type !== 'text') {
+                            continue;
+                        }
+
+                        value = formInputs[i].value;
+                        for (var j=0; j < formInputs[i].attributes.length; j++) {
+                            if (formInputs[i].attributes[j].name==='data-key') {
+                                key = formInputs[i].attributes[j].value
+                                break;
+                            }
+                        }
+                        searchQuery += "&search[" + key + ']=' + encodeURIComponent(value);
+                    }
+
+                    DataTable.reQuery();
+                });
+            }
+
+            // Customize request sent to server to be able to set total # of records
+            var generateRequest = function(oState, oSelf) {
+                // Get states or use defaults
+                oState = oState || { pagination: null, sortedBy: null };
+                var sort        = (oState.sortedBy) ? oState.sortedBy.key : _sortedField;
+                var dir         = (oState.sortedBy && oState.sortedBy.dir === YAHOO.widget.DataTable.CLASS_DESC) ? "desc" : _sortedDir;
+                var startIndex  = (oState.pagination) ? oState.pagination.recordOffset : 0;
+                var results     = (oState.pagination) ? oState.pagination.rowsPerPage : _limit;
+
+                // Build custom request
+                return  "sort=" + sort +
+                        "&dir=" + dir +
+                        "&startIndex=" + startIndex +
+                        "&results=" + results + searchQuery;
+            };
+
             // DataTable configuration
             var Configs = {
-                initialRequest: "", // Initial request for first page of data
+                generateRequest: generateRequest,
+                initialRequest: generateRequest(), // Initial request for first page of data
                 dynamicData: true // Enables dynamic server-driven data
             };
             if (_sortedField) {
@@ -184,6 +235,12 @@ COINMANAGE.AjaxDataTable = function(selector) {
 
             DataTable = new YAHOO.widget.DataTable(_node, _displayColumns, this.DataSource, Configs);
 
+            DataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
+                oPayload.totalRecords = oResponse.meta.totalRecords;
+                oPayload.pagination.recordOffset = oResponse.meta.startIndex;
+                return oPayload;
+            };
+
             if (_onRecordClick) {
                 DataTable.subscribe("rowMouseoverEvent", function() {
                     DataTable.onEventHighlightRow.apply(DataTable, arguments);
@@ -195,8 +252,8 @@ COINMANAGE.AjaxDataTable = function(selector) {
                 DataTable.subscribe("rowClickEvent", function(e) {
                     DataTable.onEventSelectRow.apply(DataTable, arguments);
 
-                    if (e.target.nodeName === "IMG") {
-                        // Ignore clicks on record actions
+                    if (e.target.nodeName === "IMG" || e.target.nodeName === "A") {
+                        // Ignore clicks on record actions or URLs
                         return false;
                     }
 

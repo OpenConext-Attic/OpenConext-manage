@@ -22,11 +22,19 @@ class Portal_GadgetController extends Zend_Controller_Action
                 ->setSortByField($inputFilter->sort)
                 ->setSortDirection($inputFilter->dir);
 
+        $searchParams = $this->_getParam('search');
+        if (!empty($searchParams)) {
+            foreach ($searchParams as $searchKey=>$searchParam) {
+                $params->addSearchParam($searchKey, $searchParam);
+            }
+        }
+
         $service = new Portal_Service_Gadget();
         $results = $service->searchCustom($params);
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
         $this->view->ResultSet          = $results->getResults();
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }

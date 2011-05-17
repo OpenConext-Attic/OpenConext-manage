@@ -1,23 +1,54 @@
-<div id="<?php $this->id = 'datagrid'; echo $this->id; ?>"></div>
-
-<script type="text/javascript" src="/javascript/coinmanage.ajaxdatatables.js"></script>
-<script type="text/javascript" src="/javascript/yui.surfconext.formatters.js"></script>
-<script type="text/javascript">
 <?php
     // Format the column config for export to json
     $fields = array();
     $columnsDefinition = $this->config->columns->toArray();
+    $searchableFields = array();
     foreach ($columnsDefinition as $key => $definition) {
         $definition['key'] = $key;
-        if (!isset($definition->hidden) || $definition->hidden !== true) {
+
+        if (!isset($definition['hidden']) || !$definition['hidden']) {
+            // Add visible fields as columns
             $fields[] = $key;
+            // Register searchable fields.
+            if (isset($definition['searchable']) && $definition['searchable']) {
+                $searchableFields[] = array(
+                    'key' => $key,
+                    'label' => $definition['label'],
+                );
+            }
         }
+
         $columnsDefinition[] = $definition;
         unset($columnsDefinition[$key]);
     }
 ?>
 
-COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
+<?php if (!empty($searchableFields)): ?>
+<br />
+<form id="<?php $this->searchId = 'search'; echo $this->searchId; ?>"
+      action=""
+      onsubmit="return false;">
+    <?php foreach ($searchableFields as $searchableField): ?>
+    <label for="search-<?php echo $searchableField['key']; ?>">
+        <?php echo $searchableField['label']; ?>
+    </label>
+    <input id="search-<?php echo $searchableField['key']; ?>"
+           data-key="<?php echo $searchableField['key']; ?>"
+           type="text"
+           size="50" />
+    <?php endforeach; ?>
+    <br />
+    <input type="submit" value="Search" />
+</form>
+<?php endif; ?>
+
+<div id="<?php $this->id = 'datagrid'; echo $this->id; ?>"></div>
+
+<script type="text/javascript" src="/javascript/coinmanage.ajaxdatatables.js"></script>
+<script type="text/javascript" src="/javascript/coinmanage.yui.datatable.formatters.js"></script>
+<script type="text/javascript" src="/javascript/coinmanage.yui.datatable.requery.js"></script>
+<script type="text/javascript">
+COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
     setLoadUrl('<?php echo $this->url(array('format'=>'json'));?>/?').
     setLoadFields(<?php echo json_encode($fields); ?>).
     setDisplayColumns(<?php echo json_encode($columnsDefinition); ?>).
@@ -66,6 +97,9 @@ COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
         "dummyForTrailingComma": ''
     }).
     <?php endforeach; ?>
+<?php endif; ?>
+<?php if (isset($this->searchId)): ?>
+    registerSearchForm('<?php echo $this->searchId; ?>').
 <?php endif; ?>
 <?php if (isset($this->config->defaultSortField)): ?>
     setSortedBy('<?php echo $this->config->defaultSortField; ?>').
