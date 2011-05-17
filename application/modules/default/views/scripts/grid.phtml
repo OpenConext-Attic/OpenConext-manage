@@ -59,7 +59,7 @@ COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>')
         window.location.href = '<?php echo $this->url($this->config->edit->url->toArray()); ?>?id=' + id;
     }).
 <?php endif; ?>
-<?php if (isset($this->config->pageSize)) : ?>
+<?php if (isset($this->config->pageSize) && !(isset($this->config->paginate) && !$this->config->paginate)) : ?>
     setLimit(<?php echo $this->config->pageSize; ?>).
 <?php endif; ?>
 <?php if (isset($this->config->deletable) && $this->config->deletable) : ?>

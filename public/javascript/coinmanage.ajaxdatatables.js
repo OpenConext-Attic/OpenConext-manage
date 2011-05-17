@@ -237,7 +237,9 @@ COINMANAGE.AjaxDataTable = function(selector) {
 
             DataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
                 oPayload.totalRecords = oResponse.meta.totalRecords;
-                oPayload.pagination.recordOffset = oResponse.meta.startIndex;
+                if (_limit) {
+                    oPayload.pagination.recordOffset = oResponse.meta.startIndex;
+                }
                 return oPayload;
             };
 
