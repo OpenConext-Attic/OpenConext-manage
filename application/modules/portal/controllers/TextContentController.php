@@ -21,6 +21,13 @@ class Portal_TextContentController extends Zend_Controller_Action
                 ->setSortByField($inputFilter->sort)
                 ->setSortDirection($inputFilter->dir);
 
+        $searchParams = $this->_getParam('search');
+        if (!empty($searchParams)) {
+            foreach ($searchParams as $searchKey=>$searchParam) {
+                $params->addSearchParam($searchKey, $searchParam);
+            }
+        }
+
         $service = new Portal_Service_TextContent();
         $results = $service->search($params);
 

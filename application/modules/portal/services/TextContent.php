@@ -82,4 +82,10 @@ class Portal_Service_TextContent
         $mapper->save($model);
         return $model;
     }
+
+    public function delete($id)
+    {
+        $dao = new Portal_Model_DbTable_TextContent();
+        return $dao->delete(array('id=?'=>$id));
+    }
 }
