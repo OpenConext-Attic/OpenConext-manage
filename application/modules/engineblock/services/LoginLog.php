@@ -59,14 +59,15 @@ class EngineBlock_Service_LoginLog
         if ($params->getSortByField() != '') {
             $select->order($params->getSortByField() . ' ' . $params->getSortDirection());
         }
-
         $rows = $dao->fetchAll($select)->toArray();
 
-        $totalCount = $dao->fetchRow(
-            $select->reset(Zend_Db_Select::LIMIT_COUNT)
-                    ->reset(Zend_Db_Select::LIMIT_OFFSET)
-                    ->columns(array('count'=>'COUNT(*)'))
-        )->offsetGet('count');
+        $select->reset(Zend_Db_Select::LIMIT_COUNT)
+               ->reset(Zend_Db_Select::LIMIT_OFFSET);
+        $countSelect = $dao->getAdapter()
+            ->select()
+            ->from($select)
+            ->columns(array('count'=>'COUNT(*)'));
+        $totalCount = $countSelect->query()->fetchObject()->count;
 
         return new Surfnet_Search_Results($params, $rows, $totalCount);
     }
