@@ -182,51 +182,59 @@ COINMANAGE.AjaxDataTable = function(selector) {
                     label: "",
                     key: 'action',
                     formatter: function(el, record) {
-                        var root, parent, recordAction, recordData = record.getData();
+                        var recordData = record.getData();
                         for (var i=0; i < _recordActions.length; i++) {
-                            recordAction = _recordActions[i];
-                            root = el.appendChild(document.createElement('span'));
-                            root.className = 'record-action';
-                            parent = root;
+                            (function() {
+                                var root, parent, recordAction;
+                                
+                                // Add a spacer
+                                el.appendChild(document.createElement('span')).innerHTML = '&nbsp;&nbsp;&nbsp;';
 
-                            if ("onClick" in recordAction || "href" in recordAction) {
-                                parent = parent.appendChild(document.createElement('a'));
-                                if ('href' in recordAction) {
-                                    parent.href = recordAction.href;
-                                    for (var key in recordData) {
-                                        if (recordData.hasOwnProperty(key)) {
-                                            parent.href = parent.href.replace(
-                                                    '__' + key + '__', recordData[key]
-                                            );
+                                // Create a root span
+                                root = el.appendChild(document.createElement('span'));
+                                root.className = 'record-action';
+                                parent = root;
+
+                                recordAction = _recordActions[i];
+                                if ("onClick" in recordAction || "href" in recordAction) {
+                                    parent = parent.appendChild(document.createElement('a'));
+                                    if ('href' in recordAction) {
+                                        parent.href = recordAction.href;
+                                        for (var key in recordData) {
+                                            if (recordData.hasOwnProperty(key)) {
+                                                parent.href = parent.href.replace(
+                                                        '__' + key + '__', recordData[key]
+                                                );
+                                            }
                                         }
                                     }
-                                }
-                                else {
-                                    parent.href = '#';
-                                }
+                                    else {
+                                        parent.href = '#';
+                                    }
 
-                                if ('onClick' in recordAction) {
-                                    YAHOO.util.Event.addListener(parent, "click", function(e) {
-                                        YAHOO.util.Event.stopPropagation(e);
-                                        return recordAction.onClick(el, record, DataTable);
-                                    });
-                                }
+                                    if ('onClick' in recordAction) {
+                                        YAHOO.util.Event.addListener(parent, "click", function(e) {
+                                            YAHOO.util.Event.stopPropagation(e);
+                                            return recordAction.onClick(el, record, DataTable);
+                                        });
+                                    }
 
-                                if ('title' in recordAction) {
-                                    parent.title = recordAction.title;
+                                    if ('title' in recordAction) {
+                                        parent.title = recordAction.title;
+                                    }
                                 }
-                            }
-                            if (recordAction.imgSrc) {
-                                parent = parent.appendChild(document.createElement('img'));
-                                parent.src = recordAction.imgSrc;
-                                if ('imgAlt' in recordAction) {
-                                    parent.alt = recordAction.imgAlt;
+                                if (recordAction.imgSrc) {
+                                    parent = parent.appendChild(document.createElement('img'));
+                                    parent.src = recordAction.imgSrc;
+                                    if ('imgAlt' in recordAction) {
+                                        parent.alt = recordAction.imgAlt;
+                                    }
+                                    if ('title' in recordAction) {
+                                        parent.title = recordAction.title;
+                                    }
                                 }
-                                if ('title' in recordAction) {
-                                    parent.title = recordAction.title;
-                                }
-                            }
-                            el.appendChild(root);
+                                el.appendChild(root);
+                            })();
                         }
                     }
                 };
