@@ -1,14 +1,16 @@
 <?php
     // Format the column config for export to json
-    $fields = array();
+    $dataSourceFields = array();
     $columnsDefinition = $this->config->columns->toArray();
     $searchableFields = array();
     foreach ($columnsDefinition as $key => $definition) {
-        $definition['key'] = $key;
+        $dataSourceFields[] = $key;
 
         if (!isset($definition['hidden']) || !$definition['hidden']) {
             // Add visible fields as columns
-            $fields[] = $key;
+            $definition['key'] = $key;
+            $columnsDefinition[] = $definition;
+
             // Register searchable fields.
             if (isset($definition['searchable']) && $definition['searchable']) {
                 $searchableFields[] = array(
@@ -17,8 +19,6 @@
                 );
             }
         }
-
-        $columnsDefinition[] = $definition;
         unset($columnsDefinition[$key]);
     }
 ?>
@@ -50,7 +50,7 @@
 <script type="text/javascript">
 COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
     setLoadUrl('<?php echo $this->url(array('format'=>'json'));?>/?').
-    setLoadFields(<?php echo json_encode($fields); ?>).
+    setLoadFields(<?php echo json_encode($dataSourceFields); ?>).
     setDisplayColumns(<?php echo json_encode($columnsDefinition); ?>).
 <?php if (isset($this->config->editable) && $this->config->editable): ?>
     onRecordClick(function(DataTable) {

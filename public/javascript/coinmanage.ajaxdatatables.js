@@ -182,7 +182,6 @@ COINMANAGE.AjaxDataTable = function(selector) {
                     label: "",
                     key: 'action',
                     formatter: function(el, record) {
-                        console.log(arguments);
                         var root, parent, recordAction, recordData = record.getData();
                         for (var i=0; i < _recordActions.length; i++) {
                             recordAction = _recordActions[i];
