@@ -1,33 +1,39 @@
 YAHOO.widget.DataTable.Formatter.entityValid = function(el, oRecord, oColumn, oData) {
     var myDataSource = new YAHOO.util.DataSource("/service-registry/validate-entity?");
-        myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
-        myDataSource.responseSchema = {
-            resultsList: "Response.Results",
-            metaFields : {
-                link : "Response.Link"
-            }
-        };
+    myDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+    myDataSource.responseSchema = {
+        resultsList: "Response.Results",
+        metaFields : {
+            link : "Response.Link"
+        }
+    };
 
-        var mySuccessHandler = function(entityId, response) {
-            if (response.results[0].Errors.length > 0) {
-                el.innerHTML += '<a href="' + response.meta.link + '" target="_blank"><img src="/images/icons/bullet_red.png" alt="Errors!" title="' +
-                        response.results[0].Errors.join(" | \n") +
+    var mySuccessHandler = function(entityId, response) {
+        if (response.results[0].Errors.length > 0) {
+            el.innerHTML += '<a href="' + response.meta.link + '" target="_blank">'+
+                '<img src="/images/icons/exclamation.png" alt="Errors!" title="' +
+                response.results[0].Errors.join(" | \n") +
                 '" /></a>';
-            }
-            if (response.results[0].Warnings.length > 0) {
-                el.innerHTML += '<a href="' + response.meta.link + '" target="_blank"><img src="/images/icons/bullet_orange.png" alt="Warnings!" title="' +
-                        response.results[0].Warnings.join(" | \n") +
+        }
+        if (response.results[0].Warnings.length > 0) {
+            el.innerHTML += '<a href="' + response.meta.link + '" target="_blank">'+
+                '<img src="/images/icons/error.png" alt="Warnings!" title="' +
+                response.results[0].Warnings.join(" | \n") +
                 '" /></a>';
-            }
-        };
-        var myFailureHandler = function() {
-        };
-        var callbackObj = {
-            success : mySuccessHandler,
-            failure : myFailureHandler
-        };
+        }
+    };
+    var myFailureHandler = function() {
+    };
+    var callbackObj = {
+        success : mySuccessHandler,
+        failure : myFailureHandler
+    };
 
-        myDataSource.sendRequest("eid=" + encodeURIComponent(oData), callbackObj);
+    var entityId = oRecord.getData('entityid');
+    if (!entityId) {
+        throw "Entity ID missing in record, unable to perform validations!";
+    }
+    myDataSource.sendRequest("eid=" + encodeURIComponent(entityId), callbackObj);
 };
 
 
