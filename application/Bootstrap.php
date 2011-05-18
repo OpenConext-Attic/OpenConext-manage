@@ -2,6 +2,11 @@
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
+    protected function _initDataTimeZone()
+    {
+        date_default_timezone_set('Europe/Amsterdam');
+    }
+
     /**
      * Set up the db adapter
      *
