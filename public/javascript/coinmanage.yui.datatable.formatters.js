@@ -30,8 +30,8 @@ YAHOO.widget.DataTable.Formatter.entityValid = function(el, oRecord, oColumn, oD
     };
 
     var entityId = oRecord.getData('entityid');
-    if (!entityId) {
-        throw "Entity ID missing in record, unable to perform validations!";
+    if (!entityId && 'console' in window && 'error' in window.console && typeof window.console.error === "function") {
+        window.console.error("Entity ID missing in record, unable to perform validations!");
     }
     myDataSource.sendRequest("eid=" + encodeURIComponent(entityId), callbackObj);
 };
