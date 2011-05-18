@@ -252,13 +252,13 @@ COINMANAGE.AjaxDataTable = function(selector) {
 
                 DataTable.subscribe("rowClickEvent", function(e) {
                     DataTable.onEventSelectRow.apply(DataTable, arguments);
-console.log(e);
+
                     if (e.target.nodeName === "IMG" || e.target.nodeName === "A") {
                         // Ignore clicks on record actions or URLs
                         return false;
                     }
 
-                    //_onRecordClick(DataTable);
+                    _onRecordClick(DataTable);
 
                     return false;
                 });
