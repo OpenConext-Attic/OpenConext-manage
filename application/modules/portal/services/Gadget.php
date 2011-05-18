@@ -112,4 +112,13 @@ class Portal_Service_Gadget
         $mapper = new Portal_Model_Mapper_GadgetMapper(new Portal_Model_DbTable_Gadget());
         return $mapper->find($id);
     }
+
+    public function delete($id)
+    {
+        if ((int)$id <= 0) {
+            throw new Exception("No id provided");
+        }
+        $dao = new Portal_Model_DbTable_Gadget();
+        return $dao->delete(array('id=?'=>$id));
+    }
 }

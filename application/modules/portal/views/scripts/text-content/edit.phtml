@@ -1,0 +1,35 @@
+<form method="POST" id="contentEdit" action="<?php echo $this->url(array('action'=>'save')); ?>">
+    <input type="hidden" id="id" name="id" value="<?php echo $this->TextContent->id; ?>" />
+
+    <label for="field">Field</label>
+    <input type="text" name="field" id="field" size="80" value="<?php echo $this->TextContent->field; ?>" />
+
+    <br /><br />
+    <label for="text">Content</label>
+    <textarea name="text"
+              id="text"
+              cols="80"
+              rows="20"
+              style='font-family: "Lucida Sans Unicode","Lucida Grande",Arial,sans-serif; font-size: 11px;'
+              ><?php echo $this->TextContent->text; ?></textarea>
+    <br /><br />
+    <input type="submit" value="Save" />
+</form>
+
+<script type="text/javascript" src="/javascript/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+CKEDITOR.replace('text', {
+        toolbar: [
+            ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Scayt'],
+            ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
+            ['Image','Table','HorizontalRule','SpecialChar','PageBreak'],
+            ['Format'],
+            ['Bold','Italic','Strike'],
+            ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
+            ['Link','Unlink','Anchor'],
+            ['Source']
+        ],
+        skin : 'office2003'
+    }
+);
+</script>

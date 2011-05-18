@@ -76,9 +76,10 @@ COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>')
             );
             myDataSource.sendRequest('id=' + record.getData('id'), {
                 success : function() {
-                    window.location.reload();
+                    DataTable.reQuery();
                 }
             });
+            return false;
         }
     }).
 <?php endif; ?>

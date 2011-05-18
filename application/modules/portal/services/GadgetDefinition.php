@@ -152,7 +152,10 @@ class Portal_Service_GadgetDefinition
 
     public function delete($id)
     {
+        $dao = new Portal_Model_DbTable_Gadget();
+        $dao->delete(array('definition=?'=>$id));
+
         $dao = new Portal_Model_DbTable_GadgetDefinition();
-        return $dao->delete(array('id'=>$id));
+        return $dao->delete(array('id=?'=>$id));
     }
 }

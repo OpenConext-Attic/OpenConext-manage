@@ -207,7 +207,7 @@ COINMANAGE.AjaxDataTable = function(selector) {
 
                                 if ('onClick' in recordAction) {
                                     YAHOO.util.Event.addListener(parent, "click", function(e) {
-                                        YAHOO.util.Event.preventDefault(e);
+                                        YAHOO.util.Event.stopPropagation(e);
                                         return recordAction.onClick(el, record, DataTable);
                                     });
                                 }
@@ -252,13 +252,13 @@ COINMANAGE.AjaxDataTable = function(selector) {
 
                 DataTable.subscribe("rowClickEvent", function(e) {
                     DataTable.onEventSelectRow.apply(DataTable, arguments);
-
+console.log(e);
                     if (e.target.nodeName === "IMG" || e.target.nodeName === "A") {
                         // Ignore clicks on record actions or URLs
                         return false;
                     }
 
-                    _onRecordClick(DataTable);
+                    //_onRecordClick(DataTable);
 
                     return false;
                 });

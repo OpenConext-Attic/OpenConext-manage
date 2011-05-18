@@ -48,4 +48,13 @@ class Portal_GadgetController extends Zend_Controller_Action
     {
         // action body
     }
+
+    public function deleteAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $service = new Portal_Service_Gadget();
+        return $service->delete((int)$this->_getParam('id'));
+    }
 }

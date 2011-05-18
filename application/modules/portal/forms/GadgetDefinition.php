@@ -8,8 +8,9 @@ class Portal_Form_GadgetDefinition extends Zend_Form
     public function init()
     {
         $this->setName('gadgetdefinition')
-            ->setMethod('post')
-            ->_initUrl()
+            ->setMethod('post');
+
+        $this->_initUrl()
             ->_initAuthorName()
             ->_initAuthorEmail()
             ->_initTitle()
@@ -21,6 +22,9 @@ class Portal_Form_GadgetDefinition extends Zend_Form
             ->_initIsCustom();
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initUrl()
     {
         $element = new Zend_Form_Element_Text('url');
@@ -29,18 +33,27 @@ class Portal_Form_GadgetDefinition extends Zend_Form
         return $this->addElement($element);
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initAuthorName()
     {
         $element = new Zend_Form_Element_Text('authorName');
         return $this->addElement($element);
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initAuthorEmail()
     {
         $element = new Zend_Form_Element_Text('authorEmail');
         return $this->addElement($element);
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initTitle()
     {
         $element = new Zend_Form_Element_Text('title');
@@ -49,40 +62,56 @@ class Portal_Form_GadgetDefinition extends Zend_Form
         return $this->addElement($element);
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initDescription()
     {
         $element = new Zend_Form_Element_Textarea('description');
-        $element->setRequired(TRUE);
-        $element->setAllowEmpty(false);
         return $this->addElement($element);
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initScreenShotUrl()
     {
         $element = new Zend_Form_Element_Text('screenShotUrl');
+        $element->setRequired(TRUE);
+        $element->setAllowEmpty(FALSE);
         return $this->addElement($element);
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initThumbnailUrl()
     {
         $element = new Zend_Form_Element_Text('thumbnailUrl');
-        $element->setRequired(TRUE);
-        $element->setAllowEmpty(false);
         return $this->addElement($element);
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initSupportsGroups()
     {
         $element = new Zend_Form_Element_Checkbox('supportsGroups');
         return $this->addElement($element);
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initSupportsSingleSignOn()
     {
         $element = new Zend_Form_Element_Checkbox('supportsSingleSignOn');
         return $this->addElement($element);
     }
 
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
     public function _initIsCustom()
     {
         $element = new Zend_Form_Element_Checkbox('isCustom');
