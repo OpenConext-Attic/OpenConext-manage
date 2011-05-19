@@ -45,7 +45,7 @@ class Portal_Model_Mapper_GadgetDefinition
      */
     public function save(Portal_Model_GadgetDefinition $gadgetDefinition)
     {
-        if (isset($gadgetDefinition->id)) {
+        if (isset($gadgetDefinition->id) && (int)$gadgetDefinition->id > 0) {
             $row = $this->_dao->find($gadgetDefinition->id)->current();
         }
         else {

@@ -63,7 +63,7 @@
         <?php if (isset($model->errors['description'])): foreach ($model->errors['description'] as $error): ?>
             <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
-        <label for="description">Description <span class="required-postfix" title="Required field">*</span></label>
+        <label for="description">Description</label>
         <textarea id="description" name="description" rows="5" cols="80"><?php
             echo $this->escape($model->description);
         ?></textarea>
@@ -73,7 +73,7 @@
         <?php if (isset($model->errors['screenShotUrl'])): foreach ($model->errors['screenShotUrl'] as $error): ?>
             <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
-        <label for="screenShotUrl">Screenshot URL</label>
+        <label for="screenShotUrl">Screenshot URL <span class="required-postfix" title="Required field">*</span></label>
         <input id="screenShotUrl"
                name="screenShotUrl"
                type="text"
@@ -87,7 +87,7 @@
         <?php if (isset($model->errors['thumbnailUrl'])): foreach ($model->errors['thumbnailUrl'] as $error): ?>
             <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
-        <label for="thumbnailUrl">Thumbnail URL <span class="required-postfix" title="Required field">*</span></label>
+        <label for="thumbnailUrl">Thumbnail URL</label>
         <input id="thumbnailUrl"
                name="thumbnailUrl"
                type="text"

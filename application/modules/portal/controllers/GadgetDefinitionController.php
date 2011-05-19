@@ -65,6 +65,7 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
         $gadgetDefinition = new Portal_Model_GadgetDefinition();
         $gadgetDefinition->isCustom = false;
         $this->view->gadgetDefinition = $gadgetDefinition;
+        $this->view->saveUrl            = $this->view->url(array('action'=>'save-official'));
         $this->render('edit');
     }
 
