@@ -16,6 +16,7 @@ class Portal_Service_Gadget
                     ->join('gadgetdefinition', 'gadget.definition=gadgetdefinition.id')
                     ->join('tab', 'gadget.tab_id=tab.id')
                     ->where('custom_gadget="T"')
+                    ->where('object_type <> "ClonedTab"')
                     ->columns();
 
         $searchParams = $params->getSearchParams();
