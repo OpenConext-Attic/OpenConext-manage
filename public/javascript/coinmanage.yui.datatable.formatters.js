@@ -9,17 +9,22 @@ YAHOO.widget.DataTable.Formatter.entityValid = function(el, oRecord, oColumn, oD
     };
 
     var mySuccessHandler = function(entityId, response) {
-        if (response.results[0].Errors.length > 0) {
+        var entity = response.results[0];
+        if (entity.Errors.length > 0) {
             el.innerHTML += '<a href="' + response.meta.link + '" target="_blank">'+
                 '<img src="/images/icons/exclamation.png" alt="Errors!" title="' +
-                response.results[0].Errors.join(" | \n") +
+                entity.Errors.join(" | \n") +
                 '" /></a>';
         }
-        if (response.results[0].Warnings.length > 0) {
+        if (entity.Warnings.length > 0) {
             el.innerHTML += '<a href="' + response.meta.link + '" target="_blank">'+
                 '<img src="/images/icons/error.png" alt="Warnings!" title="' +
-                response.results[0].Warnings.join(" | \n") +
+                entity.Warnings.join(" | \n") +
                 '" /></a>';
+        }
+        if (entity.Errors.length === 0 && entity.Warnings.length === 0) {
+            el.innerHTML += '<a href="' + response.meta.link + '" target="_blank">'+
+                '<img src="/images/icons/tick.png" alt="Valid" title="No errors or warnings, entity valid" /></a>';        
         }
     };
     var myFailureHandler = function() {
