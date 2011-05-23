@@ -31,6 +31,7 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
         $this->view->ResultSet          = $results->getResults();
+       	$this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
         $this->view->editUrl            = $this->view->url(array('action'=>'edit-custom'));
@@ -54,6 +55,7 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
         $this->view->ResultSet          = $results->getResults();
+       	$this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
         $this->view->addUrl             = $this->view->url(array('action'=>'add-official'));
