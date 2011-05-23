@@ -90,4 +90,9 @@ class Portal_Model_GadgetDefinition extends Default_Model_Abstract
      * @var bool
      */
     public $isCustom;
+
+    public function __construct()
+    {
+        $this->addedAt = date('Y-m-d H:i:s');
+    }
 }

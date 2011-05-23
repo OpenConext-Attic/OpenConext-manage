@@ -50,12 +50,12 @@ class Portal_Model_Mapper_GadgetDefinition
         else {
             $row = $this->_dao->createRow();
         }
-
         $uniqueSelect = $this->_dao->select()->where('url = ?', $gadgetDefinition->url);
-        if (isset($row['id']) && $row['id']) {
-            $uniqueSelect->where('id = ?', $row['id']);
+        if (isset($gadgetDefinition->id) && $gadgetDefinition->id) {
+            $uniqueSelect->where('id <> ?', (int)$gadgetDefinition->id);
         }
-        $duplicates = $this->_dao->fetchAll($uniqueSelect);
+
+        $duplicates = $this->_dao->fetchAll($uniqueSelect)->toArray();
         if (empty($duplicates)) {
             $row = $this->_mapGadgetDefinitionToRow($gadgetDefinition, $row);
             $row->save();
@@ -101,6 +101,7 @@ class Portal_Model_Mapper_GadgetDefinition
         $row['supportssso']     = ($gadgetDefinition->supportsSingleSignOn?'T':'F');
         $row['custom_gadget']   = ($gadgetDefinition->isCustom?'T':'F');
         $row['thumbnail']       = $gadgetDefinition->thumbnailUrl;
+        $row['approved']        = 'F';
         return $row;
     }
 }
