@@ -41,7 +41,6 @@ class Portal_Model_Mapper_GadgetDefinition
      * and the 'status' enum (0=PUBLISHED, 1=UNPUBLISHED, 2=TEST) is also unused.
      *
      * @param Portal_Model_GadgetDefinition $gadgetDefinition
-     * @return void
      */
     public function save(Portal_Model_GadgetDefinition $gadgetDefinition)
     {
@@ -51,8 +50,21 @@ class Portal_Model_Mapper_GadgetDefinition
         else {
             $row = $this->_dao->createRow();
         }
-        $row = $this->_mapGadgetDefinitionToRow($gadgetDefinition, $row);
-        return $row->save();
+
+        $uniqueSelect = $this->_dao->select()->where('url = ?', $gadgetDefinition->url);
+        if (isset($row['id']) && $row['id']) {
+            $uniqueSelect->where('id = ?', $row['id']);
+        }
+        $duplicates = $this->_dao->fetchAll($uniqueSelect);
+        if (empty($duplicates)) {
+            $row = $this->_mapGadgetDefinitionToRow($gadgetDefinition, $row);
+            $row->save();
+        }
+        else {
+            $gadgetDefinition->errors['url'][] = "A gadgetdefinition with this URL already exists";
+        }
+
+        return $gadgetDefinition;
     }
 
     protected function _mapRowToGadgetDefinition(Zend_Db_Table_Row_Abstract $row, Portal_Model_GadgetDefinition $gadgetDefinition)
