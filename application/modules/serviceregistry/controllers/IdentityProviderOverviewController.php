@@ -6,23 +6,28 @@ class ServiceRegistry_IdentityProviderOverviewController extends Zend_Controller
     {
         $this->view->identity = $this->_helper->Authenticate();
 
-        $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
-                             ->addActionContext('show-by-type', 'json')
-                             ->initContext();
+        $this->_helper->ContextSwitch()->addActionContext('show-by-type', 'json')
+                                        ->addActionContext('show-by-type', 'json-export')
+                                        ->addActionContext('show-by-type', 'csv-export')
+                                        ->initContext();
     }
 
     public function showByTypeAction()
     {
-        if ($this->getRequest()->getParam('download', false)) {
-            $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
-        }
-
         $inputFilter = $this->_helper->FilterLoader();
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir);
+        $params = Surfnet_Search_Parameters::create();
+        if ($inputFilter->results) {
+            $params->setLimit($inputFilter->results);
+        }
+        if ($inputFilter->startIndex) {
+            $params->setOffset($inputFilter->startIndex);
+        }
+        if ($inputFilter->sort) {
+            $params->setSortByField($inputFilter->sort);
+        }
+        if ($inputFilter->dir) {
+            $params->setSortDirection($inputFilter->dir);
+        }
 
         $service = new ServiceRegistry_Service_JanusEntity();
         $results = $service->searchIdps($params);
@@ -31,8 +36,6 @@ class ServiceRegistry_IdentityProviderOverviewController extends Zend_Controller
         $this->view->ResultSet          = $results->getResults();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
+        
     }
 }
-
-
-
