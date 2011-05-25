@@ -33,12 +33,12 @@ class EngineBlock_Service_LoginLog
 
     public function searchCountByIdp(Surfnet_Search_Parameters $params)
     {
-        return $this->_searchCountGrouped('idpentityid', $params);
+        return $this->_searchCountGrouped('idpentityname', $params);
     }
 
     public function searchCountBySp(Surfnet_Search_Parameters $params)
     {
-        return $this->_searchCountGrouped('spentityid', $params);
+        return $this->_searchCountGrouped('spentityname', $params);
     }
 
     protected function _searchCountGrouped($groupByField, Surfnet_Search_Parameters $params)
