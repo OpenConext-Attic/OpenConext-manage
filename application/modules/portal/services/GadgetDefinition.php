@@ -19,7 +19,7 @@ class Portal_Service_GadgetDefinition
             $dao,
             array(
                  "num" => "COUNT(id)",
-                'type' => new Zend_Db_Expr("'Totaal'"))
+                'type' => new Zend_Db_Expr("'Total'"))
         );
 
         $selectGroupEnabled = $dao->select();

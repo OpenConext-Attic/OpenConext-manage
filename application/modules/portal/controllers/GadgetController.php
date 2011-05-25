@@ -7,12 +7,11 @@ class Portal_GadgetController extends Zend_Controller_Action
         $this->view->identity = $this->_helper->Authenticate();
 
         $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
-                         ->addActionContext('list-official', 'json')
-                         ->addActionContext('list-custom', 'json')
+                         ->addActionContext('list', 'json')
                          ->initContext();
     }
 
-    public function listCustomAction()
+    public function listAction()
     {
         $inputFilter = $this->_helper->FilterLoader();
 
@@ -30,23 +29,13 @@ class Portal_GadgetController extends Zend_Controller_Action
         }
 
         $service = new Portal_Service_Gadget();
-        $results = $service->searchCustom($params);
+        $results = $service->search($params);
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
         $this->view->ResultSet          = $results->getResults();
         $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
-    }
-
-    public function updateAction()
-    {
-        // action body
-    }
-
-    public function editAction()
-    {
-        // action body
     }
 
     public function deleteAction()

@@ -25,7 +25,7 @@ class Portal_Service_Tab
             $dao,
             array(
                  "num" => "COUNT(id)",
-                 'type' => new Zend_Db_Expr("'Totaal'")
+                 'type' => new Zend_Db_Expr("'Total'")
             )
         );
 
@@ -33,14 +33,14 @@ class Portal_Service_Tab
             $dao,
             array(
                  "num" => "COUNT(id)",
-                 'type' => new Zend_Db_Expr("'Gedeeld'"))
+                 'type' => new Zend_Db_Expr("'Shared'"))
             )
         ->where('team IS NOT NULL');
 
         $selectNotShared = $dao->select();
         $selectNotShared->from($dao,
                            array("num" => "COUNT(id)",
-                                 'type' => new Zend_Db_Expr("'Niet gedeeld'"))
+                                 'type' => new Zend_Db_Expr("'Not shared'"))
                           )
                           ->where('team IS NULL');
 

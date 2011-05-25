@@ -13,24 +13,26 @@ class ServiceRegistry_Service_JanusEntity
          UNION SELECT COUNT(DISTINCT(entityid)) AS num, 'Service Provider' as type FROM `service_registry`.`janus__entity` where type = 'saml20-sp'";
          */
         $selectIdp = $dao->select();
-        $selectIdp->from($dao,
-                         array("num" => "COUNT(DISTINCT(entityid))",
+        $selectIdp->from('janus__entity AS je1',
+                         array("num" => "COUNT(*)",
                               'type' => new Zend_Db_Expr("'Identity Provider'"))
                         )
-                  ->where('type = ?', 'saml20-idp');
+                  ->where('type = ?', 'saml20-idp')
+                  ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
+
         $selectSp = $dao->select();
-        $selectSp->from($dao,
-                        array("num" => "COUNT(DISTINCT(entityid))",
+        $selectSp->from('janus__entity AS je1',
+                        array("num" => "COUNT(*)",
                               'type' => new Zend_Db_Expr("'Service Provider'"))
                        )
-                 ->where('type = ?', 'saml20-sp');
+                 ->where('type = ?', 'saml20-sp')
+                 ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
 
         $select = $dao->select()
                 ->union(array(
                     $selectIdp,
                     $selectSp
                 ));
-
         $rows = $dao->fetchAll($select)->toArray();
 
         return new Surfnet_Search_Results($params, $rows, 2);
@@ -66,7 +68,11 @@ class ServiceRegistry_Service_JanusEntity
             'state' => 'state',
             'metadataurl' => 'metadataurl',
             'created' => 'created',
-            'user' => 'user'
+            'user' => 'user',
+            'display_name' => "IFNULL(
+    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev),
+    ent.entityid
+    )",
         );
 
         $entityType = 'idp';
@@ -81,17 +87,11 @@ class ServiceRegistry_Service_JanusEntity
                              'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
                            )
                 ->join(
-                        array('jm' => 'janus__metadata'),
-                        '(ent.eid=jm.eid AND jm.revisionid=entgrp.maxrev)',
-                        array($entityType=>'value', 'key' =>'key')
-                      )
-                ->join(
                         array('ju' => 'janus__user'),
                         '(ent.user=ju.uid)',
                         array('userid'=>'userid')
                       )
-                ->where('ent.type= ?',$type)
-                ->where('jm.key=?', 'name:nl');
+                ->where('ent.type= ?',$type);
 
         if ($params->getLimit()) {
             $select->limit($params->getLimit(), $params->getOffset());
@@ -100,7 +100,6 @@ class ServiceRegistry_Service_JanusEntity
         if ($params->getSortByField() != '') {
             $select->order($params->getSortByField() . ' ' . $params->getSortDirection());
         }
-
         $rows = $dao->fetchAll($select)->toArray();
 
         $totalCount = $dao->fetchRow(

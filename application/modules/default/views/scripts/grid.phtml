@@ -89,9 +89,10 @@ COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>')
 <?php if (isset($this->config->deletable) && $this->config->deletable) : ?>
     addRecordAction('delete', {
         imgAlt: 'delete',
+        title: "Delete this row",
         imgSrc: '/images/icons/delete.png',
         onClick: function(el, record, DataTable) {
-            if (!window.confirm('Verwijder rij?')) {
+            if (!window.confirm('Delete row?')) {
                 return false;
             }
 

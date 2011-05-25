@@ -8,14 +8,13 @@ class Portal_Service_Gadget
      * @param Surfnet_Search_Parameters $params
      * @return Surfnet_Search_Result
      */
-    public function searchCustom(Surfnet_Search_Parameters $params)
+    public function search(Surfnet_Search_Parameters $params)
     {
         $dao = new Portal_Model_DbTable_Gadget();
 
         $query = $dao->select()->setIntegrityCheck(false)->from($dao,array('id'=>'gadget.id'))
                     ->join('gadgetdefinition', 'gadget.definition=gadgetdefinition.id')
                     ->join('tab', 'gadget.tab_id=tab.id')
-                    ->where('custom_gadget="T"')
                     ->where('object_type <> "ClonedTab"')
                     ->columns();
 
