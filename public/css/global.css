@@ -135,6 +135,7 @@ nav ul.navigation li ul li a.sub-item {
 
 nav ul.navigation li a.main-item {
     font-weight: bold;
+    margin-top: 2em;
 }
 
 .column {
