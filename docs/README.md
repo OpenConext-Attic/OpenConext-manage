@@ -1,5 +1,4 @@
-README
-======
+# README #
 
 This directory should be used to place project specfic documentation including
 but not limited to project notes, generated API/phpdoc documentation, or 
@@ -8,46 +7,37 @@ in your development environment only and should not be deployed with your
 application to it's final production location.
 
 
-Setting Up Your VHOST
-=====================
+## Installing ##
 
-The following is a sample VHOST you might want to consider for your project.
 
-<Virtualhost *:443>
-        ServerAdmin surfconext-beheer@surfnet.nl
 
-        DocumentRoot /var/www/html/manage/www/public
-        ServerName manage.dev.surfconext.nl
+### 1. Set up your HTTP server ###
 
-        <Directory "/var/www/html/manage/www">
-          Order deny,allow
-          Deny from all
-          
-          // This is not required when in production
-          Allow from 145.100.191.0/24 192.87.109.0/24 195.169.126.0/24 192.87.117.0/24 92.67.37.154 195.240.2.130 81.23.230.39 81.23.230.239 82.176.175.208 80.101.99.190 79.170.90.128        
-        </Directory>
+Set up an HTTP server, note that for the Manage environment to work the following Apache2 config
+(or it's functional equivalent for a different HTTP host) MUST be enabled:
 
-        # Alias for handling simplesamlphp
-        Alias /simplesaml /var/www/html/manage/www/library/simplesamlphp-1.6.3/www
+    # Alias for handling simplesamlphp
+    Alias /simplesaml !!PATH_TO_MANAGE_ROOT!!/library/simplesamlphp/www
 
-		# This should be omitted in the production environment
-        SetEnv APPLICATION_ENV staging
+    SetEnv APPLICATION_ENV !!ENV!!
 
-		# Rewriting for rest services Management platform
-        RewriteEngine On
+    # Rewriting for rest services Management platform
+    RewriteEngine On
 
-        # Make sure simplesaml subdir is NOT run through mod_rewrite
-        RewriteRule ^/simplesaml - [L,NC]
+    # Make sure simplesaml subdir is NOT run through mod_rewrite
+    RewriteRule ^/simplesaml - [L,NC]
 
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteCond %{REQUEST_URI} !^/demo/(.*)$
-        RewriteRule !\.(js|ico|gif|jpg|png|css)$ /index.php
+    # If we are NOT requesting a physical file
+    RewriteCond %{REQUEST_FILENAME} !-f
+    # ... a directory
+    RewriteCond %{REQUEST_FILENAME} !-d
+    # ... or an image, javascript or CSS file, route it to index.php
+    RewriteRule !\.(js|ico|gif|jpg|png|css)$ /index.php
 
-        SSLEngine on
-        SSLCertificateFile /etc/httpd/ssl/star.dev.surfconext.nl.pem
-        SSLCertificateKeyFile /etc/httpd/ssl/star.dev.surfconext.nl.key
-        SSLCertificateChainFile /etc/httpd/ssl/chain.dev.surfconext.nl.pem
+Note that !!ENV!! MUST be replaced by one of the environments from application.ini (production, staging, test, dev,...).
+And !!PATH_TO_MANAGE_ROOT!! should be replaced with where the Manage application is placed at (example: /var/www/surfconext/manage).
 
-</VirtualHost>
+### 2. Configure ###
+
+Copy docs/example.application.ini to /etc/surfconext/manage.ini and edit this file to reflect your configuration.
 
