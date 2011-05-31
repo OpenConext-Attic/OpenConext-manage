@@ -13,7 +13,7 @@ $application = new Surfnet_Application(APPLICATION_ENV, APPLICATION_PATH . '/con
 $appConfig = $application->getConfig();
 
 $metadata[$appConfig->auth->simplesamlphp->idp->entityId] = array(
-    'entityid' => $appConfig->saml->idp->entityId,
+    'entityid' => $appConfig->auth->simplesamlphp->idp->entityId,
     'SingleSignOnService' =>
     array (
         0 => array (
