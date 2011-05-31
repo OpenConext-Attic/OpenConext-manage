@@ -7,11 +7,9 @@
  * $Id$
  */
 
-require_once 'Zend/Config/Ini.php';
-$appConfig = new Zend_Config_Ini(
-                     APPLICATION_PATH . '/configs/authentication.ini',
-                     APPLICATION_ENV
-                 );
+require_once 'Surfnet/Application.php';
+$application = new Surfnet_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
+$appConfig = $application->getConfig();
 
 $config = array (
 

@@ -26,10 +26,10 @@
 include __DIR__ . '/_include.php';
 
 /** Zend_Application */
-require_once 'Zend/Application.php';
+require_once 'Surfnet/Application.php';
 
 // Create application, bootstrap, and run
-$application = new Zend_Application(
+$application = new Surfnet_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
 );

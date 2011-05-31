@@ -1,15 +1,10 @@
-# README #
+# SURFnet SURFconext Manage #
 
-This directory should be used to place project specfic documentation including
-but not limited to project notes, generated API/phpdoc documentation, or 
-manual files generated or hand written.  Ideally, this directory would remain
-in your development environment only and should not be deployed with your
-application to it's final production location.
-
+The Manage application for SURFconext.
 
 ## Installing ##
 
-
+Follow the steps below to install the Manage application.
 
 ### 1. Set up your HTTP server ###
 
@@ -35,9 +30,9 @@ Set up an HTTP server, note that for the Manage environment to work the followin
     RewriteRule !\.(js|ico|gif|jpg|png|css)$ /index.php
 
 Note that !!ENV!! MUST be replaced by one of the environments from application.ini (production, staging, test, dev,...).
-And !!PATH_TO_MANAGE_ROOT!! should be replaced with where the Manage application is placed at (example: /var/www/surfconext/manage).
+And !!PATH_TO_MANAGE_ROOT!! MUSTw be replaced with where the Manage application is placed at (example: /var/www/surfconext/manage).
 
 ### 2. Configure ###
 
-Copy docs/example.application.ini to /etc/surfconext/manage.ini and edit this file to reflect your configuration.
+Copy docs/example.manage.ini to /etc/surfconext/manage.ini and edit this file to reflect your configuration.
 

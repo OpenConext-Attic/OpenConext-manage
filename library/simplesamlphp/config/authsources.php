@@ -6,11 +6,9 @@
  * Use the applications authentication.ini
  */
 
-require_once 'Zend/Config/Ini.php';
-$appConfig = new Zend_Config_Ini(
-                     APPLICATION_PATH . '/configs/authentication.ini',
-                     APPLICATION_ENV
-                 );
+require_once 'Surfnet/Application.php';
+$application = new Surfnet_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
+$appConfig = $application->getConfig();
 
 $config = array(
 
@@ -40,7 +38,7 @@ $config = array(
 
 		// The entity ID of the IdP this should SP should contact.
 		// Can be NULL/unset, in which case the user will be shown a list of available IdPs.
-		'idp' => $appConfig->saml->idp,
+		'idp' => $appConfig->auth->simplesamlphp->idp->entityId,
 
 		// The URL to the discovery service.
 		// Can be NULL/unset, in which case a builtin discovery service will be used.
