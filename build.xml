@@ -1,4 +1,4 @@
-<project name="COIN EngineBlock" default="build">
+<project name="SURFconext Manage" default="build">
     <target name="build" depends="clean,prepare,lint,phpunit,phpqa" />
     <target name="test" depends="clean,prepare,lint,phpunit" />
 
