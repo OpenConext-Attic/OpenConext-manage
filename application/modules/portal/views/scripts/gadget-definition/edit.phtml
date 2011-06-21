@@ -115,6 +115,15 @@
                 />
     </fieldset>
 
+    <fieldset>
+        <label for="fixedTabGadget">Does this gadget needs to appear in the Fixed Tab?</label>
+        <input id="fixedTabGadget"
+               name="fixedTabGadget"
+               type="checkbox"<?php if ($model->fixedTabGadget): ?>
+               checked="checked"<?php endif; ?>
+                />
+    </fieldset>
+
     <?php if ($model->installCount > 0) : ?>
     <fieldset>
         <label for="installCount">Number of times this definition had been installed / used</label>

@@ -71,6 +71,13 @@ class Portal_Model_GadgetDefinition extends Default_Model_Abstract
     public $supportsSingleSignOn = false;
 
     /**
+     * Does this gadget is to be included in a fixed tab?
+     *
+     * @var bool
+     */
+    public $fixedTabGadget = false;
+
+    /**
      * URL to a thumbnail to use for the gadget
      *
      * @var string

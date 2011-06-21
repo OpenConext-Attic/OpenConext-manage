@@ -19,6 +19,7 @@ class Portal_Form_GadgetDefinition extends Zend_Form
             ->_initThumbnailUrl()
             ->_initSupportsGroups()
             ->_initSupportsSingleSignOn()
+			->_initFixedTabGadget()
             ->_initIsCustom();
     }
 
@@ -106,6 +107,15 @@ class Portal_Form_GadgetDefinition extends Zend_Form
     public function _initSupportsSingleSignOn()
     {
         $element = new Zend_Form_Element_Checkbox('supportsSingleSignOn');
+        return $this->addElement($element);
+    }
+
+    /**
+     * @return Portal_Form_GadgetDefinition
+     */
+    public function _initFixedTabGadget()
+    {
+        $element = new Zend_Form_Element_Checkbox('fixedTabGadget');
         return $this->addElement($element);
     }
 

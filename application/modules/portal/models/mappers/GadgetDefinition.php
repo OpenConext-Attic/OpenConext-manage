@@ -79,6 +79,7 @@ class Portal_Model_Mapper_GadgetDefinition
         $gadgetDefinition->screenShotUrl           = $row['screenshot'];
         $gadgetDefinition->supportsGroups          = $row['supports_groups']==='T'?true:false;
         $gadgetDefinition->supportsSingleSignOn    = $row['supportssso']==='T'?true:false;
+        $gadgetDefinition->fixedTabGadget		   = $row['fixed_tab_gadget']==='T'?true:false;
         $gadgetDefinition->isCustom                = $row['custom_gadget']==='T'?true:false;
         $gadgetDefinition->thumbnailUrl            = $row['thumbnail'];
         $gadgetDefinition->installCount            = $row['install_count'];
@@ -99,6 +100,7 @@ class Portal_Model_Mapper_GadgetDefinition
         $row['screenshot']      = $gadgetDefinition->screenShotUrl;
         $row['supports_groups'] = ($gadgetDefinition->supportsGroups?'T':'F');
         $row['supportssso']     = ($gadgetDefinition->supportsSingleSignOn?'T':'F');
+        $row['fixed_tab_gadget']= ($gadgetDefinition->fixedTabGadget?'T':'F');
         $row['custom_gadget']   = ($gadgetDefinition->isCustom?'T':'F');
         $row['thumbnail']       = $gadgetDefinition->thumbnailUrl;
         $row['approved']        = 'F';
