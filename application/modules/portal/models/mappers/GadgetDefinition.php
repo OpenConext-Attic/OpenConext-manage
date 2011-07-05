@@ -79,7 +79,7 @@ class Portal_Model_Mapper_GadgetDefinition
         $gadgetDefinition->screenShotUrl           = $row['screenshot'];
         $gadgetDefinition->supportsGroups          = $row['supports_groups']==='T'?true:false;
         $gadgetDefinition->supportsSingleSignOn    = $row['supportssso']==='T'?true:false;
-        $gadgetDefinition->fixedTabGadget		   = $row['fixed_tab_gadget']==='T'?true:false;
+        $gadgetDefinition->fixedTabGadget          = $row['fixed_tab_gadget']==='T'?true:false;
         $gadgetDefinition->isCustom                = $row['custom_gadget']==='T'?true:false;
         $gadgetDefinition->thumbnailUrl            = $row['thumbnail'];
         $gadgetDefinition->installCount            = $row['install_count'];
