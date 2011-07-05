@@ -57,7 +57,8 @@ class EngineBlock_Service_LoginLog
         }
 
         if ($params->getSortByField() != '') {
-            $select->order($params->getSortByField() . ' ' . $params->getSortDirection());
+            $select->order($params->getSortByField()
+                . ' ' . $params->getSortDirection());
         }
         $rows = $dao->fetchAll($select)->toArray();
 
