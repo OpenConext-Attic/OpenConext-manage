@@ -103,6 +103,18 @@ class Surfnet_Search_Parameters
         return $this;
     }
 
+    /**
+     * Set the search parameters all at once
+     * 
+     * @var    Array
+     * @return Surfnet_Search_Parameters
+     */
+    public function setSearchParams(Array $params)
+    {
+        $this->_searchParams = $params;
+        return $this;
+    }
+
     public function getSearchParams()
     {
         return $this->_searchParams;
