@@ -3,16 +3,16 @@
 class Portal_TabOverviewController extends Zend_Controller_Action
 {
     public function init()
-        {
-            $this->view->identity = $this->_helper->Authenticate();
+    {
+        $this->view->identity = $this->_helper->Authenticate();
 
-            $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
-                                 ->addActionContext('show-by-team', 'json')
-                                 ->initContext();
-        }
+        $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
+                             ->addActionContext('show-by-team', 'json')
+                             ->initContext();
+    }
 
-        public function showByTeamAction()
-        {
+    public function showByTeamAction()
+    {
         if ($this->getRequest()->getParam('download', false)) {
             $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
         }
@@ -32,7 +32,7 @@ class Portal_TabOverviewController extends Zend_Controller_Action
         $this->view->ResultSet          = $results->getResults();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
-        }
+    }
 }
 
 
