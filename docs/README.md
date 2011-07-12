@@ -32,7 +32,16 @@ Set up an HTTP server, note that for the Manage environment to work the followin
 Note that !!ENV!! MUST be replaced by one of the environments from application.ini (production, staging, test, dev,...).
 And !!PATH_TO_MANAGE_ROOT!! MUSTw be replaced with where the Manage application is placed at (example: /var/www/surfconext/manage).
 
-### 2. Configure ###
+### 2. Set up shell environment.
+
+Edit */etc/profile* (as root or with sudo) and add:
+
+    export APPLICATION_ENV="!!ENV!!"
+
+Where "!!ENV!!" MUST be replace by your environment of choice.
+Then open a new terminal to make sure you have the new environment.
+
+### 3. Configure ###
 
 Copy docs/example.manage.ini to /etc/surfconext/manage.ini and edit this file to reflect your configuration.
 
