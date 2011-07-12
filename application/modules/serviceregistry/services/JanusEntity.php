@@ -20,6 +20,12 @@ class ServiceRegistry_Service_JanusEntity
                   ->where('type = ?', 'saml20-idp')
                   ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
 
+        foreach ($params->getSearchParams() as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+            $selectIdp->where($value);
+        }
         $selectSp = $dao->select();
         $selectSp->from('janus__entity AS je1',
                         array("num" => "COUNT(*)",
@@ -28,6 +34,15 @@ class ServiceRegistry_Service_JanusEntity
                  ->where('type = ?', 'saml20-sp')
                  ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
 
+        foreach ($params->getSearchParams() as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+            $selectSp->where($value);
+        }
+
+        var_dump($selectSp->__toString());
+        var_dump($selectIdp->__toString());
         $select = $dao->select()
                 ->union(array(
                     $selectIdp,
