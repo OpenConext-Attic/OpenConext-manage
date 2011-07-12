@@ -78,6 +78,18 @@ class ExternalReporting_Insert_Client
         return $this->_client->er_InsertReport($this->_login, $this->_password, $parameters);
     }
 
+    /**
+     * Update a report value into VERS
+     *
+     * @param array $parameters The report value parameters
+     * NOTE: The parameters must comply with the WSDL file shown at the bottom of the file
+     *
+     * @return string updateReportResponse in xml format
+     */
+    public function updateReport(array $parameters)
+    {
+        return $this->_client->er_UpdateReport($this->_login, $this->_password, $parameters);
+    }
 }
 
 /* WSDL file (august 20th, 2010)
