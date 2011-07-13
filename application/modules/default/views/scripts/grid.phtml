@@ -72,16 +72,22 @@ foreach ($columnsDefinition as $key => $definition) {
 <script type="text/javascript" src="/javascript/coinmanage.yui.datatable.formatters.js"></script>
 <script type="text/javascript" src="/javascript/coinmanage.yui.datatable.requery.js"></script>
 <script type="text/javascript">
+<?php $idColumn = (isset($this->config->primarykey) && strlen(trim($this->config->primarykey)) > 0 ? $this->config->primarykey : 'id'); ?>
 COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>').
-    setLoadUrl('<?php echo $this->url(array('format'=>'json'));?>/?').
+    setLoadUrl('<?php echo $this->url(array('format'=>'json') + $_GET);?>/?').
     setLoadFields(<?php echo json_encode($dataSourceFields); ?>).
     setDisplayColumns(<?php echo json_encode($columnsDefinition); ?>).
 <?php if (isset($this->config->editable) && $this->config->editable): ?>
     onRecordClick(function(DataTable) {
         // Some magic to get the id of the row the use selected
-        var id = DataTable.getRecord(DataTable.getSelectedRows()[0]).getData('id');
-        window.location.href = '<?php echo $this->url($this->config->edit->url->toArray()); ?>?id=' + id;
-    }).
+        var id = DataTable.getRecord(DataTable.getSelectedRows()[0]).getData('<?php echo $idColumn ?>');
+        var editUrl = '<?php echo $this->url($this->config->edit->url->toArray()); ?>?<?php echo $idColumn ?>=' + id;
+<?php if (isset($this->config->params)) :  foreach ($this->config->params->toArray() as $key => $param) : ?>
+        var <?= $param ?> = DataTable.getRecord(DataTable.getSelectedRows()[0]).getData('<?php echo $key ?>');
+        editUrl += '&<?= $key ?>='+<?= $param ?>;
+<?php endforeach; endif; ?>
+        window.location.href = editUrl;
+        }).
 <?php endif; ?>
 <?php if (isset($this->config->pageSize) && !(isset($this->config->paginate) && !$this->config->paginate)) : ?>
     setLimit(<?php echo $this->config->pageSize; ?>).
@@ -92,14 +98,21 @@ COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>')
         title: "Delete this row",
         imgSrc: '/images/icons/delete.png',
         onClick: function(el, record, DataTable) {
-            if (!window.confirm('Delete row?')) {
+            var bgColor = YAHOO.util.Dom.getStyle(record.getId(), 'color');
+            YAHOO.util.Dom.setStyle(record.getId(), 'color', '#FF0000');
+            if (!window.confirm('Delete selected row?')) {
+                YAHOO.util.Dom.setStyle(record.getId(), 'color', bgColor);
                 return false;
             }
 
-            var myDataSource = new YAHOO.util.DataSource(
-                '<?php echo $this->url(array('action'=>'delete')); ?>?'
-            );
-            myDataSource.sendRequest('id=' + record.getData('id'), {
+            var deleteUrl = '<?php if (isset($this->config->delete->url->action)) echo $this->url(array('action'=>$this->config->delete->url->action)); 
+                                    else echo $this->url(array('action'=>'delete')); ?>?';
+<?php if (isset($this->config->params)) :  foreach ($this->config->params->toArray() as $key => $param) : ?>
+            var <?= $param ?> = record.getData('<?php echo $key ?>');
+            deleteUrl += '<?= $key ?>='+<?= $param ?>+'&';
+<?php endforeach; endif; ?>                                                
+            var myDataSource = new YAHOO.util.DataSource(deleteUrl);
+            myDataSource.sendRequest('<?php echo $idColumn ?>=' + record.getData('<?php echo $idColumn ?>'), {
                 success : function() {
                     DataTable.reQuery();
                 }
