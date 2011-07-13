@@ -201,3 +201,13 @@ fieldset {
     opacity: 0.5;
     filter: alpha(opacity=50);
 }
+
+.hint {
+    font-size: smaller;
+    font-style: italic;
+}
+
+.datatable_ul {
+    margin-left: 8px;
+    margin-right: 4px;
+}

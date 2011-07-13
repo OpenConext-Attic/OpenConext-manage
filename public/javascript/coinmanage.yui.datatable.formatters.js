@@ -104,3 +104,28 @@ YAHOO.widget.DataTable.Formatter.xmllink = function(el, oRecord, oColumn, oData)
         el.innerHTML = YAHOO.lang.isValue(oData) ? oData : "";
     }
 };
+
+YAHOO.widget.DataTable.Formatter.list = function(el, oRecord, oColumn, oData) {
+    if (YAHOO.lang.isArray(oData)) {
+        var html = '<ul class="datatable_ul">';
+        var value = '';
+        for (var i = 0; i < oData.length; i++) {
+            value = '';
+            if (YAHOO.lang.isArray(oData[i])) {
+                value = oData[i].join(', ');
+            } else if (YAHOO.lang.isObject(oData[i])) {
+                for(var col in oData[i]) {
+                    value += oData[i][col] + ', ';
+                }
+                // remove trailing comma and space
+                value = value.substring(0, value.length-2);
+            } else {
+                value = oData[i];
+            }
+            html += '<li>' + value + '</li>';
+        }
+        el.innerHTML = html;
+    } else {
+        el.innerHTML = "";
+    }
+};
