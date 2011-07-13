@@ -1,6 +1,6 @@
 <?php
 
-class Engineblock_LoginOverviewController extends Zend_Controller_Action
+class EngineBlock_LoginOverviewController extends Zend_Controller_Action
 {
     public function init()
     {

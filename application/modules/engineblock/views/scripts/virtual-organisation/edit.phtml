@@ -1,0 +1,37 @@
+<?php $model = $this->virtualOrganisation; ?>
+
+<form id="virtualorganisation-edit"
+      name="virtualorganisation-edit"
+      action="<?php echo $this->saveUrl;?>"
+      method="POST">
+
+    <input type="hidden" id="org_vo_id" name="org_vo_id" value="<?php echo $this->escape($model->vo_id); ?>"/>
+    
+    <fieldset>
+        <?php if (isset($model->errors['vo_id'])): foreach ($model->errors['vo_id'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="vo_id">Virtual Organisation id<span class="required-postfix" title="Required field">*</span></label>
+        <input id="vo_id"
+               name="vo_id"
+               type="text"
+               value="<?php echo $this->escape($model->vo_id); ?>"
+               size="100"
+               maxlength="255"
+                />
+        <p class="hint">
+        Gebruik a.u.b. alleen letters, cijfers, underscores en/of mintekens.
+        </p>
+    </fieldset>
+<?php if (strlen($model->vo_id) > 0 && !isset($model->errors['vo_id'])) : ?>
+    <a href="<?php echo $this->url(array('action'=>'groupadd', 'vo_id'=>$model->vo_id)); ?>">Add a new Group</a>
+    <?php
+    echo $this->grid($this->gridConfig);
+    ?>        
+    <br />
+<?php endif; ?>
+    
+    <br/>
+    <input id="submit" name="submit" value="Opslaan" type="submit">
+    <input id="back" name="back" value="Terug" type="button" onclick="location.href='<?php echo $this->listUrl; ?>';">
+</form>

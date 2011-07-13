@@ -1,0 +1,42 @@
+<?php $model = $this->virtualOrganisationGroup; ?>
+
+<form id="virtualorganisationgroup-edit"
+      name="virtualorganisationgroup-edit"
+      action="<?php echo $this->saveUrl;?>"
+      method="POST">
+
+    <input type="hidden" id="vo_id" name="vo_id" value="<?php echo $this->escape($model->vo_id); ?>"/>
+    <input type="hidden" id="org_group_id" name="org_group_id" value="<?php echo $this->escape($model->group_id); ?>"/>
+    
+    <fieldset>
+        <?php if (isset($model->errors['group_id'])): foreach ($model->errors['group_id'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="url">Group id<span class="required-postfix" title="Required field">*</span></label>
+        <input id="group_id"
+               name="group_id"
+               type="text"
+               value="<?php echo $this->escape($model->group_id); ?>"
+               size="100"
+               maxlength="255"
+                />
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['group_stem'])): foreach ($model->errors['group_stem'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="url">Group stem<span class="required-postfix" title="Required field">*</span></label>
+        <input id="group_stem"
+               name="group_stem"
+               type="text"
+               value="<?php echo $this->escape($model->group_stem); ?>"
+               size="100"
+               maxlength="255"
+                />
+    </fieldset>
+    
+    <br/>
+    <input id="submit" name="submit" value="Opslaan" type="submit">
+    <input id="cancel" name="cancel" value="Annuleren" type="button" onclick="location.href='<?php echo $this->listUrl; ?>';">
+</form>
