@@ -8,6 +8,7 @@ class ServiceRegistry_Service_JanusEntity
     public function searchCountTypes(Surfnet_Search_Parameters $params)
     {
         $dao = new ServiceRegistry_Model_DbTable_JanusEntity();
+        $searchParams = $params->getSearchParams();
         /*
          $qry = "SELECT COUNT(DISTINCT(entityid)) AS num, 'Identity Provider' as type FROM `service_registry`.`janus__entity` where type = 'saml20-idp'
          UNION SELECT COUNT(DISTINCT(entityid)) AS num, 'Service Provider' as type FROM `service_registry`.`janus__entity` where type = 'saml20-sp'";
@@ -20,12 +21,15 @@ class ServiceRegistry_Service_JanusEntity
                   ->where('type = ?', 'saml20-idp')
                   ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
 
-        foreach ($params->getSearchParams() as $key => $value) {
-            if (!$value) {
-                continue;
-            }
-            $selectIdp->where($value);
+        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+            $selectIdp->where(
+                $this->_getCountTypesWhereForDate(
+                    $searchParams['year'],
+                    $searchParams['month']
+                )
+            );
         }
+
         $selectSp = $dao->select();
         $selectSp->from('janus__entity AS je1',
                         array("num" => "COUNT(*)",
@@ -34,11 +38,14 @@ class ServiceRegistry_Service_JanusEntity
                  ->where('type = ?', 'saml20-sp')
                  ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
 
-        foreach ($params->getSearchParams() as $key => $value) {
-            if (!$value) {
-                continue;
-            }
-            $selectSp->where($value);
+
+        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+            $selectSp->where(
+                $this->_getCountTypesWhereForDate(
+                    $searchParams['year'],
+                    $searchParams['month']
+                )
+            );
         }
 
         $select = $dao->select()
@@ -49,6 +56,28 @@ class ServiceRegistry_Service_JanusEntity
         $rows = $dao->fetchAll($select)->toArray();
 
         return new Surfnet_Search_Results($params, $rows, 2);
+    }
+
+    /**
+     * Get 'where' condition for 
+     * 
+     * @param Surfnet_Search_Parameters $params
+     * @return String
+     */
+    protected function _getCountTypesWhereForDate($year, $month) {
+        $year = intval($year);
+        $month = intval($month);
+        
+        return sprintf(
+                    "((`expiration` IS NULL) OR (LEFT(`expiration`,7) <= '%04u-%02u'))",
+                    $year,
+                    $month
+               )
+               . sprintf(
+                    " AND (LEFT(`created`,7) <= '%04u-%02u')",
+                    $year,
+                    $month
+               );
     }
 
     public function searchIdps(Surfnet_Search_Parameters $params)

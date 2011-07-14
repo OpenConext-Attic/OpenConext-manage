@@ -43,10 +43,15 @@ class Portal_Service_Tab
                                  'type' => new Zend_Db_Expr("'Not shared'"))
                           )
                           ->where('team IS NULL');
-        foreach ($params->getSearchParams() as $param) {
-            $selectTotal->where($param);
-            $selectShared->where($param);
-            $selectNotShared->where($param);
+        $searchParams = $params->getSearchParams();
+        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+            $dateWhere = $this->_getTeamTabsDateWhere(
+                $searchParams['year'],
+                $searchParams['month']
+            );
+            $selectTotal->where($dateWhere);
+            $selectShared->where($dateWhere);
+            $selectNotShared->where($dateWhere);
         }
 
         $select = $dao->select()
@@ -56,7 +61,6 @@ class Portal_Service_Tab
                 $selectNotShared
             )
         );
-        
         if ($params->getLimit()) {
             $select->limit($params->getLimit(), $params->getOffset());
         }
@@ -66,5 +70,23 @@ class Portal_Service_Tab
         $rows = $dao->fetchAll($select)->toArray();
 
         return new Surfnet_Search_Results($params, $rows, 3);
+    }
+
+    /**
+     * Get SQL where for month
+     * 
+     * @param Integer $year
+     * @param Integer $month
+     * @return String
+     */
+    protected function _getTeamTabsDateWhere($year, $month) {
+        $year = intval($year);
+        $month = intval($month);
+        return sprintf(
+            '(YEAR(FROM_UNIXTIME(ROUND(creation_timestamp/1000))) <= %04u)'
+            . ' AND (MONTH(FROM_UNIXTIME(ROUND(creation_timestamp/1000))) <= %02u)',
+            $year,
+            $month
+        );
     }
 }

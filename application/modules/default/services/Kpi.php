@@ -60,10 +60,13 @@ class Default_Service_Kpi
          * Get logins from last month.
          */
         $date = getdate($timestamp);
+
         $searchFields = array(
-            'YEAR(loginstamp)'  => $date['year'],
-            'MONTH(loginstamp)' => $date['mon']
+            'year'  => $date['year'],
+            'month' => $date['mon']
         );
+
+
         $params = Surfnet_Search_Parameters::create()
                 ->setSearchParams($searchFields);
 
@@ -73,12 +76,19 @@ class Default_Service_Kpi
         return $results[0]['num'];
     }
 
+    /**
+     * Get the number of connected provider types (IdP or Sp)
+     * for the month $timestamp
+     *
+     * @param Integer $timestamp
+     * @return Array
+     */
     public function getConnectedProviderTypes($timestamp)
     {
-        $period = date('Y-m', $timestamp);
+        $date = getdate($timestamp);
         $searchFields = array(
-            "((`expiration` IS NULL) OR (LEFT(`expiration`,7) <= '{$period}'))"
-            . "AND (LEFT(`created`,7) <= '{$period}')"
+            'year'  => $date['year'],
+            'month' => $date['mon']
         );
 
         $params = Surfnet_Search_Parameters::create()
@@ -128,12 +138,12 @@ class Default_Service_Kpi
     protected function _getProviderTypeLogins($timestamp, $type)
     {
         /**
-         * Get logins from last month.
+         * Get logins for the month in timestamp.
          */
         $date = getdate($timestamp);
         $searchFields = array(
-            'YEAR(loginstamp)'  => $date['year'],
-            'MONTH(loginstamp)' => $date['mon']
+            'year'  => $date['year'],
+            'month' => $date['mon']
         );
 
         $params = Surfnet_Search_Parameters::create()
@@ -171,8 +181,8 @@ class Default_Service_Kpi
          */
         $date = getdate($timestamp);
         $searchFields = array(
-            'YEAR(FROM_UNIXTIME(ROUND(creation_timestamp/1000))) <= ' . $date['year'],
-            'MONTH(FROM_UNIXTIME(ROUND(creation_timestamp/1000))) <= ' . $date['mon']
+            'year'  => $date['year'],
+            'month' => $date['mon']
         );
 
         $params = Surfnet_Search_Parameters::create()

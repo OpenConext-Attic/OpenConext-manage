@@ -71,10 +71,9 @@ class Default_ExportController extends Zend_Controller_Action
         
         $data = array();
         $timestamp = strtotime("LAST MONTH");
-        $timestamp = strtotime("12 months ago");
         $period = date('Y-m', $timestamp);
         
-        $connectedProviderTypes = $kpi->getConnectedProviderTypes($timestamp);
+        $connectedProviderTypes          = $kpi->getConnectedProviderTypes($timestamp);
         $data['Totaal aantal logins']    = $kpi->getLogins($timestamp);
         $data['Aantal aangesloten IdPs'] = $connectedProviderTypes['idp'];
         $data['Aantal aangesloten SPs']  = $connectedProviderTypes['sp'];
