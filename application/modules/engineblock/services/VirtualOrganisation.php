@@ -40,18 +40,36 @@ class EngineBlock_Service_VirtualOrganisation
         }
         unset($row);
         
+        // get corresponding idps
+        $idpRecords = array();
+        foreach ($voRecords as $row) {
+            /* @var $row Zend_Db_Table_Row */
+            $idpRecords[$row->vo_id] = $row->findDependentRowset('EngineBlock_Model_DbTable_VirtualOrganisationIdp')->toArray();
+            // remove FK's
+            foreach ($idpRecords[$row['vo_id']] as &$idpRow) {
+                unset($idpRow['vo_id']);
+            }
+        }
+        unset($row);
+        
         // merge groups into VOs
         $voRecords = $voRecords->toArray();
         foreach ($voRecords as &$row) {
             $row['groups'] = $groupRecords[$row['vo_id']];
         }
+        unset($row);
+
+        // merge idps into VOs
+        foreach ($voRecords as &$row) {
+            $row['idps'] = $idpRecords[$row['vo_id']];
+        }
+        unset($row);
 
         $totalCount = $dao->fetchRow(
             $query->reset(Zend_Db_Select::LIMIT_COUNT)
                     ->reset(Zend_Db_Select::LIMIT_OFFSET)
                     ->columns(array('count'=>'COUNT(*)'))
         )->offsetGet('count');
-
         return new Surfnet_Search_Results($params, $voRecords, $totalCount);
     }
 
@@ -100,11 +118,14 @@ class EngineBlock_Service_VirtualOrganisation
         $mapper = new EngineBlock_Model_Mapper_VirtualOrganisation(new EngineBlock_Model_DbTable_VirtualOrganisation());
         $vo = $mapper->save($vo, $data['vo_id'] != $data['org_vo_id']);
 
-        // if the PK changes (vo_id), it is saved as a new record, so the groups must be updated and the original record should be deleted
+        // if the PK changes (vo_id), it is saved as a new record, so the groups and idps must be updated and the original record should be deleted
         if (empty($vo->errors) && isset($data['org_vo_id']) && $vo->vo_id != $data['org_vo_id']) {
             // update group records
             $groupService = new EngineBlock_Service_VirtualOrganisationGroup();
             $groupService->updateVOId($data['org_vo_id'], $data['vo_id']);
+            // update idp records
+            $idpService = new EngineBlock_Service_VirtualOrganisationIdp();
+            $idpService->updateVOId($data['org_vo_id'], $data['vo_id']);
             // delete old vo
             $this->delete($data['org_vo_id']);
         }

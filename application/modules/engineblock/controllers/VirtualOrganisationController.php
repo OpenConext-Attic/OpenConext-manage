@@ -55,23 +55,60 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
         // rebuild clean urls to prevent "/vo_id/..." in the urls when returning from group editing:
         $this->view->saveUrl             = $this->view->url(array('module'=>'engineblock', 'controller' => 'virtual-organisation', 'action'=>'save'), null, true);
         $this->view->listUrl             = $this->view->url(array('module'=>'engineblock', 'controller' => 'virtual-organisation', 'action'=>'list'), null, true);
+        $this->view->gridData = array();
 
-        // include groups
-        $inputFilter = $this->_helper->FilterLoader();
+        // groups grid
+        $inputFilter = $this->_helper->FilterLoader('groups');
         $params = Surfnet_Search_Parameters::create()
                 ->setLimit($inputFilter->results)
                 ->setOffset($inputFilter->startIndex)
                 ->setSortByField($inputFilter->sort)
                 ->setSortDirection($inputFilter->dir);
         $service = new EngineBlock_Service_VirtualOrganisationGroup();
-        $results = $service->listSearch($params, $this->view->vo_id);
-        $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
-        $this->view->ResultSet          = $this->view->virtualOrganisation->groups; //$results->getResults();
-       	$this->view->startIndex         = $results->getParameters()->getOffset();
-        $this->view->recordsReturned    = $results->getResultCount();
-        $this->view->totalRecords       = $results->getTotalCount();
-        $this->view->addUrl             = $this->view->url(array('action'=>'groupadd'));
-        $this->view->editUrl            = $this->view->url(array('action'=>'groupedit'));
+        $groupRecords = $service->listSearch($params, $this->view->vo_id);
+        $this->view->gridData['groups'] = array(
+            'gridConfig'        => $this->_helper->gridSetup($inputFilter, 'groups'),
+        );
+        
+        // idps grid
+        $inputFilter = $this->_helper->FilterLoader('idps');
+        $params = Surfnet_Search_Parameters::create()
+                ->setLimit($inputFilter->results)
+                ->setOffset($inputFilter->startIndex)
+                ->setSortByField($inputFilter->sort)
+                ->setSortDirection($inputFilter->dir);
+        $service = new EngineBlock_Service_VirtualOrganisationIdp();
+        $idpRecords = $service->listSearch($params, $this->view->vo_id);
+        $this->view->gridData['idps'] = array(
+            'gridConfig'        => $this->_helper->gridSetup($inputFilter, 'idps'),
+        );
+
+        // json context dependent variables
+        if ($this->_getParam('format') == 'json') {
+            $this->view->gridid = $this->_getParam('gridid');
+            switch ($this->view->gridid) {
+                case 'groups' :
+                    $this->view->ResultSet          = $this->view->virtualOrganisation->groups; //$results->getResults();
+                    $this->view->startIndex         = $groupRecords->getParameters()->getOffset();
+                    $this->view->recordsReturned    = $groupRecords->getResultCount();
+                    $this->view->totalRecords       = $groupRecords->getTotalCount();
+                    $this->view->addUrl             = $this->view->url(array('action'=>'groupadd'));
+                    $this->view->editUrl            = $this->view->url(array('action'=>'groupedit'));
+                    break;
+                case 'idps' :
+                    $this->view->ResultSet          = $this->view->virtualOrganisation->idps; //$results->getResults();
+                    $this->view->startIndex         = $idpRecords->getParameters()->getOffset();
+                    $this->view->recordsReturned    = $idpRecords->getResultCount();
+                    $this->view->totalRecords       = $idpRecords->getTotalCount();
+                    $this->view->addUrl             = $this->view->url(array('action'=>'idpadd'));
+                    $this->view->editUrl            = $this->view->url(array('action'=>'idpedit'));
+                    break;
+                default :
+                    break;
+            }
+        } else {
+            $this->view->ResultSet = array();
+        }
     }
 
     public function deleteAction()
@@ -149,4 +186,55 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
         $service = new EngineBlock_Service_VirtualOrganisationGroup();
         return $service->delete(htmlentities($this->_getParam('vo_id')), htmlentities($this->_getParam('group_id')));        
     }
+    
+    public function idpaddAction()
+    {
+        $this->view->vo_id = htmlentities($this->_getParam('vo_id'));
+        if (strlen($this->view->vo_id) > 0) {
+            $virtualOrganisationIdp = new EngineBlock_Model_VirtualOrganisationIdp();
+            $virtualOrganisationIdp->populate(array('vo_id'=>$this->view->vo_id));
+            $this->view->virtualOrganisationIdp = $virtualOrganisationIdp;
+            $this->view->saveUrl             = $this->view->url(array('action'=>'idpsave'));
+            $this->view->listUrl             = $this->view->url(array('action'=>'edit'));
+            $this->render('idpedit');        
+        } else {
+            $this->_forward('edit');
+       }
+    }
+    
+    public function idpeditAction()
+    {
+        $this->view->vo_id = htmlentities($this->_getParam('vo_id'));
+        $this->view->idp_id = htmlentities($this->_getParam('idp_id'));
+        $service = new EngineBlock_Service_VirtualOrganisationIdp();
+        $this->view->virtualOrganisationIdp = $service->fetchById($this->view->vo_id, $this->view->idp_id);
+        $this->view->saveUrl                  = $this->view->url(array('action'=>'idpsave'));
+        $this->view->listUrl                  = $this->view->url(array('action'=>'edit'));        
+    }
+
+    public function idpsaveAction()
+    {
+        $this->view->listUrl = $this->view->url(array('action'=>'edit'));
+
+        $service = new EngineBlock_Service_VirtualOrganisationIdp();
+        $virtualOrganisationIdp = $service->save($this->_getAllParams(), true);
+        
+        if (empty($virtualOrganisationIdp->errors)) {
+            $this->_redirect($this->view->url(array('action'=>'edit','vo_id'=>$this->_getParam('vo_id'))));
+        }
+        else {
+            $this->view->virtualOrganisationIdp = $virtualOrganisationIdp;
+            $this->render('idpedit');
+        }        
+    }
+    
+    public function idpdeleteAction() 
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $service = new EngineBlock_Service_VirtualOrganisationIdp();
+        return $service->delete(htmlentities($this->_getParam('vo_id')), htmlentities($this->_getParam('idp_id')));        
+    }
+    
 }

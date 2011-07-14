@@ -118,7 +118,7 @@ COINMANAGE.AjaxDataTable = function(selector) {
             return this;
         },
 
-        render: function() {
+        render: function(gridId) {
             var DataTable;
 
             _validate();
@@ -175,7 +175,8 @@ COINMANAGE.AjaxDataTable = function(selector) {
                 return  "sort=" + sort +
                         "&dir=" + dir +
                         "&startIndex=" + startIndex +
-                        "&results=" + results + searchQuery;
+                        "&results=" + results + searchQuery +
+                        "&gridid=" + gridId;
             };
 
             // DataTable configuration

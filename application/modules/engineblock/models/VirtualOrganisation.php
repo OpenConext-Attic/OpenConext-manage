@@ -16,4 +16,11 @@ class EngineBlock_Model_VirtualOrganisation extends Default_Model_Abstract
      */
     public $groups;
 
+    /**
+     * Groups
+     *
+     * @var Array
+     */
+    public $idps;
+
 }

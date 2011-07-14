@@ -66,7 +66,7 @@ foreach ($columnsDefinition as $key => $definition) {
 </form>
 <?php endif; ?>
 
-<div id="<?php $this->id = 'datagrid'; echo $this->id; ?>"></div>
+<div id="<?php $this->id = (isset($this->config->gridid) ? $this->config->gridid : 'datagrid'); echo $this->id; ?>"></div>
 
 <script type="text/javascript" src="/javascript/coinmanage.ajaxdatatables.js"></script>
 <script type="text/javascript" src="/javascript/coinmanage.yui.datatable.formatters.js"></script>
@@ -149,5 +149,5 @@ COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>')
 <?php if (isset($this->config->defaultSortDir)): ?>
     setSortedDir('<?php echo $this->config->defaultSortDir; ?>').
 <?php endif; ?>
-    render();
+    render(<?php if ($this->config->gridid) { echo "'".$this->config->gridid."'"; } ?>);
 </script>

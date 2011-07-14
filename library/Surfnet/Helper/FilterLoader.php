@@ -34,12 +34,16 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
 {
     const GRID_CONFIG_APPLICATION_PATH = '/configs/grid.ini';
 
+    // grid config identifier
+    protected $_configId;
+    
     /**
      *
      * @return Zend_Filter_Input
      */
     public function direct()
     {
+        if (func_num_args() > 0) $this->_configId = (string) func_get_arg(0);
         return $this->_getFilterForCurrentAction();
     }
 
@@ -100,6 +104,7 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
         $module         = $currentRequest->getModuleName();
         $controller     = $currentRequest->getControllerName();
         $action         = $currentRequest->getActionName();
+        $id             = $this->_configId;
 
         if (!isset($config->$module)) {
             throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown module: '$module'");
@@ -115,6 +120,13 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
             throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown action: '$action'");
         }
         $config = $config->$action;
+
+        if (!empty($id)) {
+            if (!isset($config->$id)) {
+                throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown id: '$id'");
+            }
+            $config = $config->$id;
+        }
 
         $options = array(
             'defaultField'  => $config->defaultSortField,

@@ -115,7 +115,7 @@ YAHOO.widget.DataTable.Formatter.list = function(el, oRecord, oColumn, oData) {
                 value = oData[i].join(', ');
             } else if (YAHOO.lang.isObject(oData[i])) {
                 for(var col in oData[i]) {
-                    value += oData[i][col] + ', ';
+                    value += oData[i][col] + ' / ';
                 }
                 // remove trailing comma and space
                 value = value.substring(0, value.length-2);

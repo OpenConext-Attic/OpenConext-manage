@@ -34,9 +34,10 @@ class EngineBlock_Model_Mapper_VirtualOrganisation
 
         // get corresponding groups
         $groups = $row->findDependentRowset('EngineBlock_Model_DbTable_VirtualOrganisationGroup')->toArray();
+        $idps   = $row->findDependentRowset('EngineBlock_Model_DbTable_VirtualOrganisationIdp')->toArray();
         
         $virtualOrganisation = new EngineBlock_Model_VirtualOrganisation();
-        $this->_mapRowToVirtualOrganisation($row, $groups, $virtualOrganisation);
+        $this->_mapRowToVirtualOrganisation($row, $groups, $idps, $virtualOrganisation);
         
         return $virtualOrganisation;
     }
@@ -68,16 +69,17 @@ class EngineBlock_Model_Mapper_VirtualOrganisation
         return $virtualOrganisation;
     }
 
-    protected function _mapRowToVirtualOrganisation(Zend_Db_Table_Row_Abstract $row, array $groups, EngineBlock_Model_VirtualOrganisation $virtualOrganisation)
+    protected function _mapRowToVirtualOrganisation(Zend_Db_Table_Row_Abstract $row, array $groups, array $idps, EngineBlock_Model_VirtualOrganisation $virtualOrganisation)
     {
         $virtualOrganisation->vo_id         = $row['vo_id'];
         $virtualOrganisation->groups        = $groups;
+        $virtualOrganisation->idps        = $idps;
         return $virtualOrganisation;
     }
 
     protected function _mapVirtualOrganisationToRow(EngineBlock_Model_VirtualOrganisation $virtualOrganisation, Zend_Db_Table_Row_Abstract $row)
     {
-        // note: groups are stored separately
+        // note: groups and idps are stored separately
         $row['vo_id']              = $virtualOrganisation->vo_id;
         return $row;
     }
