@@ -87,7 +87,6 @@ class Default_Service_Kpi
         $service = new ServiceRegistry_Service_JanusEntity();
         $providerTypes = $service->searchCountTypes($params)
                                  ->getResults();
-        var_dump($providerTypes);
         return array(
                         'idp' => $providerTypes[0]["num"],
                         'sp'  => $providerTypes[1]["num"]

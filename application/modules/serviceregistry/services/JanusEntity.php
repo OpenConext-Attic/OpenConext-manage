@@ -41,8 +41,6 @@ class ServiceRegistry_Service_JanusEntity
             $selectSp->where($value);
         }
 
-        var_dump($selectSp->__toString());
-        var_dump($selectIdp->__toString());
         $select = $dao->select()
                 ->union(array(
                     $selectIdp,

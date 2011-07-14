@@ -155,7 +155,6 @@ class Default_Service_Vers
             }
             $this->_addResult($key,$result);
         }
-        var_dump($this->getResults());
         return $success;
     }
 }
