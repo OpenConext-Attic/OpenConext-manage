@@ -43,6 +43,11 @@ class Portal_Service_Tab
                                  'type' => new Zend_Db_Expr("'Not shared'"))
                           )
                           ->where('team IS NULL');
+        foreach ($params->getSearchParams() as $param) {
+            $selectTotal->where($param);
+            $selectShared->where($param);
+            $selectNotShared->where($param);
+        }
 
         $select = $dao->select()
             ->union(array(
@@ -51,7 +56,7 @@ class Portal_Service_Tab
                 $selectNotShared
             )
         );
-
+        
         if ($params->getLimit()) {
             $select->limit($params->getLimit(), $params->getOffset());
         }
