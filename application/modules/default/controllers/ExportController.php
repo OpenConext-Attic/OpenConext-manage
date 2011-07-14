@@ -27,8 +27,11 @@ class Default_ExportController extends Zend_Controller_Action
 {
     public function init ()
     {
-        //Get the identity
-        $this->view->identity = $this->_helper->Authenticate('portal');
+        /* Running from the CLI, no authentication needed/available. */
+        if (php_sapi_name() != 'cli') {
+            //Get the identity
+            $this->view->identity = $this->_helper->Authenticate('portal');
+        }
 
         $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
                                      ->addActionContext('availableidps', 'json')
@@ -52,4 +55,36 @@ class Default_ExportController extends Zend_Controller_Action
 
         $this->view->ResultSet = $result;
     }
+
+    /**
+     * Export to VERS
+     *
+     */
+    public function versAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->view->result = "Export done";
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $kpi = new Default_Service_Kpi();
+
+        
+        $data = array();
+        $timestamp = strtotime("LAST MONTH");
+        $timestamp = strtotime("12 months ago");
+        $period = date('Y-m', $timestamp);
+        
+        $connectedProviderTypes = $kpi->getConnectedProviderTypes($timestamp);
+        $data['Totaal aantal logins']    = $kpi->getLogins($timestamp);
+        $data['Aantal aangesloten IdPs'] = $connectedProviderTypes['idp'];
+        $data['Aantal aangesloten SPs']  = $connectedProviderTypes['sp'];
+        $data['Beschikbare tabs']        = $kpi->getTeamTabs($timestamp);
+
+        $vers = new Default_Service_Vers();
+        $result = $vers->insertReport($data, $period);
+        if ($result!==true) {
+            throw new Exception($vers->getResultMessage(), -1);
+        }
+    }
+
 }
