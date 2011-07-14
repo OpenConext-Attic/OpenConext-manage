@@ -16,10 +16,25 @@ class EngineBlock_Service_LoginLog
                       array("num" => "COUNT(userid)",
                             'type' => new Zend_Db_Expr("'Total Logins'"))
                      );
+        $searchParams = $params->getSearchParams();
+        foreach ($searchParams as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+            $selectTotal->where($key . ' = ' . $dao->getAdapter()->quote($value));
+        }
+        
         $selectUnique = $dao->select()->from($dao,
                         array("num" => "COUNT(DISTINCT(userid))",
                               'type' => new Zend_Db_Expr("'Unique Logins'"))
                        );
+
+        foreach ($searchParams as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+            $selectUnique->where($key . ' = ' . $dao->getAdapter()->quote($value));
+        }
 
         $select = $dao->select()
                 ->union(array(
@@ -59,6 +74,14 @@ class EngineBlock_Service_LoginLog
         if ($params->getSortByField() != '') {
             $select->order($params->getSortByField()
                 . ' ' . $params->getSortDirection());
+        }
+
+        $searchParams = $params->getSearchParams();
+        foreach ($searchParams as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+            $select->where($key . ' = ' . $dao->getAdapter()->quote($value));
         }
         $rows = $dao->fetchAll($select)->toArray();
 
