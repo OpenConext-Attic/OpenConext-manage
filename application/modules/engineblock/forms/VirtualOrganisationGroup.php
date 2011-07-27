@@ -12,9 +12,7 @@ class EngineBlock_Form_VirtualOrganisationGroup extends Zend_Form
 
         $this->_initOrgGroupId()
             ->_initVOId()
-            ->_initGroupId()
-            ->_initGroupStem();
-    }
+            ->_initGroupId();    }
 
     /**
      * @return EngineBlock_Form_VirtualOrganisationGroup
@@ -42,17 +40,6 @@ class EngineBlock_Form_VirtualOrganisationGroup extends Zend_Form
     public function _initGroupId()
     {
         $element = new Zend_Form_Element_Text('group_id');
-        $element->setRequired(TRUE);
-        $element->setAllowEmpty(false);
-        return $this->addElement($element);
-    }
-
-    /**
-     * @return EngineBlock_Form_VirtualOrganisationGroup
-     */
-    public function _initGroupStem()
-    {
-        $element = new Zend_Form_Element_Text('group_stem');
         $element->setRequired(TRUE);
         $element->setAllowEmpty(false);
         return $this->addElement($element);

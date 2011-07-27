@@ -5,19 +5,19 @@
 
 class EngineBlock_Service_VirtualOrganisation
 {
-    
+
     public function listSearch(Surfnet_Search_Parameters $params)
     {
         return $this->_searchWhere($params);
     }
 
-    protected function _searchWhere(Surfnet_Search_Parameters $params, $where='')
+    protected function _searchWhere(Surfnet_Search_Parameters $params, $where = '')
     {
         // select VO record(s)
         $dao = new EngineBlock_Model_DbTable_VirtualOrganisation();
 
         $query = $dao->select()->from($dao);
-        if (strlen(trim($where)) > 0) {   
+        if (strlen(trim($where)) > 0) {
             $query->where($where);
         }
         if ($params->getLimit()) {
@@ -27,7 +27,7 @@ class EngineBlock_Service_VirtualOrganisation
             $query->order('virtual_organisation.' . $params->getSortByField() . ' ' . $params->getSortDirection());
         }
         $voRecords = $dao->fetchAll($query);
-        
+
         // get corresponding groups
         $groupRecords = array();
         foreach ($voRecords as $row) {
@@ -39,7 +39,7 @@ class EngineBlock_Service_VirtualOrganisation
             }
         }
         unset($row);
-        
+
         // get corresponding idps
         $idpRecords = array();
         foreach ($voRecords as $row) {
@@ -51,7 +51,19 @@ class EngineBlock_Service_VirtualOrganisation
             }
         }
         unset($row);
-        
+
+        // get corresponding stem
+        $stemRecords = array();
+        foreach ($voRecords as $row) {
+            if ($row->vo_type === 'STEM') {
+                /* @var $config Zend_Config */
+                $config = Zend_Registry::get('config');
+                $stemPrefix = $config->engineBlock->vo->stemPrefix;
+                $stemRecords[$row['vo_id']] = $stemPrefix . $row->vo_id;
+            }
+        }
+        unset($row);
+
         // merge groups into VOs
         $voRecords = $voRecords->toArray();
         foreach ($voRecords as &$row) {
@@ -65,10 +77,18 @@ class EngineBlock_Service_VirtualOrganisation
         }
         unset($row);
 
+        // merge stems into VOs
+        foreach ($voRecords as &$row) {
+            if ($row['vo_type'] === 'STEM') {
+                $row['stem'] = $stemRecords[$row['vo_id']];
+            }
+        }
+        unset($row);
+
         $totalCount = $dao->fetchRow(
             $query->reset(Zend_Db_Select::LIMIT_COUNT)
                     ->reset(Zend_Db_Select::LIMIT_OFFSET)
-                    ->columns(array('count'=>'COUNT(*)'))
+                    ->columns(array('count' => 'COUNT(*)'))
         )->offsetGet('count');
         return new Surfnet_Search_Results($params, $voRecords, $totalCount);
     }
@@ -129,7 +149,7 @@ class EngineBlock_Service_VirtualOrganisation
             // delete old vo
             $this->delete($data['org_vo_id']);
         }
-        
+
         return $vo;
     }
 
@@ -141,7 +161,7 @@ class EngineBlock_Service_VirtualOrganisation
             // cascade delete groups
             if ($result) {
                 $dao = new EngineBlock_Model_DbTable_VirtualOrganisationGroup();
-                return $dao->delete("vo_id='$id'");            
+                return $dao->delete("vo_id='$id'");
             } else {
                 return false;
             }
@@ -149,5 +169,5 @@ class EngineBlock_Service_VirtualOrganisation
             return false;
         }
     }
-    
+
 }

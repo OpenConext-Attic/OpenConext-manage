@@ -32,13 +32,13 @@ class EngineBlock_Model_Mapper_VirtualOrganisation
 
         $row = $rowsFound->current();
 
-        // get corresponding groups
+        // get corresponding groups, idps & stem
         $groups = $row->findDependentRowset('EngineBlock_Model_DbTable_VirtualOrganisationGroup')->toArray();
-        $idps   = $row->findDependentRowset('EngineBlock_Model_DbTable_VirtualOrganisationIdp')->toArray();
-        
+        $idps = $row->findDependentRowset('EngineBlock_Model_DbTable_VirtualOrganisationIdp')->toArray();
+
         $virtualOrganisation = new EngineBlock_Model_VirtualOrganisation();
         $this->_mapRowToVirtualOrganisation($row, $groups, $idps, $virtualOrganisation);
-        
+
         return $virtualOrganisation;
     }
 
@@ -46,7 +46,7 @@ class EngineBlock_Model_Mapper_VirtualOrganisation
      *
      * @param EngineBlock_Model_VirtualOrganisation $virtualOrganisation
      */
-    public function save(EngineBlock_Model_VirtualOrganisation $virtualOrganisation, $isNewRecord=false)
+    public function save(EngineBlock_Model_VirtualOrganisation $virtualOrganisation, $isNewRecord = false)
     {
         // get existing record or create a new one
         if (!$isNewRecord) {
@@ -54,7 +54,7 @@ class EngineBlock_Model_Mapper_VirtualOrganisation
         } else {
             $row = $this->_dao->createRow();
         }
-        
+
         // check the PK
         $uniqueSelect = $this->_dao->select()->where('vo_id = ?', $virtualOrganisation->vo_id);
         $duplicates = $this->_dao->fetchAll($uniqueSelect)->toArray();
@@ -71,16 +71,25 @@ class EngineBlock_Model_Mapper_VirtualOrganisation
 
     protected function _mapRowToVirtualOrganisation(Zend_Db_Table_Row_Abstract $row, array $groups, array $idps, EngineBlock_Model_VirtualOrganisation $virtualOrganisation)
     {
-        $virtualOrganisation->vo_id         = $row['vo_id'];
-        $virtualOrganisation->groups        = $groups;
-        $virtualOrganisation->idps        = $idps;
+        $virtualOrganisation->vo_id = $row['vo_id'];
+        $virtualOrganisation->vo_type = $row['vo_type'];
+        $virtualOrganisation->groups = $groups;
+        $virtualOrganisation->idps = $idps;
+
+        if ($virtualOrganisation->vo_type === 'STEM') {
+            /* @var $config Zend_Config */
+            $config = Zend_Registry::get('config');
+            $stemPrefix = $config->engineBlock->vo->stemPrefix;
+            $virtualOrganisation->stem = $stemPrefix . $virtualOrganisation->vo_id;
+        }
         return $virtualOrganisation;
     }
 
     protected function _mapVirtualOrganisationToRow(EngineBlock_Model_VirtualOrganisation $virtualOrganisation, Zend_Db_Table_Row_Abstract $row)
     {
         // note: groups and idps are stored separately
-        $row['vo_id']              = $virtualOrganisation->vo_id;
+        $row['vo_id'] = $virtualOrganisation->vo_id;
+        $row['vo_type'] = $virtualOrganisation->vo_type;
         return $row;
     }
 }

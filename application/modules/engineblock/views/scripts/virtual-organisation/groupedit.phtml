@@ -21,20 +21,6 @@
                maxlength="255"
                 />
     </fieldset>
-
-    <fieldset>
-        <?php if (isset($model->errors['group_stem'])): foreach ($model->errors['group_stem'] as $error): ?>
-            <div class="form-error"><?php echo $error; ?></div>
-        <?php endforeach; endif; ?>
-        <label for="url">Group stem<span class="required-postfix" title="Required field">*</span></label>
-        <input id="group_stem"
-               name="group_stem"
-               type="text"
-               value="<?php echo $this->escape($model->group_stem); ?>"
-               size="100"
-               maxlength="255"
-                />
-    </fieldset>
     
     <br/>
     <input id="submit" name="submit" value="Save" type="submit">

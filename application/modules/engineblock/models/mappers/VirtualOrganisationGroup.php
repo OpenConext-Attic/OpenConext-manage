@@ -69,7 +69,6 @@ class EngineBlock_Model_Mapper_VirtualOrganisationGroup
     {
         $virtualOrganisationGroup->vo_id         = $row['vo_id'];
         $virtualOrganisationGroup->group_id      = $row['group_id'];
-        $virtualOrganisationGroup->group_stem    = $row['group_stem'];
         return $virtualOrganisationGroup;
     }
 
@@ -77,7 +76,6 @@ class EngineBlock_Model_Mapper_VirtualOrganisationGroup
     {
         $row['vo_id']                  = $virtualOrganisationGroup->vo_id;
         $row['group_id']               = $virtualOrganisationGroup->group_id;
-        $row['group_stem']             = $virtualOrganisationGroup->group_stem;
         return $row;
     }
 }

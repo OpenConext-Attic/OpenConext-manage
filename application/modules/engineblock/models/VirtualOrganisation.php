@@ -10,11 +10,23 @@ class EngineBlock_Model_VirtualOrganisation extends Default_Model_Abstract
     public $vo_id;
 
     /**
+     * The VO type
+     *
+     * @var String
+     */
+    public $vo_type;
+
+    /**
      * Groups
      *
      * @var Array
      */
     public $groups;
+
+    /**
+     * Stem
+     */
+    public $stem;
 
     /**
      * Groups
