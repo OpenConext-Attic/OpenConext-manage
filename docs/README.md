@@ -46,3 +46,22 @@ Then open a new terminal to make sure you have the new environment.
 
 Copy docs/example.manage.ini to /etc/surfconext/manage.ini and edit this file to reflect your configuration.
 
+### 4 Set up VERS reporting.
+
+Edit */etc/surfconext/manage.ini* and add:
+
+    vers.env = "test"
+
+or
+    vers.env = "production"
+
+Beware: there is no Development environment for VERS,
+so make sure you don't mess up things for other developers.
+
+Create a cronjob to run the VERS export:
+
+    php [path to surfconext-admin]/scripts/versexport.php
+
+Run the surfconext-admin/scipts/versexport.php script once a month,
+on the first day of the month.
+It will put the data of the previous month in VERS.
