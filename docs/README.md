@@ -65,3 +65,25 @@ Create a cronjob to run the VERS export:
 Run the surfconext-admin/scipts/versexport.php script once a month,
 on the first day of the month.
 It will put the data of the previous month in VERS.
+
+## Updating ##
+
+It is recommended practice that you deploy the Management application in a directory that includes the version number and use a
+symlink to link to the 'current' version of the Management application.
+
+**EXAMPLE**
+
+    .
+    ..
+    manage -> manage-v1.6.0
+    manage-v1.5.0
+    manage-v1.6.0
+
+If you are using this pattern, an update can be done with the following:
+
+1. Download and deploy a new version in a new directory.
+
+2. Check out the release notes in docs/release_notes/X.Y.Z.md (where X.Y.Z is the version number) for any
+   additional steps.
+
+3. Change the symlink.
