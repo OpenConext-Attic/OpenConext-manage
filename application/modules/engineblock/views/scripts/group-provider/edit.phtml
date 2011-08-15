@@ -1,0 +1,89 @@
+<?php $model = $this->groupProvider; ?>
+
+<form id="groupprovider-edit"
+      name="groupprovider-edit"
+      action="<?php echo $this->saveUrl;?>"
+      method="POST">
+
+    <input type="hidden" id="org_groupprovider_id" name="org_groupprovider_id"
+           value="<?php echo $this->escape($model->group_provider_id); ?>"/>
+
+    <fieldset title="Virtual Organisation Name">
+        <?php if (isset($model->errors['group_provider_id'])): foreach ($model->errors['group_provider_id'] as $error): ?>
+        <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="group_provider_id">Group Provider id<span class="required-postfix" title="Required field">*</span></label>
+        <input id="group_provider_id"
+               name="group_provider_id"
+               type="text"
+               value="<?php echo $this->escape($model->group_provider_id); ?>"
+               size="100"
+               maxlength="255"
+                />
+
+        <p class="hint">
+            Only alphanumeric characters, underscores and dashes are allowed.
+        </p>
+    </fieldset>
+
+    <?php if (!$model->group_provider_id): ?>
+    <fieldset title="Group Provider Type">
+        <label>Group Provider type<span class="required-postfix" title="Required field">*</span></label>
+        <label for="group_provider_type_grouper">Group</label>
+        <input id="group_provider_type_grouper"
+               name="vo_type"
+               type="radio"
+               value="GROUPER" <?= $model->group_provider_type === 'GROUPER' ? 'checked' : !isset($model->group_provider_type) ? 'checked'
+                : ''; ?>>
+        <label for="group_provider_type_oauth">Oauth</label>
+        <input id="group_provider_type_oauth"
+               name="vo_type"
+               type="radio"
+               value="OAUTH" <?= $model->group_provider_type === 'OAUTH' ? 'checked' : ''; ?>>
+    </fieldset>
+    <?php else: ?>
+    <input type="hidden" name="vo_type" value="<?=$model->group_provider_type; ?>">
+    <?php endif; ?>
+
+    <?php if (strlen($model->group_provider_id) > 0 && !isset($model->errors['group_provider_id'])) : ?>
+    <?php switch ($model->group_provider_type) {
+        case 'GROUPER' : ?>
+                grouper
+            <?php break;
+        case 'OAUTH' : ?>
+                oauth
+            <?php break;
+    } ?>
+    <?php endif; ?>
+    <br/><br/>
+
+    <h3>Preconditions</h3>
+    <a href="<?php echo $this->url(array('action' => 'preconditionadd', 'group_provider_id' => $model->group_provider_id)); ?>">Add a new
+        Precondition</a>
+    <?php
+        echo $this->grid($this->gridData['preconditions']['gridConfig']);
+    ?>
+    <br/><br/>
+
+    <h3>Decorators</h3>
+    <a href="<?php echo $this->url(array('action' => 'decoratoradd', 'group_provider_id' => $model->group_provider_id)); ?>">Add a new
+        Decorator</a>
+    <?php
+        echo $this->grid($this->gridData['decorators']['gridConfig']);
+    ?>
+    <br/><br/>
+
+    <h3>Group Filters</h3>
+    <a href="<?php echo $this->url(array('action' => 'groupfilteradd', 'group_provider_id' => $model->group_provider_id)); ?>">Add a new
+        Group Filter</a>
+    <?php
+        echo $this->grid($this->gridData['group_filters']['gridConfig']);
+    ?>
+    <br/><br/>
+
+    <h3>Group Member Filters</h3>
+    <a href="<?php echo $this->url(array('action' => 'groupmemberfilteradd', 'group_provider_id' => $model->group_provider_id)); ?>">Add a new
+        Group Member Filter</a>
+    <?php
+        echo $this->grid($this->gridData['group_member_filters']['gridConfig']);
+    ?>
