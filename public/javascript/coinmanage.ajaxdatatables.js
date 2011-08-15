@@ -165,9 +165,15 @@ COINMANAGE.AjaxDataTable = function(selector) {
             // Customize request sent to server to be able to set total # of records
             var generateRequest = function(oState, oSelf) {
                 // Get states or use defaults
-                oState = oState || { pagination: null, sortedBy: null };
+                oState = oState || { 
+                    pagination: null, 
+                    sortedBy: {
+                        key: _sortedField, 
+                        dir: _sortedDir === "desc" ? YAHOO.widget.DataTable.CLASS_DESC : YAHOO.widget.DataTable.CLASS_ASC  
+                    } 
+                };
                 var sort        = (oState.sortedBy) ? oState.sortedBy.key : _sortedField;
-                var dir         = (oState.sortedBy && oState.sortedBy.dir === YAHOO.widget.DataTable.CLASS_DESC) ? "desc" : _sortedDir;
+                var dir         = (oState.sortedBy && oState.sortedBy.dir === YAHOO.widget.DataTable.CLASS_DESC) ? "desc" : "asc";
                 var startIndex  = (oState.pagination) ? oState.pagination.recordOffset : 0;
                 var results     = (oState.pagination) ? oState.pagination.rowsPerPage : _limit;
 
