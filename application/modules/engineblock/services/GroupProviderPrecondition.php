@@ -75,18 +75,11 @@ class EngineBlock_Service_GroupProviderPrecondition
                 }
             }
             $precondition->errors = $modelErrors;
-            return $precondition;
+        } else {
+            $mapper = new EngineBlock_Model_Mapper_GroupProviderPrecondition(new EngineBlock_Model_DbTable_GroupProviderPrecondition());
+            $isNewRecord = (isset($data['org_precondition_id']) && $precondition->precondition_id != $data['org_precondition_id']);
+            $mapper->save($precondition, $isNewRecord);
         }
-
-        $mapper = new EngineBlock_Model_Mapper_GroupProviderPrecondition(new EngineBlock_Model_DbTable_GroupProviderPrecondition());
-        $isNewRecord = (isset($data['org_precondition_id']) && $precondition->precondition_id != $data['org_precondition_id']);
-        $mapper->save($precondition, $isNewRecord);
-
-        // if the PK changes, it is saved as a new record, so the original record should be deleted
-        if ($isNewRecord) {
-            $this->delete($data['group_provider_id'], $data['org_precondition_id']);
-        }
-
         return $precondition;
     }
 

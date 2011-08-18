@@ -28,21 +28,18 @@
     <?php if (!$model->vo_id): ?>
     <fieldset title="Virtual Organisation Type">
         <label>Virtual Organisation type<span class="required-postfix" title="Required field">*</span></label>
-        <label for="vo_type_group">Group</label>
         <input id="vo_type_group"
                name="vo_type"
                type="radio"
-               value="GROUP" <?= $model->vo_type === 'GROUP' ? 'checked' : !isset($model->vo_type) ? 'checked' : ''; ?>>
-        <label for="vo_type_stem">Stem</label>
+               value="GROUP" <?= $model->vo_type === 'GROUP' ? 'checked' : !isset($model->vo_type) ? 'checked' : ''; ?>>Group<br/>
         <input id="vo_type_stem"
                name="vo_type"
                type="radio"
-               value="STEM" <?= $model->vo_type === 'STEM' ? 'checked' : ''; ?>>
-        <label for="vo_type_idp">IdP</label>
+               value="STEM" <?= $model->vo_type === 'STEM' ? 'checked' : ''; ?>>Stem<br/>
         <input id="vo_type_idp"
                name="vo_type"
                type="radio"
-               value="IDP" <?= $model->vo_type === 'IDP' ? 'checked' : ''; ?>>
+               value="IDP" <?= $model->vo_type === 'IDP' ? 'checked' : ''; ?>>IdP<br/>
     </fieldset>
     <?php else: ?>
         <input type="hidden" name="vo_type" value="<?=$model->vo_type; ?>">

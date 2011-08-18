@@ -56,4 +56,42 @@ class EngineBlock_Model_Mapper_GroupProvider
 
         return $groupProvider;
     }
+    
+    /**
+     *
+     * @param EngineBlock_Model_GroupProvider $groupProvider
+     */
+    public function save(EngineBlock_Model_GroupProvider $groupProvider, $isNewRecord = false)
+    {
+        // get existing record or create a new one
+        if (!$isNewRecord) {
+            $row = $this->_dao->find($groupProvider->group_provider_id)->current();
+        } else {
+            $row = $this->_dao->createRow();
+        }
+
+        // check the PK
+        $uniqueSelect = $this->_dao->select()->where('group_provider_id = ?', $groupProvider->group_provider_id);
+        $duplicates = $this->_dao->fetchAll($uniqueSelect)->toArray();
+        if (!$isNewRecord || count($duplicates) == 0) {
+            $row = $this->_mapGroupProviderToRow($groupProvider, $row);
+            $row->save();
+        }
+        else {
+            $groupProvider->errors['group_provider_id'][] = "A Group Provider with id '{$duplicates[0]['group_provider_id']}' already exists";
+        }
+
+        return $groupProvider;
+    }
+    
+    protected function _mapGroupProviderToRow(EngineBlock_Model_GroupProvider $groupProvider, Zend_Db_Table_Row_Abstract $row)
+    {
+        $row['group_provider_id'] = $groupProvider->group_provider_id;
+        $row['group_provider_type'] = $groupProvider->group_provider_type;
+        $row['adapter'] = $groupProvider->adapter;
+        $row['class_name'] = $groupProvider->class_name;
+        $row['endpoint'] = $groupProvider->endpoint;
+        $row['timeout'] = $groupProvider->timeout;
+        return $row;
+    }
 }

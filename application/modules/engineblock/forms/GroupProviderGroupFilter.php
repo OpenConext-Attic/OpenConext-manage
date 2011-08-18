@@ -11,8 +11,12 @@ class EngineBlock_Form_GroupProviderGroupFilter extends Zend_Form
             ->setMethod('post');
 
         $this->_initOrgGroupFilterId()
+            ->_initGroupFilterId()
             ->_initGroupProviderId()
-            ->_initGroupFilterId();
+            ->_initClassName()
+            ->_initProperty()
+            ->_initReplace()
+            ->_initSearch();    
     }
 
     /**
@@ -27,9 +31,29 @@ class EngineBlock_Form_GroupProviderGroupFilter extends Zend_Form
     /**
      * @return EngineBlock_Form_GroupProviderGroupFilter
      */
+    public function _initGroupFilterId()
+    {
+        $element = new Zend_Form_Element_Hidden('group_filter_id');
+        return $this->addElement($element);
+    }
+
+    /**
+     * @return EngineBlock_Form_GroupProviderGroupFilter
+     */
     public function _initGroupProviderId()
     {
         $element = new Zend_Form_Element_Hidden('group_provider_id');
+        $element->setRequired(TRUE);
+        $element->setAllowEmpty(false);
+        return $this->addElement($element);
+    }
+    
+    /**
+     * @return EngineBlock_Form_GroupProviderGroupFilter
+     */
+    public function _initClassName()
+    {
+        $element = new Zend_Form_Element_Text('group_filter_class_name');
         $element->setRequired(TRUE);
         $element->setAllowEmpty(false);
         return $this->addElement($element);
@@ -38,12 +62,30 @@ class EngineBlock_Form_GroupProviderGroupFilter extends Zend_Form
     /**
      * @return EngineBlock_Form_GroupProviderGroupFilter
      */
-    public function _initGroupFilterId()
+    public function _initProperty()
     {
-        $element = new Zend_Form_Element_Text('group_filter_id');
+        $element = new Zend_Form_Element_Text('group_filter_property');
         $element->setRequired(TRUE);
         $element->setAllowEmpty(false);
         return $this->addElement($element);
     }
 
+    /**
+     * @return EngineBlock_Form_GroupProviderGroupFilter
+     */
+    public function _initReplace()
+    {
+        $element = new Zend_Form_Element_Text('group_filter_replace');
+        return $this->addElement($element);
+    }
+
+    /**
+     * @return EngineBlock_Form_GroupProviderGroupFilter
+     */
+    public function _initSearch()
+    {
+        $element = new Zend_Form_Element_Text('group_filter_search');
+        return $this->addElement($element);
+    }
+    
 }

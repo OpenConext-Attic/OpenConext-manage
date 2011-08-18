@@ -1,0 +1,45 @@
+<?php $model = $this->groupProviderPrecondition; ?>
+
+<h2>Precondition details:</h2>
+<br/>   
+<form id="groupproviderprecondition-edit"
+      name="groupproviderprecondition-edit"
+      action="<?php echo $this->saveUrl;?>"
+      method="POST">
+
+    <input type="hidden" id="group_provider_id" name="group_provider_id" value="<?php echo $this->escape($model->group_provider_id); ?>"/>
+    <input type="hidden" id="org_precondition_id" name="org_precondition_id" value="<?php if ($this->escape($model->precondition_id) != "") : ?><?php echo $this->escape($model->precondition_id); ?><?php else : ?>-1<?php endif; ?>"/>
+    <input type="hidden" id="precondition_id" name="precondition_id" value="<?php echo $this->escape($model->precondition_id); ?>"/>
+    
+    <fieldset>
+        <?php if (isset($model->errors['precondition_class_name'])): foreach ($model->errors['precondition_class_name'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="url">Class name<span class="required-postfix" title="Required field">*</span></label>
+        <input id="precondition_class_name"
+               name="precondition_class_name"
+               type="text"
+               value="<?php echo $this->escape($model->precondition_class_name); ?>"
+               size="100"
+               maxlength="255"
+                />
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['precondition_search'])): foreach ($model->errors['precondition_search'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="url">Search</label>
+        <input id="precondition_search"
+               name="precondition_search"
+               type="text"
+               value="<?php echo $this->escape($model->precondition_search); ?>"
+               size="100"
+               maxlength="255"
+                />
+    </fieldset>
+
+    <br/>
+    <input id="submit" name="submit" value="Save" type="submit">
+    <input id="back" name="back" value="Back" type="button" onclick="location.href='<?php echo $this->listUrl; ?>#preconditions';">
+</form>

@@ -1,0 +1,59 @@
+<?php $model = $this->groupProviderDecorator; ?>
+
+<h2>Decorator details:</h2>
+<br/>   
+<form id="groupproviderdecorator-edit"
+      name="groupproviderdecorator-edit"
+      action="<?php echo $this->saveUrl;?>"
+      method="POST">
+
+    <input type="hidden" id="group_provider_id" name="group_provider_id" value="<?php echo $this->escape($model->group_provider_id); ?>"/>
+    <input type="hidden" id="org_decorator_id" name="org_decorator_id" value="<?php if ($this->escape($model->decorator_id) != "") : ?><?php echo $this->escape($model->decorator_id); ?><?php else : ?>-1<?php endif; ?>"/>
+    <input type="hidden" id="decorator_id" name="decorator_id" value="<?php echo $this->escape($model->decorator_id); ?>"/>
+    
+    <fieldset>
+        <?php if (isset($model->errors['decorator_class_name'])): foreach ($model->errors['decorator_class_name'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="url">Class name<span class="required-postfix" title="Required field">*</span></label>
+        <input id="decorator_class_name"
+               name="decorator_class_name"
+               type="text"
+               value="<?php echo $this->escape($model->decorator_class_name); ?>"
+               size="100"
+               maxlength="255"
+                />
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['decorator_replace'])): foreach ($model->errors['decorator_replace'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="url">Replace</label>
+        <input id="decorator_replace"
+               name="decorator_replace"
+               type="text"
+               value="<?php echo $this->escape($model->decorator_replace); ?>"
+               size="100"
+               maxlength="255"
+                />
+    </fieldset>
+
+    <fieldset>
+        <?php if (isset($model->errors['decorator_search'])): foreach ($model->errors['decorator_search'] as $error): ?>
+            <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="url">Search</label>
+        <input id="decorator_search"
+               name="decorator_search"
+               type="text"
+               value="<?php echo $this->escape($model->decorator_search); ?>"
+               size="100"
+               maxlength="255"
+                />
+    </fieldset>
+
+    <br/>
+    <input id="submit" name="submit" value="Save" type="submit">
+    <input id="back" name="back" value="Back" type="button" onclick="location.href='<?php echo $this->listUrl; ?>#decorators';">
+</form>

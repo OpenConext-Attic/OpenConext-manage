@@ -75,18 +75,11 @@ class EngineBlock_Service_GroupProviderDecorator
                 }
             }
             $decorator->errors = $modelErrors;
-            return $decorator;
+        } else {
+            $mapper = new EngineBlock_Model_Mapper_GroupProviderDecorator(new EngineBlock_Model_DbTable_GroupProviderDecorator());
+            $isNewRecord = (isset($data['org_decorator_id']) && $decorator->decorator_id != $data['org_decorator_id']);
+            $mapper->save($decorator, $isNewRecord);
         }
-
-        $mapper = new EngineBlock_Model_Mapper_GroupProviderDecorator(new EngineBlock_Model_DbTable_GroupProviderDecorator());
-        $isNewRecord = (isset($data['org_decorator_id']) && $decorator->decorator_id != $data['org_decorator_id']);
-        $mapper->save($decorator, $isNewRecord);
-
-        // if the PK changes, it is saved as a new record, so the original record should be deleted
-        if ($isNewRecord) {
-            $this->delete($data['group_provider_id'], $data['org_decorator_id']);
-        }
-
         return $decorator;
     }
 

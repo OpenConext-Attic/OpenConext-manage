@@ -118,4 +118,45 @@ class EngineBlock_Service_GroupProvider
         $mapper = new EngineBlock_Model_Mapper_GroupProvider(new EngineBlock_Model_DbTable_GroupProvider());
         return $mapper->fetchById($id);
     }
+    
+    public function save($data, $overwrite = false)
+    {
+        if (isset($data['group_provider_id']) && !$overwrite) {
+            $id = $data['group_provider_id'];
+            $gpService = new EngineBlock_Service_GroupProvider();
+            $gp = $gpService->fetchById($id);
+        }
+        else {
+            $gp = new EngineBlock_Model_GroupProvider();
+        }
+        $gp->populate($data);
+        
+        $form = new EngineBlock_Form_GroupProvider();
+        if (!$form->isValid($gp->toArray())) {
+            $formErrors = $form->getErrors();
+            $modelErrors = array();
+            foreach ($formErrors as $fieldName => $fieldErrors) {
+                foreach ($fieldErrors as $fieldError) {
+                    switch ($fieldError) {
+                        case 'isEmpty':
+                            $error = 'Field is obligatory, but no input given';
+                            break;
+                        default:
+                            $error = $fieldError;
+                    }
+
+                    if (!isset($modelErrors[$fieldName])) {
+                        $modelErrors[$fieldName] = array();
+                    }
+                    $modelErrors[$fieldName][] = $error;
+                }
+            }
+            $gp->errors = $modelErrors;
+        } else {
+            $mapper = new EngineBlock_Model_Mapper_GroupProvider(new EngineBlock_Model_DbTable_GroupProvider());
+            $gp = $mapper->save($gp, $data['group_provider_id'] != $data['org_group_provider_id']);
+        }
+        return $gp;
+    }
+    
 }
