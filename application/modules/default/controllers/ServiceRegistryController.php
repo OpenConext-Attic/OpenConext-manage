@@ -46,7 +46,8 @@ class Default_ServiceRegistryController extends Zend_Controller_Action
             throw new Exception('Entity ID required');
         }
 
-        $config = Zend_Registry::get('config');
+        /* @var $config Zend_Config */
+        $config = Zend_Registry::get('config')->toArray();
         $serviceRegistryConfig = $config['serviceRegistry'];
 
         $baseUrl = $serviceRegistryConfig['scheme'] . '://' . $serviceRegistryConfig['host'];
