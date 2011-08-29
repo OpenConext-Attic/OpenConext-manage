@@ -158,7 +158,7 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
             $virtualOrganisationGroup->populate(array('vo_id' => $this->view->vo_id));
             $this->view->virtualOrganisationGroup = $virtualOrganisationGroup;
             $this->view->saveUrl = $this->view->url(array('action' => 'groupsave'));
-            $this->view->listUrl = $this->view->url(array('action' => 'edit'));
+            $this->view->listUrl = $this->view->url(array('action' => 'edit', 'vo_id' => $this->view->vo_id));
             $this->render('groupedit');
         } else {
             $this->_forward('edit');
