@@ -172,7 +172,7 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
         $service = new EngineBlock_Service_VirtualOrganisationGroup();
         $this->view->virtualOrganisationGroup = $service->fetchById($this->view->vo_id, $this->view->group_id);
         $this->view->saveUrl = $this->view->url(array('action' => 'groupsave'));
-        $this->view->listUrl = $this->view->url(array('action' => 'edit'));
+        $this->view->listUrl = $this->view->url(array('action' => 'edit', 'vo_id' => $this->view->vo_id));
     }
 
     public function groupsaveAction()
@@ -208,7 +208,7 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
             $virtualOrganisationIdp->populate(array('vo_id' => $this->view->vo_id));
             $this->view->virtualOrganisationIdp = $virtualOrganisationIdp;
             $this->view->saveUrl = $this->view->url(array('action' => 'idpsave'));
-            $this->view->listUrl = $this->view->url(array('action' => 'edit'));
+            $this->view->listUrl = $this->view->url(array('action' => 'edit', $this->view->vo_id));
             $this->render('idpedit');
         } else {
             $this->_forward('edit');
@@ -222,7 +222,7 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
         $service = new EngineBlock_Service_VirtualOrganisationIdp();
         $this->view->virtualOrganisationIdp = $service->fetchById($this->view->vo_id, $this->view->idp_id);
         $this->view->saveUrl = $this->view->url(array('action' => 'idpsave'));
-        $this->view->listUrl = $this->view->url(array('action' => 'edit'));
+        $this->view->listUrl = $this->view->url(array('action' => 'edit', 'vo_id' => $this->view->vo_id));
     }
 
     public function idpsaveAction()
