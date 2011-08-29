@@ -158,7 +158,7 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
             $virtualOrganisationGroup->populate(array('vo_id' => $this->view->vo_id));
             $this->view->virtualOrganisationGroup = $virtualOrganisationGroup;
             $this->view->saveUrl = $this->view->url(array('action' => 'groupsave'));
-            $this->view->listUrl = $this->view->url(array('action' => 'edit'));
+            $this->view->listUrl = $this->view->url(array('action' => 'edit', 'vo_id' => $this->view->vo_id));
             $this->render('groupedit');
         } else {
             $this->_forward('edit');
@@ -177,7 +177,7 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
 
     public function groupsaveAction()
     {
-        $this->view->listUrl = $this->view->url(array('action' => 'edit'));
+        $this->view->listUrl = $this->view->url(array('action' => 'edit', 'vo_id' => $this->_getParam('vo_id')));
 
         $service = new EngineBlock_Service_VirtualOrganisationGroup();
         $virtualOrganisationGroup = $service->save($this->_getAllParams(), true);
@@ -208,7 +208,7 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
             $virtualOrganisationIdp->populate(array('vo_id' => $this->view->vo_id));
             $this->view->virtualOrganisationIdp = $virtualOrganisationIdp;
             $this->view->saveUrl = $this->view->url(array('action' => 'idpsave'));
-            $this->view->listUrl = $this->view->url(array('action' => 'edit'));
+            $this->view->listUrl = $this->view->url(array('action' => 'edit', 'vo_id' => $this->view->vo_id));
             $this->render('idpedit');
         } else {
             $this->_forward('edit');
@@ -222,12 +222,12 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
         $service = new EngineBlock_Service_VirtualOrganisationIdp();
         $this->view->virtualOrganisationIdp = $service->fetchById($this->view->vo_id, $this->view->idp_id);
         $this->view->saveUrl = $this->view->url(array('action' => 'idpsave'));
-        $this->view->listUrl = $this->view->url(array('action' => 'edit'));
+        $this->view->listUrl = $this->view->url(array('action' => 'edit', 'vo_id' => $this->view->vo_id));
     }
 
     public function idpsaveAction()
     {
-        $this->view->listUrl = $this->view->url(array('action' => 'edit'));
+        $this->view->listUrl = $this->view->url(array('action' => 'edit', $this->_getParam('vo_id')));
 
         $service = new EngineBlock_Service_VirtualOrganisationIdp();
         $virtualOrganisationIdp = $service->save($this->_getAllParams(), true);
