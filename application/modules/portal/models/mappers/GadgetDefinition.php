@@ -61,7 +61,7 @@ class Portal_Model_Mapper_GadgetDefinition
             $row->save();
         }
         else {
-            $gadgetDefinition->errors['url'][] = "A gadgetdefinition with this URL already exists";
+            $gadgetDefinition->errors['url'][] = "A gadgetdefinition with this URL already exists (<a href='edit-custom?id=" . $duplicates[0]["id"] . "'>open existing gadgetDefinition</a>)";
         }
 
         return $gadgetDefinition;
