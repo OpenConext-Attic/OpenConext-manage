@@ -1,0 +1,41 @@
+<h1>Allowed SP connections for '<?=$this->entity['display_name'];?>'</h1>
+<br/>
+<table id="SpTable">
+    <thead>
+    <tr class="yui-dt-first yui-dt-last">
+        <th>SP</th>
+        <th>State</th>
+        <th>Created At</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->ResultSet as $entity) { ?>
+    <tr>
+        <td><?=$entity['display_name'];?></td>
+        <td><?=$entity['state'];?></td>
+        <td><?=$entity['created'];?></td>
+    </tr>
+        <?php } ?>
+    </tbody>
+</table>
+<br/>
+<br/>
+<a href="javascript:history.go(-1)"><< Go back</a>
+<script type="text/javascript">
+
+    var fixTableLayout = function() {
+        var evenElements = YAHOO.util.Selector.query('tbody tr:nth-child(even)');
+        var oddElements = YAHOO.util.Selector.query('tbody tr:nth-child(odd)');
+
+        for (var i in evenElements) {
+            YAHOO.util.Dom.addClass(evenElements[i], 'even');
+        }
+
+        for (var i in oddElements) {
+            YAHOO.util.Dom.addClass(oddElements[i], 'odd');
+        }
+
+    };
+
+    YAHOO.util.Event.onDOMReady(fixTableLayout);
+</script>

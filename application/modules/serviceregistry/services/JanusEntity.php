@@ -1,6 +1,26 @@
 <?php
 /**
+ * SURFconext Manage
  *
+ * LICENSE
+ *
+ * Copyright 2011 SURFnet bv, The Netherlands
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ * @category  SURFconext Manage
+ * @package
+ * @copyright Copyright © 2010-2011 SURFnet bv, The Netherlands (http://www.surfnet.nl)
+ * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
 
 class ServiceRegistry_Service_JanusEntity
@@ -151,5 +171,42 @@ class ServiceRegistry_Service_JanusEntity
         )->offsetGet('count');
 
         return new Surfnet_Search_Results($params, $rows, $totalCount);
+    }
+
+    public function fetchByEntityId($entityId)
+    {
+        $mapper = new ServiceRegistry_Model_Mapper_JanusEntityMapper(new ServiceRegistry_Service_JanusEntity());
+        return $mapper->fetchByEntityId($entityId);
+    }
+
+    public function getAllowedConnections($entityId)
+    {
+        $service = new ServiceRegistry_Service_JanusEntity();
+        $fromEntity = $service->fetchByEntityId($entityId);
+
+        $entities = array();
+        // get all entities from other type
+        if ($fromEntity['type'] === "saml20-idp") {
+            $results = $service->searchSps(Surfnet_Search_Parameters::create());
+            $entities = $results->getResults();
+        } else {
+            $results = $service->searchIdps(Surfnet_Search_Parameters::create());
+            $entities = $results->getResults();
+        }
+
+        $entitiesResult = array();
+        foreach ($entities as $entity) {
+            if ($service->isConnectionAllowed($fromEntity, $entity) && $service->isConnectionAllowed($entity, $fromEntity)) {
+                $entitiesResult[] = $entity;
+            }
+        }
+
+        return $entitiesResult;
+    }
+
+    public function isConnectionAllowed($fromEntity, $toEntity)
+    {
+        $mapper = new ServiceRegistry_Model_Mapper_JanusEntityMapper(new ServiceRegistry_Service_JanusEntity());
+        return $mapper->isConnectionAllowed($fromEntity, $toEntity);
     }
 }

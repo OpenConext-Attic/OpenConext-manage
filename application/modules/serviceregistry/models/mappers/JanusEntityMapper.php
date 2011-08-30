@@ -24,11 +24,11 @@
  */
 
 /**
- * Log Login datamapper
+ * Janus Entity datamapper
  *
  * @author marc
  */
-class Portal_Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
+class ServiceRegistry_Model_Mapper_JanusEntityMapper
 {
     /**
      *
@@ -67,7 +67,7 @@ class Portal_Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
      *
      * @return Array|Integer Array with gagdet usage data or row count.
      */
-    public function fetchAvailableType($type='saml20-idp', $order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    public function fetchAvailableType($type = 'saml20-idp', $order = 'title', $dir = 'asc', $limit = null, $offset = 0, $countOnly = false)
     {
         $db = $this->_dao->getAdapter();
 
@@ -79,10 +79,10 @@ class Portal_Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
         );
 
         $rev_select->from(
-                           array('janus__entity'),
-                           $rev_fields
-                         )
-                   ->group('eid');
+            array('janus__entity'),
+            $rev_fields
+        )
+                ->group('eid');
 
         $fields = array(
             'entityid' => 'entityid',
@@ -93,30 +93,30 @@ class Portal_Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
         );
 
         $entityType = 'idp';
-        if ($type==='saml20-sp') {
+        if ($type === 'saml20-sp') {
             $entityType = 'sp';
         }
 
         $select = $db->select();
         $select->from(
-                       array('ent' => 'janus__entity'),
-                       $fields
-                     )
+            array('ent' => 'janus__entity'),
+            $fields
+        )
                 ->joinInner(
-                             array('entgrp' => $rev_select),
-                             'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
-                           )
+            array('entgrp' => $rev_select),
+            'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
+        )
                 ->join(
-                        array('jm' => 'janus__metadata'),
-                        '(ent.eid=jm.eid AND jm.revisionid=entgrp.maxrev)',
-                        array($entityType=>'value', 'key' =>'key')
-                      )
+            array('jm' => 'janus__metadata'),
+            '(ent.eid=jm.eid AND jm.revisionid=entgrp.maxrev)',
+            array($entityType => 'value', 'key' => 'key')
+        )
                 ->join(
-                        array('ju' => 'janus__user'),
-                        '(ent.user=ju.uid)',
-                        array('userid'=>'userid')
-                      )
-                ->where('ent.type= ?',$type)
+            array('ju' => 'janus__user'),
+            '(ent.user=ju.uid)',
+            array('userid' => 'userid')
+        )
+                ->where('ent.type= ?', $type)
                 ->where('jm.key=?', 'name:nl');
 
         if (isset($limit)) {
@@ -135,7 +135,8 @@ class Portal_Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
         $result = array();
         foreach ($rows as $row) {
             $result[] = array(
-                'valid'  => $row['entityid'],
+                'valid' => $row['entityid'],
+                'allowedConnections' => $row['entityid'],
                 $entityType => $row[$entityType],
                 'state' => $row['state'],
                 'metadataurl' => $row['metadataurl'],
@@ -145,7 +146,7 @@ class Portal_Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
         }
         return $result;
     }
-    
+
     /**
      * Gets the available Idps
      *
@@ -158,7 +159,7 @@ class Portal_Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
      *
      * @return Array|Integer Array with gagdet usage data or row count.
      */
-    public function fetchIdpAndSpCount($order='title', $dir='asc', $limit=null, $offset=0, $countOnly=false)
+    public function fetchIdpAndSpCount($order = 'title', $dir = 'asc', $limit = null, $offset = 0, $countOnly = false)
     {
         /*
          $qry = "SELECT COUNT(DISTINCT(entityid)) AS num, 'Identity Provider' as type FROM `service_registry`.`janus__entity` where type = 'saml20-idp'
@@ -168,21 +169,21 @@ class Portal_Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
         $selectIdp->from($this->_dao,
                          array("num" => "COUNT(DISTINCT(entityid))",
                               'type' => new Zend_Db_Expr("'Identity Provider'"))
-                        )
-                  ->where('type = ?', 'saml20-idp');
+        )
+                ->where('type = ?', 'saml20-idp');
         $selectSp = $this->_dao->select();
         $selectSp->from($this->_dao,
                         array("num" => "COUNT(DISTINCT(entityid))",
-                              'type' => new Zend_Db_Expr("'Service Provider'"))
-                       )
-                 ->where('type = ?', 'saml20-sp');
+                             'type' => new Zend_Db_Expr("'Service Provider'"))
+        )
+                ->where('type = ?', 'saml20-sp');
 
         $select = $this->_dao->select()
                 ->union(array(
-                    $selectIdp,
-                    $selectSp
-                ));
-        
+                             $selectIdp,
+                             $selectSp
+                        ));
+
         $rows = $this->_dao->fetchAll(
             $select
         );
@@ -193,6 +194,194 @@ class Portal_Model_Mapper_JanusEntityMapper extends Model_Mapper_Abstract
                 'num' => $row['num'],
                 'type' => $row['type']
             );
+        }
+        return $result;
+    }
+
+    public function fetchByEntityId($entityId)
+    {
+        $dao = new ServiceRegistry_Model_DbTable_JanusEntity();
+
+        $rev_fields = array(
+            'eid' => 'eid',
+            'maxrev' => 'max(revisionid)',
+        );
+
+        $rev_select = $dao->select()->from(
+            array('janus__entity'),
+            $rev_fields
+        )
+                ->group('eid');
+
+        $fields = array(
+            'entityid' => 'entityid',
+            'state' => 'state',
+            'metadataurl' => 'metadataurl',
+            'created' => 'created',
+            'user' => 'user',
+            'allowedall' => 'allowedall',
+            'display_name' => "IFNULL(
+    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev),
+    ent.entityid
+    )",
+        );
+
+        $select = $dao->select()->setIntegrityCheck(false)->from(array('ent' => 'janus__entity'))
+                ->columns($fields)
+                ->joinInner(
+            array('entgrp' => $rev_select),
+            'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
+        )
+                ->join(
+            array('ju' => 'janus__user'),
+            '(ent.user=ju.uid)',
+            array('userid' => 'userid')
+        )
+                ->where('ent.entityid= ?', $entityId);
+
+        $row = $dao->fetchRow($select)->toArray();
+
+        return $row;
+    }
+
+    public function fetchByEId($eid)
+    {
+        $dao = new ServiceRegistry_Model_DbTable_JanusEntity();
+
+        $rev_fields = array(
+            'eid' => 'eid',
+            'maxrev' => 'max(revisionid)',
+        );
+
+        $rev_select = $dao->select()->from(
+            array('janus__entity'),
+            $rev_fields
+        )
+                ->group('eid');
+
+        $fields = array(
+            'entityid' => 'entityid',
+            'state' => 'state',
+            'metadataurl' => 'metadataurl',
+            'created' => 'created',
+            'user' => 'user',
+            'allowedall' => 'allowedall',
+            'display_name' => "IFNULL(
+    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev),
+    ent.entityid
+    )",
+        );
+
+        $select = $dao->select()->setIntegrityCheck(false)->from(array('ent' => 'janus__entity'))
+                ->columns($fields)
+                ->joinInner(
+            array('entgrp' => $rev_select),
+            'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
+        )
+                ->join(
+            array('ju' => 'janus__user'),
+            '(ent.user=ju.uid)',
+            array('userid' => 'userid')
+        )
+                ->where('ent.eid= ?', $eid);
+
+        $row = $dao->fetchRow($select)->toArray();
+        return $row;
+    }
+
+    public function isConnectionAllowed(array $fromEntity, array $toEntity)
+    {
+        if ($fromEntity['allowedall'] === 'yes') {
+            return true;
+        }
+
+        $blockedConnections = $this->_fetchBlockedEntities($fromEntity['eid']);
+        if (count($blockedConnections) && !array_key_exists($toEntity['entityid'], $blockedConnections)) {
+            return true;
+        }
+
+        $allowedConnections = $this->_fetchAllowedEntities($fromEntity['eid']);
+        if (count($allowedConnections) && array_key_exists($toEntity['entityid'], $allowedConnections)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected  function _fetchBlockedEntities($eid)
+    {
+        $dao = new ServiceRegistry_Model_DbTable_JanusEntity();
+
+        $rev_fields = array(
+            'eid' => 'eid',
+            'maxrev' => 'max(revisionid)',
+        );
+
+        $rev_select = $dao->select()->from(
+            array('janus__entity'),
+            $rev_fields)
+                ->where('eid = ?', $eid)
+                ->group('eid');
+
+        $fields = array(
+            'eid' => 'eid',
+            'revisionid' => 'revisionid',
+            'remoteentityid' => 'remoteentityid',
+            'created' => 'created',
+            'ip' => 'ip'
+        );
+
+        $rev_id = $dao->fetchRow($rev_select)->toArray();
+
+        $select = $dao->select()->setIntegrityCheck(false)->from(array('ent' => 'janus__blockedEntity'))
+                ->columns($fields)
+                ->where('ent.eid = ?', $eid)
+                ->where('ent.revisionid = ?', $rev_id['maxrev']);
+
+        $rows = $dao->fetchAll($select)->toArray();
+
+        $result = array();
+        foreach ($rows as $value) {
+            $result[$value['remoteentityid']] = $value;
+        }
+        return $result;
+    }
+
+    protected  function _fetchAllowedEntities($eid)
+    {
+        $dao = new ServiceRegistry_Model_DbTable_JanusEntity();
+
+        $rev_fields = array(
+            'eid' => 'eid',
+            'maxrev' => 'max(revisionid)',
+        );
+
+        $rev_select = $dao->select()->from(
+            array('janus__entity'),
+            $rev_fields
+        )
+                ->where('eid = ?', $eid)
+                ->group('eid');
+
+        $fields = array(
+            'eid' => 'eid',
+            'revisionid' => 'revisionid',
+            'remoteentityid' => 'remoteentityid',
+            'created' => 'created',
+            'ip' => 'ip'
+        );
+
+        $rev_id = $dao->fetchRow($rev_select)->toArray();
+
+        $select = $dao->select()->setIntegrityCheck(false)->from('janus__allowedEntity')
+                ->columns($fields)
+                ->where('eid = ?', $eid)
+                ->where('revisionid = ?', $rev_id['maxrev']);
+
+        $rows = $dao->fetchAll($select)->toArray();
+
+        $result = array();
+        foreach ($rows as $value) {
+            $result[$value['remoteentityid']] = $value;
         }
         return $result;
     }

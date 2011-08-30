@@ -129,3 +129,15 @@ YAHOO.widget.DataTable.Formatter.list = function(el, oRecord, oColumn, oData) {
         el.innerHTML = "";
     }
 };
+
+YAHOO.widget.DataTable.Formatter.showAllowedSPConnections = function(el, oRecord, oColumn, oData) {
+    var entityId = oRecord.getData('entityid');
+    var html = '<a href="/serviceregistry/allowed-connections/show-for-idp?eid=' + encodeURIComponent(entityId) + '">Allowed x§SP\'s</a>';
+    el.innerHTML += html;
+};
+
+YAHOO.widget.DataTable.Formatter.showAllowedIdPConnections = function(el, oRecord, oColumn, oData) {
+    var entityId = oRecord.getData('entityid');
+    var html = '<a href="/serviceregistry/allowed-connections/show-for-sp?eid=' + encodeURIComponent(entityId) + '">Allowed IdP\'s</a>';
+    el.innerHTML += html;
+};
