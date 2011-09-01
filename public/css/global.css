@@ -177,8 +177,9 @@ body {
 }
 
 .content {
-    margin-left: 150px;
+    float: left;
     padding: 10px;
+    width: 85%;
 }
 
 .flexigrid {
@@ -191,6 +192,7 @@ body {
 
 label {
     display: block;
+    font-weight: bold;  
 }
 
 fieldset {
@@ -210,6 +212,77 @@ fieldset {
 .datatable_ul {
     margin-left: 8px;
     margin-right: 4px;
+}
+
+span.relationTitle
+{
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 0 0 10px 0;
+}
+
+table.form_subtable {
+    margin: 0 0 24px 0;
+    width: 200px;
+}
+
+table.form_subtable tr td.fieldlabel {
+    padding: 10px 0 0 0;
+    
+}
+
+.fieldlabel {
+    font-weight: bold;
+}
+
+a:active {
+	outline: none;
+}
+a:focus {
+	-moz-outline-style: none;
+}
+#tabs_container {
+	width: 600px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+#tabs_container ul.tabs {
+	list-style: none;
+	border-bottom: 1px solid #ccc;
+	height: 21px;
+	margin: 0;
+}
+#tabs_container ul.tabs li {
+	float: left;
+}
+#tabs_container ul.tabs li a {
+	padding: 3px 10px;
+	display: block;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	margin-right: 2px;
+	text-decoration: none;
+	background-color: #efefef;
+}
+#tabs_container ul.tabs li.active a {
+	background-color: #fff;
+	padding-top: 4px;
+}
+div.tab_contents_container {
+	border: 1px solid #ccc;
+	border-top: none;
+	padding: 10px;
+}
+div.tab_contents {
+	display: none;
+}
+div.tab_contents_active {
+	display: block;
+}
+div.clear {
+	clear: both;
 }
 
 table, tr, th, td {

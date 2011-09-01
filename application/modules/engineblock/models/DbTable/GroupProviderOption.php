@@ -3,12 +3,9 @@
 /**
  *
  */
-class EngineBlock_Model_DbTable_GroupProviderPrecondition extends EngineBlock_Model_DbTable_Abstract {
+class EngineBlock_Model_DbTable_GroupProviderOption extends EngineBlock_Model_DbTable_Abstract {
 
-    protected $_name = 'group_provider_precondition';
-    protected $_dependentTables = array(
-        'EngineBlock_Model_DbTable_GroupProviderPreconditionOption',
-    );
+    protected $_name = 'group_provider_option';
     protected $_referenceMap = array(
         'GroupProvider' => array(
             'columns' => 'group_provider_id',

@@ -17,19 +17,13 @@ class EngineBlock_Model_GroupProviderPrecondition extends Default_Model_Abstract
      *
      * @var String
      */
-    public $precondition_id;
+    public $id;
 
     /**
-     * Precondition Class Name
+     * Type
      *
      * @var String
      */
-    public $precondition_class_name;
+    public $type;
 
-    /**
-     * Precondition Search
-     *
-     * @var String
-     */
-    public $precondition_search;
 }

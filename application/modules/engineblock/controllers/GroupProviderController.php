@@ -44,113 +44,21 @@ class EngineBlock_GroupProviderController extends Zend_Controller_Action
         $this->view->groupProvider = $groupProvider;
         $this->view->saveUrl = $this->view->url(array('action' => 'save'));
         $this->view->listUrl = $this->view->url(array('action' => 'list'));
+        $this->view->mode = 'add';
         $this->render('edit');
     }
 
     public function editAction()
     {
-        $this->view->group_provider_id = htmlentities($this->_getParam('group_provider_id'));
+        $this->view->id = htmlentities($this->_getParam('id'));
         $service = new EngineBlock_Service_GroupProvider();
-        $this->view->groupProvider = $service->fetchById($this->view->group_provider_id);
+        $this->view->groupProvider = $service->fetchById($this->view->id);
+
         // rebuild clean urls to prevent "/group_provider_id/..." in the urls when returning from editing:
         $this->view->saveUrl = $this->view->url(array('module' => 'engineblock', 'controller' => 'group-provider', 'action' => 'save'), null, true);
         $this->view->listUrl = $this->view->url(array('module' => 'engineblock', 'controller' => 'group-provider', 'action' => 'list'), null, true);
         $this->view->gridData = array();
-
-        // decorators grid
-        $inputFilter = $this->_helper->FilterLoader('decorators');
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir);
-        $service = new EngineBlock_Service_GroupProviderDecorator();
-        $decoratorRecords = $service->listSearch($params, $this->view->group_provider_id);
-        $this->view->gridData['decorators'] = array(
-            'gridConfig' => $this->_helper->gridSetup($inputFilter, 'decorators'),
-        );
-
-        // preconditions grid
-        $inputFilter = $this->_helper->FilterLoader('preconditions');
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir);
-        $service = new EngineBlock_Service_GroupProviderPrecondition();
-        $preconditionRecords = $service->listSearch($params, $this->view->group_provider_id);
-        $this->view->gridData['preconditions'] = array(
-            'gridConfig' => $this->_helper->gridSetup($inputFilter, 'preconditions'),
-        );
-
-        // group_filters grid
-        $inputFilter = $this->_helper->FilterLoader('group_filters');
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir);
-        $service = new EngineBlock_Service_GroupProviderGroupFilter();
-        $group_filterRecords = $service->listSearch($params, $this->view->group_provider_id);
-        $this->view->gridData['group_filters'] = array(
-            'gridConfig' => $this->_helper->gridSetup($inputFilter, 'group_filters'),
-        );
-
-        // group_member_filters grid
-        $inputFilter = $this->_helper->FilterLoader('group_member_filters');
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir);
-        $service = new EngineBlock_Service_GroupProviderGroupMemberFilter();
-        $group_member_filterRecords = $service->listSearch($params, $this->view->group_provider_id);
-        $this->view->gridData['group_member_filters'] = array(
-            'gridConfig' => $this->_helper->gridSetup($inputFilter, 'group_member_filters'),
-        );
-
-        // json context dependent variables
-        if ($this->_getParam('format') == 'json') {
-            $this->view->gridid = $this->_getParam('gridid');
-            switch ($this->view->gridid) {
-                case 'decorators' :
-                    $this->view->ResultSet = $this->view->groupProvider->decorators; //$results->getResults();
-                    $this->view->startIndex = $decoratorRecords->getParameters()->getOffset();
-                    $this->view->recordsReturned = $decoratorRecords->getResultCount();
-                    $this->view->totalRecords = $decoratorRecords->getTotalCount();
-                    $this->view->addUrl = $this->view->url(array('action' => 'decoratoradd'));
-                    $this->view->editUrl = $this->view->url(array('action' => 'decoratoredit'));
-                    break;
-                case 'preconditions' :
-                    $this->view->ResultSet = $this->view->groupProvider->preconditions; //$results->getResults();
-                    $this->view->startIndex = $preconditionRecords->getParameters()->getOffset();
-                    $this->view->recordsReturned = $preconditionRecords->getResultCount();
-                    $this->view->totalRecords = $preconditionRecords->getTotalCount();
-                    $this->view->addUrl = $this->view->url(array('action' => 'preconditionadd'));
-                    $this->view->editUrl = $this->view->url(array('action' => 'preconditionedit'));
-                    break;
-                case 'group_filters' :
-                    $this->view->ResultSet = $this->view->groupProvider->group_filters; //$results->getResults();
-                    $this->view->startIndex = $group_filterRecords->getParameters()->getOffset();
-                    $this->view->recordsReturned = $group_filterRecords->getResultCount();
-                    $this->view->totalRecords = $group_filterRecords->getTotalCount();
-                    $this->view->addUrl = $this->view->url(array('action' => 'groupfilteradd'));
-                    $this->view->editUrl = $this->view->url(array('action' => 'groupfilteredit'));
-                    break;
-                case 'group_member_filters' :
-                    $this->view->ResultSet = $this->view->groupProvider->group_member_filters; //$results->getResults();
-                    $this->view->startIndex = $group_member_filterRecords->getParameters()->getOffset();
-                    $this->view->recordsReturned = $group_member_filterRecords->getResultCount();
-                    $this->view->totalRecords = $group_member_filterRecords->getTotalCount();
-                    $this->view->addUrl = $this->view->url(array('action' => 'groupmemberfilteradd'));
-                    $this->view->editUrl = $this->view->url(array('action' => 'groupmemberfilteredit'));
-                    break;
-                default :
-                    break;
-            }
-        } else {
-            $this->view->ResultSet = array();
-        }
+        $this->view->mode = 'edit';
     }
     
     public function saveAction()
@@ -158,14 +66,14 @@ class EngineBlock_GroupProviderController extends Zend_Controller_Action
         $this->view->listUrl = $this->view->url(array('action' => 'list'));
 
         $service = new EngineBlock_Service_GroupProvider();
-        $groupProvider = $service->save($this->_getAllParams(), true);
+        $groupProvider = $service->save($this->_getAllParams());
 
         if (empty($groupProvider->errors)) {
             $this->_redirect($this->view->url(array('module' => 'engineblock', 'controller' => 'group-provider', 'action' => 'list'), null, true));
         }
         else {
-            $groupProvider->gp_id = $this->_getParam('org_gp_id');
-            $this->view->GroupProvider = $groupProvider;
+            $this->view->groupProvider = $groupProvider;
+            $this->view->mode = (intval($groupProvider->id) > 0 ? 'edit' : 'add');
             $this->render('edit');
         }
     }
