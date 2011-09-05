@@ -71,14 +71,14 @@ class EngineBlock_Model_Mapper_GroupProvider
 
     protected function _mapPreconditionsToGroupProvider(Array $preconditions, $groupProvider) {
         // translate preconditions to model properties
-        foreach ($preconditions as $p) {
-            switch ($p['type']) {
+        foreach ($preconditions as $precondition) {
+            switch ($precondition['classname']) {
                 case "EngineBlock_Group_Provider_Precondition_UserId_PregMatch":
                     $groupProvider->user_id_match = 'on';
-                    if (is_array($p['options'])) {
-                        foreach($p['options'] as $o) {
-                            if ($o['name'] == 'search') {
-                                $groupProvider->user_id_match_search = $o['value'];
+                    if (is_array($precondition['options'])) {
+                        foreach($precondition['options'] as $preconditionOption) {
+                            if ($preconditionOption['name'] == 'search') {
+                                $groupProvider->user_id_match_search = $preconditionOption['value'];
                             }
                         }
                     }
@@ -123,21 +123,21 @@ class EngineBlock_Model_Mapper_GroupProvider
     }    
     
     protected function _mapFiltersToGroupProvider(Array $filters, EngineBlock_Model_GroupProvider $groupProvider) {
-        foreach ($filters as $f) {
-            switch ($f['type']) {
+        foreach ($filters as $filter) {
+            switch ($filter['type']) {
                 case "group":
                     $groupProvider->modify_group = 'on';
                     $rule = array();
-                    if (is_array($f['options'])) {
-                        foreach($f['options'] as $o) {
-                            if ($o['name'] == 'property') {
-                                $rule['property'] = $o['value'];
+                    if (is_array($filter['options'])) {
+                        foreach($filter['options'] as $filterOption) {
+                            if ($filterOption['name'] == 'property') {
+                                $rule['property'] = $filterOption['value'];
                             }
-                            if ($o['name'] == 'search') {
-                                $rule['search'] = $o['value'];
+                            if ($filterOption['name'] == 'search') {
+                                $rule['search'] = $filterOption['value'];
                             }
-                            if ($o['name'] == 'replace') {
-                                $rule['replace'] = $o['value'];
+                            if ($filterOption['name'] == 'replace') {
+                                $rule['replace'] = $filterOption['value'];
                             }
                         }
                     }
@@ -149,16 +149,16 @@ class EngineBlock_Model_Mapper_GroupProvider
                 case "groupMember":
                     $groupProvider->modify_user = 'on';
                     $rule = array();
-                    if (is_array($f['options'])) {
-                        foreach($f['options'] as $o) {
-                            if ($o['name'] == 'property') {
-                                $rule['property'] = $o['value'];
+                    if (is_array($filter['options'])) {
+                        foreach($filter['options'] as $filterOption) {
+                            if ($filterOption['name'] == 'property') {
+                                $rule['property'] = $filterOption['value'];
                             }
-                            if ($o['name'] == 'search') {
-                                $rule['search'] = $o['value'];
+                            if ($filterOption['name'] == 'search') {
+                                $rule['search'] = $filterOption['value'];
                             }
-                            if ($o['name'] == 'replace') {
-                                $rule['replace'] = $o['value'];
+                            if ($filterOption['name'] == 'replace') {
+                                $rule['replace'] = $filterOption['value'];
                             }
                         }
                     }
