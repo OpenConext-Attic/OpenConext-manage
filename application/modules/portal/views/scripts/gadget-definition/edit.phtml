@@ -131,11 +131,9 @@
     </fieldset>
     <?php endif; ?>
 
+    <input id="submit" name="submit" value="Save" type="submit">
     <?php if ($model->isCustom) : ?>
-       <fieldset>
-           <a href="/portal/gadget-definition/promote/id/<?php echo $this->escape($model->id); ?>">Promote to official gadget</a>
-       </fieldset>
+        <input id="promote" name="promote" value="Promote to official gadget" type="submit">
     <?php endif; ?>
 
-    <input id="submit" name="submit" value="Save" type="submit">
 </form>

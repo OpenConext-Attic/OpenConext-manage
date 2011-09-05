@@ -115,8 +115,11 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
         $data = $this->_getAllParams();
         $data['isCustom'] = true;
         $service = new Portal_Service_GadgetDefinition();
+        $promote = $this->_getParam('promote');
+        if ($promote) {
+            $data['isCustom'] = false;
+        }
         $gadgetDefinition = $service->save($data, true);
-
         if (empty($gadgetDefinition->errors)) {
             $this->_redirect($this->view->url(array('action'=>'list-custom')));
         }
