@@ -184,7 +184,7 @@ class EngineBlock_Model_Mapper_GroupProvider
             $optionRows = $row->findDependentRowset('EngineBlock_Model_DbTable_GroupProviderOption');
         } else {
             $row = $this->_gpTable->createRow();
-            $optionRows = null;
+            $optionRows = array();
         }
 
         // check the PK
@@ -337,7 +337,7 @@ class EngineBlock_Model_Mapper_GroupProvider
         return $groupProvider;
     }
 
-    protected function _mapGroupProviderToRow(EngineBlock_Model_GroupProvider $groupProvider, Zend_Db_Table_Row_Abstract $row, Zend_Db_Table_Rowset $optionRows)
+    protected function _mapGroupProviderToRow(EngineBlock_Model_GroupProvider $groupProvider, Zend_Db_Table_Row_Abstract $row, $optionRows)
     {
         // the basics
         $row['id'] = $groupProvider->id;
