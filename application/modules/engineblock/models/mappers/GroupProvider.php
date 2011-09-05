@@ -163,7 +163,9 @@ class EngineBlock_Model_Mapper_GroupProvider
                         }
                     }
                     // all options are obligatory
-                    if (count($rule) == 3) $groupProvider->modify_user_rule[] = $rule;
+                    if (count($rule) == 3) {
+                        $groupProvider->modify_user_rule[] = $rule;
+                    }
                     break;                
             }
         }
@@ -339,7 +341,6 @@ class EngineBlock_Model_Mapper_GroupProvider
             // clean multiple slashes (except ://)
             $groupProvider->url = preg_replace('/([^:])([\/]+)([^\/]|$)/', "$1/$3", $groupProvider->url);
         }
-  
         return $groupProvider;
     }
 
@@ -352,20 +353,26 @@ class EngineBlock_Model_Mapper_GroupProvider
 
         // transformations model->row: 
         // * authentication type -> classname
-        $authType = (is_array($groupProvider->authentication) ? $groupProvider->authentication[0] : "GROUPER");
-        switch($authType) {
-            case 'BASIC':
-                $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('OPENSOCIAL_BASIC');
-                break;
-            case 'OAUTH':
-                $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('OPENSOCIAL_OAUTH');
-                break;
-            case 'GROUPER':
-                $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('GROUPER');
-                break;
-            default:
-                $row['classname'] = $groupProvider->fullClassname;
-                break;
+
+        if (isset($groupProvider->authentication)) {
+            $authType = (is_array($groupProvider->authentication) ? $groupProvider->authentication[0] : "GROUPER");
+            switch($authType) {
+                case 'BASIC':
+                    $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('OPENSOCIAL_BASIC');
+                    break;
+                case 'OAUTH':
+                    $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('OPENSOCIAL_OAUTH');
+                    break;
+                case 'GROUPER':
+                    $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('GROUPER');
+                    break;
+                default:
+                    $row['classname'] = $groupProvider->fullClassname;
+                    break;
+            }
+        }
+        else if (isset($groupProvider->classname)) {
+            $row['classname'] = EngineBlock_Model_GroupProvider::getClassname($groupProvider->classname);
         }
         // *         
 
