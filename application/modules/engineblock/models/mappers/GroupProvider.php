@@ -491,4 +491,13 @@ class EngineBlock_Model_Mapper_GroupProvider
         
         return array($row, $newOptionRows, $preconditions, $decorators, $filters);
     }
+
+    public function delete($id)
+    {
+        $rows = $this->_gpTable->find($id);
+        if ($rows->count() < 1) {
+            return false;
+        }
+        return $rows->current()->delete();
+    }
 }
