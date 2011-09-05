@@ -1,4 +1,9 @@
-<?php $model = $this->groupProvider; ?>
+<?php
+/**
+ * @var Zend_View $this
+ * @var EngineBlock_Model_GroupProvider $model
+ */
+$model = $this->groupProvider; ?>
 <?php $this->headScript()->appendFile('/javascript/jquery-1.4.4.min.js'); ?>
 
 <h2>Group Provider Details</h2>
@@ -463,14 +468,14 @@
         <?php if (isset($model->errors['modify_group_rules'])): foreach ($model->errors['modify_group_rules'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
-        <?php if (!is_array($model->modify_group_rules) || count($model->modify_group_rules) == 0) : ?>
+        <?php if (!is_array($model->modify_group_rule) || count($model->modify_group_rule) == 0) : ?>
         <p id="group_novaluesmessage" style="margin-left: 60px;">
             - no rules -
         </p>
         <?php endif; ?>
         <ul id="group_rule_list">
-        <?php if (is_array($model->modify_group_rules)) : ?>
-            <?php foreach ($model->modify_group_rules as $i => $rule) : ?>
+        <?php if (is_array($model->modify_group_rule)) : ?>
+            <?php foreach ($model->modify_group_rule as $i => $rule) : ?>
                 <li  style="margin-left: 60px;" id="modify_group_rules_<?php echo $i ?>">In <strong>[<?php echo $rule['property']; ?>]</strong> replace <strong>"<?php echo $rule['search']; ?>"</strong> with <strong>"<?php echo $rule['replace']; ?>"</strong>
                     <a href="#group_rule_list" style="margin-left: 50px" onclick="removeGroupRule(<?php echo $i ?>);">[remove]</a>
                 <input type="hidden" name="modify_group_rule[<?php echo $i ?>][property]" value ="<?php echo $rule['property']; ?>"/>
@@ -509,14 +514,14 @@
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
 
-        <?php if (!is_array($model->modify_user_rules) || count($model->modify_user_rules) == 0) : ?>
+        <?php if (!is_array($model->modify_user_rule) || count($model->modify_user_rule) == 0) : ?>
         <p id="user_novaluesmessage" style="margin-left: 60px;">
             - no rules -
         </p>
         <?php endif; ?>
         <ul id="user_rule_list">
-        <?php if (is_array($model->modify_user_rules)) : ?>
-            <?php foreach ($model->modify_user_rules as $j => $rule) : ?>
+        <?php if (is_array($model->modify_user_rule)) : ?>
+            <?php foreach ($model->modify_user_rule as $j => $rule) : ?>
                 <li  style="margin-left: 60px;" id="modify_user_rules_<?php echo $j ?>">In <strong>[<?php echo $rule['property']; ?>]</strong> replace <strong>"<?php echo $rule['search']; ?>"</strong> with <strong>"<?php echo $rule['replace']; ?>"</strong>
                     <a href="#user_rule_list" style="margin-left: 50px" onclick="removeUserRule(<?php echo $j ?>);">[remove]</a>
                 <input type="hidden" name="modify_user_rule[<?php echo $j ?>][property]" value ="<?php echo $rule['property']; ?>"/>
@@ -575,7 +580,7 @@
 
 <script>
     // group rules
-    var groupRuleCount = <?php echo ($i > 0 ? $i : 0) ?>;
+    var groupRuleCount = <?php echo count($model->modify_group_rule); ?>;
     var addGroupRule = function() {
         var gr_property = $('#modify_group_rules_property').val();
         var gr_search = $('#modify_group_rules_search').val();
@@ -599,7 +604,7 @@
         $('#modify_group_rules_'+i).remove();
     };
     // user rules
-    var userRuleCount = <?php echo ($j > 0 ? $j : 0) ?>;
+    var userRuleCount = <?php echo count($model->modify_user_rule); ?>;;
     var addUserRule = function() {
         var gr_property = $('#modify_user_rules_property').val();
         var gr_search = $('#modify_user_rules_search').val();
