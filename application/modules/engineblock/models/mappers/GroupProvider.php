@@ -122,7 +122,7 @@ class EngineBlock_Model_Mapper_GroupProvider
         return $groupProvider;
     }    
     
-    protected function _mapFiltersToGroupProvider(Array $filters, $groupProvider) {
+    protected function _mapFiltersToGroupProvider(Array $filters, EngineBlock_Model_GroupProvider $groupProvider) {
         foreach ($filters as $f) {
             switch ($f['type']) {
                 case "group":
@@ -142,7 +142,9 @@ class EngineBlock_Model_Mapper_GroupProvider
                         }
                     }
                     // all options are obligatory
-                    if (count($rule) == 3) $groupProvider->modify_group_rules[] = $rule;
+                    if (count($rule) == 3) {
+                        $groupProvider->modify_group_rule[] = $rule;
+                    }
                     break;                
                 case "groupMember":
                     $groupProvider->modify_user = 'on';
@@ -161,13 +163,17 @@ class EngineBlock_Model_Mapper_GroupProvider
                         }
                     }
                     // all options are obligatory
-                    if (count($rule) == 3) $groupProvider->modify_user_rules[] = $rule;
+                    if (count($rule) == 3) $groupProvider->modify_user_rule[] = $rule;
                     break;                
             }
         }
         // no sense in checking the box if there are no rules
-        if (count($groupProvider->modify_group_rules) == 0) $groupProvider->modify_group = null;
-        if (count($groupProvider->modify_user_rules) == 0) $groupProvider->modify_user = null;
+        if (count($groupProvider->modify_group_rule) == 0) {
+            $groupProvider->modify_group = null;
+        }
+        if (count($groupProvider->modify_user_rule) == 0) {
+            $groupProvider->modify_user = null;
+        }
         // done
         return $groupProvider;
     }    
@@ -328,7 +334,7 @@ class EngineBlock_Model_Mapper_GroupProvider
         }
         
         // special case: grouper URL is built from several components
-        if ($groupProvider->classname == "GROUPER") {
+        if ($groupProvider->classname == "GROUPER" && isset($groupProvider->host)) {
             $groupProvider->url = $groupProvider->protocol.'://'.$groupProvider->host.'/'.$groupProvider->version.'/'.$groupProvider->path;
             // clean multiple slashes (except ://)
             $groupProvider->url = preg_replace('/([^:])([\/]+)([^\/]|$)/', "$1/$3", $groupProvider->url);

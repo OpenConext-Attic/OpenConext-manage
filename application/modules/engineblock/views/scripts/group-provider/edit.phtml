@@ -113,7 +113,7 @@
         <input id="timeout"
                name="timeout"
                type="text"
-               value="<?php echo $this->escape($model->timeout); ?>"
+               value="<?php if (isset($model->timeout)) { echo $this->escape($model->timeout); } ?>"
                size="100"
                maxlength="255"
                 />
@@ -126,7 +126,7 @@
         <input id="ssl_verifyhost"
                name="ssl_verifyhost"
                type="checkbox"
-               <?php echo ($model->ssl_verifyhost == 'on' ? 'checked="checked"' : ''); ?>
+               <?php echo (isset($model->ssl_verifyhost) && $model->ssl_verifyhost == 'on' ? 'checked="checked"' : ''); ?>
                size="100"
                maxlength="255"
                 />
@@ -139,7 +139,7 @@
         <input id="ssl_verifypeer"
                name="ssl_verifypeer"
                type="checkbox"
-               <?php echo ($model->ssl_verifypeer == 'on' ? 'checked="checked"' : ''); ?>
+               <?php echo (isset($model->ssl_verifypeer) && $model->ssl_verifypeer == 'on' ? 'checked="checked"' : ''); ?>
                size="100"
                maxlength="255"
                 />
@@ -155,7 +155,7 @@
         <input id="url"
                name="url"
                type="text"
-               value="<?php echo $this->escape($model->url); ?>"
+               value="<?php if (isset($model->url)) { echo $this->escape($model->url); } ?>"
                size="100"
                maxlength="255"
                 />
@@ -569,7 +569,8 @@
     
 <?php endif; ?>
     
-    <input type="submit" value="Save"></input>&nbsp;<input type="button" value="Cancel" onclick="javascript:location.href='<?php echo $this->listUrl;?>'">
+    <input type="submit" value="Save" />&nbsp;
+    <input type="button" value="Cancel" onclick="javascript:location.href='<?php echo $this->listUrl;?>'">
 </form>
 
 <script>
@@ -593,10 +594,10 @@
         $('#modify_group_rules_property').val('');
         $('#modify_group_rules_search').val('');
         $('#modify_group_rules_replace').val('');
-    }
+    };
     var removeGroupRule = function(i) {
         $('#modify_group_rules_'+i).remove();
-    }
+    };
     // user rules
     var userRuleCount = <?php echo ($j > 0 ? $j : 0) ?>;
     var addUserRule = function() {
@@ -617,10 +618,10 @@
         $('#modify_user_rules_property').val('');
         $('#modify_user_rules_search').val('');
         $('#modify_user_rules_replace').val('');
-    }
+    };
     var removeUserRule = function(i) {
         $('#modify_user_rules_'+i).remove();
-    }
+    };
 
 <?php if ($this->mode == 'edit' && substr($model->classname, 0, 10) == 'OPENSOCIAL') : ?>
     // OPENSOCIAL authorization tab control
