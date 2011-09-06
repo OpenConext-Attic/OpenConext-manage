@@ -234,18 +234,6 @@ $model = $this->groupProvider; ?>
                                maxlength="255"
                                 />
                     </fieldset>
-                    <fieldset title="Signature Method">
-                        <?php if (isset($model->errors['signature_method'])): foreach ($model->errors['signature_method'] as $error): ?>
-                        <div class="form-error"><?php echo $error; ?></div>
-                        <?php endforeach; endif; ?>
-                        <label>Signature Method: </label>
-                        <select id="signature_method" name="signature_method">                            
-                            <option value="HMAC-SHA1" <?php echo ($model->signature_method == 'HMAC-SHA1' ? 'selected="selected"' : '') ?>>HMAC-SHA1</option>
-                            <option value="HMAC-SHA256" <?php echo ($model->signature_method == 'HMAC-SHA256' ? 'selected="selected"' : '') ?>>HMAC-SHA256</option>
-                            <option value="RSA-SHA1" <?php echo ($model->signature_method == 'RSA-SHA1' ? 'selected="selected"' : '') ?>>RSA-SHA1</option>
-                            <option value="PLAINTEXT" <?php echo ($model->signature_method == 'PLAINTEXT' ? 'selected="selected"' : '') ?>>PLAINTEXT</option>
-                        </select>
-                    </fieldset>
                     <fieldset title="Callback URL">
                         <?php if (isset($model->errors['callback_url'])): foreach ($model->errors['callback_url'] as $error): ?>
                         <div class="form-error"><?php echo $error; ?></div>
@@ -336,38 +324,24 @@ $model = $this->groupProvider; ?>
                             <option value="DELETE" <?php echo ($model->request_method == 'DELETE' ? 'selected="selected"' : '') ?>>DELETE</option>
                         </select>
                     </fieldset>
-                    <fieldset title="RSA Public Key">
-                        <?php if (isset($model->errors['rsa_public_key'])): foreach ($model->errors['rsa_public_key'] as $error): ?>
+                    <fieldset title="Signature Method">
+                        <?php if (isset($model->errors['signature_method'])): foreach ($model->errors['signature_method'] as $error): ?>
                         <div class="form-error"><?php echo $error; ?></div>
                         <?php endforeach; endif; ?>
-                        <label>RSA Public Key: </span></label>
-                        <input id="rsa_public_key"
-                               name="rsa_public_key"
-                               type="text"
-                               value="<?php echo $this->escape($model->rsa_public_key); ?>"
-                               size="100"
-                               maxlength="255"
-                                />
-                    </fieldset>
-                    <fieldset title="RSA Private Key">
-                        <?php if (isset($model->errors['rsa_private_key'])): foreach ($model->errors['rsa_private_key'] as $error): ?>
-                        <div class="form-error"><?php echo $error; ?></div>
-                        <?php endforeach; endif; ?>
-                        <label>RSA Private Key: </span></label>
-                        <input id="rsa_private_key"
-                               name="rsa_private_key"
-                               type="text"
-                               value="<?php echo $this->escape($model->rsa_private_key); ?>"
-                               size="100"
-                               maxlength="255"
-                                />
+                        <label>Signature Method: </label>
+                        <select id="signature_method" name="signature_method">
+                            <option value="HMAC-SHA1" <?php echo ($model->signature_method == 'HMAC-SHA1' ? 'selected="selected"' : '') ?>>HMAC-SHA1</option>
+                            <option value="HMAC-SHA256" <?php echo ($model->signature_method == 'HMAC-SHA256' ? 'selected="selected"' : '') ?>>HMAC-SHA256</option>
+                            <option value="RSA-SHA1" <?php echo ($model->signature_method == 'RSA-SHA1' ? 'selected="selected"' : '') ?>>RSA-SHA1</option>
+                            <option value="PLAINTEXT" <?php echo ($model->signature_method == 'PLAINTEXT' ? 'selected="selected"' : '') ?>>PLAINTEXT</option>
+                        </select>
                     </fieldset>
                     <fieldset title="Request Scheme">
                         <?php if (isset($model->errors['request_scheme'])): foreach ($model->errors['request_scheme'] as $error): ?>
                         <div class="form-error"><?php echo $error; ?></div>
                         <?php endforeach; endif; ?>
                         <label>Request Scheme: </span></label>
-                        <select id="request_scheme" name="request_scheme">                            
+                        <select id="request_scheme" name="request_scheme">
                             <option value="HEADER" <?php echo ($model->request_scheme == 'HEADER' ? 'selected="selected"' : '') ?>>HEADER</option>
                             <option value="POSTBODY" <?php echo ($model->request_scheme == 'POSTBODY' ? 'selected="selected"' : '') ?>>POSTBODY</option>
                             <option value="QUERYSTRING" <?php echo ($model->request_scheme == 'QUERYSTRING' ? 'selected="selected"' : '') ?>>QUERYSTRING</option>
@@ -377,14 +351,39 @@ $model = $this->groupProvider; ?>
                         <?php if (isset($model->errors['timeout'])): foreach ($model->errors['timeout'] as $error): ?>
                         <div class="form-error"><?php echo $error; ?></div>
                         <?php endforeach; endif; ?>
-                        <label>Timeout: </span></label>
+                        <label>Timeout (in seconds): </span></label>
                         <input id="timeout"
                                name="timeout"
                                type="text"
                                value="<?php echo $this->escape($model->timeout); ?>"
-                               size="100"
+                               size="5"
                                maxlength="255"
+                               style="text-align: right"
                                 />
+                    </fieldset>
+                    <fieldset title="RSA Public Key">
+                        <?php if (isset($model->errors['rsa_public_key'])): foreach ($model->errors['rsa_public_key'] as $error): ?>
+                        <div class="form-error"><?php echo $error; ?></div>
+                        <?php endforeach; endif; ?>
+                        <label>RSA Public Key: </span></label>
+                        <textarea id="rsa_public_key"
+                                  name="rsa_public_key"
+                                  cols="100"
+                                  rows="20"><?php
+                            echo $this->escape($model->rsa_public_key);
+                        ?></textarea>
+                    </fieldset>
+                    <fieldset title="RSA Private Key">
+                        <?php if (isset($model->errors['rsa_private_key'])): foreach ($model->errors['rsa_private_key'] as $error): ?>
+                        <div class="form-error"><?php echo $error; ?></div>
+                        <?php endforeach; endif; ?>
+                        <label>RSA Private Key: </span></label>
+                        <textarea id="rsa_private_key"
+                                  name="rsa_private_key"
+                                  cols="100"
+                                  rows="20"><?php
+                            echo $this->escape($model->rsa_private_key);
+                        ?></textarea>
                     </fieldset>
                 </div>
             </div>
