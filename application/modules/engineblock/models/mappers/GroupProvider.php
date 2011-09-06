@@ -395,14 +395,14 @@ class EngineBlock_Model_Mapper_GroupProvider
             // mandatory precondition for OAuth
             $preconditions[] = array(
                 'group_provider_id' => $groupProvider->id,
-                'type' => 'EngineBlock_Group_Provider_Precondition_OpenSocial_Oauth_AccessTokenExists',
+                'classname' => 'EngineBlock_Group_Provider_Precondition_OpenSocial_Oauth_AccessTokenExists',
             );
         }
         if ($groupProvider->user_id_match == 'on') {
             // user id must match
             $preconditions[] = array(
                 'group_provider_id' => $row['id'],
-                'type' => 'EngineBlock_Group_Provider_Precondition_UserId_PregMatch',
+                'classname' => 'EngineBlock_Group_Provider_Precondition_UserId_PregMatch',
                 'options' => array(
                     array('name' => 'search', 'value' => $groupProvider->user_id_match_search)
                 ),
@@ -488,7 +488,6 @@ class EngineBlock_Model_Mapper_GroupProvider
                 }
             }
         }        
-        
         return array($row, $newOptionRows, $preconditions, $decorators, $filters);
     }
 
