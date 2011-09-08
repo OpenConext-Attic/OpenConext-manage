@@ -422,7 +422,7 @@ $model = $this->groupProvider; ?>
         <div style="float: left; width: 35px; height: 210px;">
             <img src="/images/icons/group.png" alt="Groups"/>
         </div>
-        <label>Provider IN: </span></label>
+        <label>GroupProvider Group IN: </span></label>
         <?php if (isset($model->errors['modify_group_id'])): foreach ($model->errors['modify_group_id'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
@@ -453,7 +453,7 @@ $model = $this->groupProvider; ?>
                 /><br/>
         <div style="float: left; margin-left: 88px; font-size: smaller">Regular expressions are allowed.</div>
         <br/><br/>
-        <label>Provider OUT: </span></label>
+        <label>GroupProvider Group OUT: </span></label>
         <?php if (isset($model->errors['modify_group_id'])): foreach ($model->errors['modify_group_id'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
@@ -499,7 +499,38 @@ $model = $this->groupProvider; ?>
         <div style="float: left; width: 35px; height: 210px;">
             <img src="/images/icons/user.png" alt="Users"/>
         </div>
-        <label>Provider IN  : </span></label>
+        <label>GroupProvider User IN: </span></label>
+        <?php if (isset($model->errors['modify_user_id'])): foreach ($model->errors['modify_user_id'] as $error): ?>
+        <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <input id="modify_user_id"
+               name="modify_user_id"
+               type="checkbox"
+               <?php echo ($model->modify_user_id == 'on' ? 'checked="checked"' : ''); ?>
+                /> Modify User Id
+        <br/>
+        <?php if (isset($model->errors['modify_user_id_search'])): foreach ($model->errors['modify_user_id_search'] as $error): ?>
+        <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <div style="width: 65px; float: left; line-height: 23px; margin-left: 23px;">Search: </div>
+        <input id="modify_user_id_search"
+               name="modify_user_id_search"
+               type="text"
+               value="<?php echo $this->escape($model->modify_user_id_search); ?>"
+               size="70"
+               maxlength="255"
+                /><br/>
+        <div style="width: 65px; float: left; line-height: 23px; margin-left: 23px;">Replace: </div>
+        <input id="modify_user_id_replace"
+               name="modify_user_id_replace"
+               type="text"
+               value="<?php echo $this->escape($model->modify_user_id_replace); ?>"
+               size="70"
+               maxlength="255"
+                /><br/>
+        <div style="float: left; margin-left: 88px; font-size: smaller">Regular expressions are allowed.</div>
+        </br>
+        <label>GroupProvider User OUT  : </span></label>
         <?php if (isset($model->errors['modify_user_id'])): foreach ($model->errors['modify_user_id'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
@@ -538,36 +569,7 @@ $model = $this->groupProvider; ?>
         with <input id="modify_user_rules_replace" type="text" size="20" maxlength="255"><input type="button" value="Add rule" onclick="addUserRule();"/>
         </div>
         <br/>
-        <label>Provider OUT: </span></label>
-        <?php if (isset($model->errors['modify_user_id'])): foreach ($model->errors['modify_user_id'] as $error): ?>
-        <div class="form-error"><?php echo $error; ?></div>
-        <?php endforeach; endif; ?>
-        <input id="modify_user_id"
-               name="modify_user_id"
-               type="checkbox"
-               <?php echo ($model->modify_user_id == 'on' ? 'checked="checked"' : ''); ?>               
-                /> Modify User Id
-        <br/>
-        <?php if (isset($model->errors['modify_user_id_search'])): foreach ($model->errors['modify_user_id_search'] as $error): ?>
-        <div class="form-error"><?php echo $error; ?></div>
-        <?php endforeach; endif; ?>
-        <div style="width: 65px; float: left; line-height: 23px; margin-left: 23px;">Search: </div>
-        <input id="modify_user_id_search"
-               name="modify_user_id_search"
-               type="text"
-               value="<?php echo $this->escape($model->modify_user_id_search); ?>"
-               size="70"
-               maxlength="255"
-                /><br/>
-        <div style="width: 65px; float: left; line-height: 23px; margin-left: 23px;">Replace: </div>
-        <input id="modify_user_id_replace"
-               name="modify_user_id_replace"
-               type="text"
-               value="<?php echo $this->escape($model->modify_user_id_replace); ?>"
-               size="70"
-               maxlength="255"
-                /><br/>
-        <div style="float: left; margin-left: 88px; font-size: smaller">Regular expressions are allowed.</div>
+
     </fieldset>
 
     
