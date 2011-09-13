@@ -1,0 +1,42 @@
+<form method="POST" id="contentEdit" action="<?php echo $this->url(array('action'=>'save')); ?>">
+    <input type="hidden" id="id" name="id" value="<?php echo $this->EmailConfiguration->id; ?>" />
+
+    <label for="email_type">Email Type</label>
+    <input type="text" name="email_type" id="email_type" size="80" value="<?php echo $this->EmailConfiguration->email_type; ?>" />
+
+    <label for="email_from">Sender</label>
+    <input type="text" name="email_from" id="email_from" size="80" value="<?php echo $this->EmailConfiguration->email_from; ?>" />
+
+    <label for="email_subject">Subject</label>
+    <input type="text" name="email_subject" id="email_subject" size="80" value="<?php echo $this->EmailConfiguration->email_subject; ?>" />
+
+    <br /><br />
+    <label for="email_text">Text</label>
+    <textarea name="email_text"
+              id="email_text"
+              cols="80"
+              rows="20"
+              style='font-family: "Lucida Sans Unicode","Lucida Grande",Arial,sans-serif; font-size: 11px;'
+              ><?php echo $this->EmailConfiguration->email_text; ?></textarea>
+    <br /><br />
+    <input type="submit" value="Save" />
+</form>
+
+<script type="text/javascript" src="/javascript/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+CKEDITOR.replace('email_text', {
+        enterMode : CKEDITOR.ENTER_BR,
+        toolbar: [
+            ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Scayt'],
+            ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
+            ['Image','Table','HorizontalRule','SpecialChar','PageBreak'],
+            ['Format'],
+            ['Bold','Italic','Strike'],
+            ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
+            ['Link','Unlink','Anchor'],
+            ['Source']
+        ],
+        skin : 'office2003'
+    }
+);
+</script>
