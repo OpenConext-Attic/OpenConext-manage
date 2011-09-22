@@ -78,7 +78,8 @@ class Default_ExportController extends Zend_Controller_Action
         $data['Aantal aangesloten IdPs'] = $connectedProviderTypes['idp'];
         $data['Aantal aangesloten SPs']  = $connectedProviderTypes['sp'];
         $data['Beschikbare tabs']        = $kpi->getTeamTabs($timestamp);
-
+        $data['Aantal gebruikers']       = $kpi->getUsers();
+        
         $vers = new Default_Service_Vers();
         $result = $vers->insertReport($data, $period);
         if ($result!==true) {

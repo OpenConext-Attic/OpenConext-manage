@@ -49,9 +49,8 @@ class Default_Service_Vers
         if (is_null($this->_client)) {
             // Create SOAP client
             $config = Zend_Registry::get('config')->toArray();
-            $env = $config['vers']['env'];
-            $versConfig = $config['vers']['full'][$env];
-
+            $env = $config->vers->env;
+            $versConfig = $config->vers->full->{$env};
             /*
              * The reporting client is an external, so the
              * Location/ naming convention is not exactly the
@@ -60,9 +59,9 @@ class Default_Service_Vers
              */
             require_once('Surfnet/ExternalReporting/Insert/Client.php');
             $this->_client = new ExternalReporting_Insert_Client(
-                $versConfig['wsdl_url'],
-                $versConfig['user_name'],
-                $versConfig['password']
+                $versConfig->wsdl_url,
+                $versConfig->user_name,
+                $versConfig->password
             );
         } else {
             $this->_client = $client;

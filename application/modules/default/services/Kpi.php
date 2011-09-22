@@ -22,6 +22,9 @@
  * @copyright Copyright © 2010-2011 SURFnet bv, The Netherlands (http://www.surfnet.nl)
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
+
+require_once('EngineBlock/UserDirectory.php');
+
 /**
  * SURFconext Key Performance Indicators
  */
@@ -191,6 +194,21 @@ class Default_Service_Kpi
         $service = new Portal_Service_Tab();
         $results = $service->searchTeams($params)->getResults();
         return $results[0]['num'];
+    }
+
+    /**
+     * Get the amount of currently connected users.
+     * This not quite the same as the other KPI's since it seems
+     * to be impossible to get deprovisioned users.
+     *
+     * @return Integer
+     */
+    public function getUsers()
+    {
+        $config = Zend_Registry::get('config');
+        $ldapConfig = $config->engineblock->ldap;
+        $userDirectory = new EngineBlock_UserDirectory($ldapConfig);
+        return $userDirectory->countUsersByIdentifier('*');
     }
 }
 
