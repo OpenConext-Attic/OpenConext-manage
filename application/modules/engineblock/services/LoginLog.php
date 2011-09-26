@@ -51,6 +51,25 @@ class EngineBlock_Service_LoginLog
         return $this->_searchCountGrouped('spentityname', $params);
     }
 
+    public function searchSpLoginsByIdp(Surfnet_Search_Parameters $params)
+    {
+        $params->addSearchParam('entity_field', 'spentityname');
+        return $this->_searchCountGrouped('idpentityname', $params);
+    }
+
+    public function searchIdpLoginsBySp(Surfnet_Search_Parameters $params)
+    {
+        $params->addSearchParam('entity_field', 'idpentityname');
+        return $this->_searchCountGrouped('spentityname', $params);
+    }
+
+    /**
+     * Get logins grouped by type (IDP or SP)
+     *
+     * @param String $groupByField
+     * @param Surfnet_Search_Parameters $params
+     * @return Surfnet_Search_Results
+     */
     protected function _searchCountGrouped($groupByField, Surfnet_Search_Parameters $params)
     {
         $dao = new EngineBlock_Model_DbTable_LogLogin();
@@ -80,10 +99,19 @@ class EngineBlock_Service_LoginLog
                 )
             );
         }
+        if (isset($searchParams['entity_field'])
+             && !empty($searchParams['entity_field'])) {
+            $select->where(
+                $this->_getEntityWhere(
+                    $searchParams['entity_field'], $searchParams['entity_id']
+                )
+            );
+        }
         $rows = $dao->fetchAll($select)->toArray();
 
         $select->reset(Zend_Db_Select::LIMIT_COUNT)
                ->reset(Zend_Db_Select::LIMIT_OFFSET);
+
         $countSelect = $dao->getAdapter()
             ->select()
             ->from($select)
@@ -109,4 +137,19 @@ class EngineBlock_Service_LoginLog
             $month
         );
     }
+    /**
+     * Get the SQL selector for entity
+     *
+     * @param String $field
+     * @param String $value
+     */
+    protected function _getEntityWhere($field, $value)
+    {
+        return sprintf(
+            "(`%s` = '%s')",
+            $field,
+            $value
+        );
+    }
+
 }

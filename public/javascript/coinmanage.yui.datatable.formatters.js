@@ -141,3 +141,15 @@ YAHOO.widget.DataTable.Formatter.showAllowedIdPConnections = function(el, oRecor
     var html = '<a href="/serviceregistry/allowed-connections/show-for-sp?eid=' + encodeURIComponent(entityId) + '">Allowed IdP\'s</a>';
     el.innerHTML += html;
 };
+
+YAHOO.widget.DataTable.Formatter.showSPLoginsByIdp = function(el, oRecord, oColumn, oData) {
+    var entityId = oRecord.getData('grouped');
+    var html = '<a href="/engineblock/login-overview/show-sp-logins-by-idp?eid=' + encodeURIComponent(entityId) + '">' + entityId + '</a>';
+    el.innerHTML += html;
+}
+
+YAHOO.widget.DataTable.Formatter.showIdPLoginsBySp = function(el, oRecord, oColumn, oData) {
+    var entityId = oRecord.getData('grouped');
+    var html = '<a href="/engineblock/login-overview/show-idp-logins-by-sp?eid=' + encodeURIComponent(entityId) + '">' + entityId + '</a>';
+    el.innerHTML += html;
+}
