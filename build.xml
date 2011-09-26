@@ -1,6 +1,8 @@
-<project name="SURFconext Manage" default="build">
-    <target name="build" depends="clean,prepare,lint,phpunit,phpqa" />
-    <target name="test" depends="clean,prepare,lint,phpunit" />
+<project name="SURFconext Manage" default="test">
+    <target name="test" depends="clean,prepare,lint" />
+    <target name="build" depends="clean,prepare,lint,phpqa" />
+    <target name="phpqa" depends="phpcs,phpmd,phpcb,phpcpd,pdepend" />
+
 
     <target name="clean">
         <delete dir="${basedir}/build" />
@@ -28,20 +30,29 @@
             </fileset>
         </apply>
     </target>
+
+    <target name="phpunit" description="Run unit tests">
+        <exec dir="${basedir}/tests" executable="phpunit" failonerror="true">
+            <arg line="--log-junit ${basedir}/build/logs/phpunit.xml
+                       --coverage-clover ${basedir}/build/logs/clover.xml
+                       --coverage-html ${basedir}/build/coverage
+                       ." />
+        </exec>
+    </target>
  
-    <target name="phpcs">
-        <exec dir="${basedir}" executable="phpcs" failonerror="false" output="/dev/null">
+    <target name="phpcs" description="CheckStyle with Zend style guidelines">
+        <exec dir="${basedir}" executable="phpcs" failonerror="false">
             <arg line="--extensions=php --ignore=build,tests,library/Zend,library/simplesamlphp --standard=Zend --tab-width=4 --report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml ." />
         </exec>
     </target>
  
-    <target name="phpmd">
+    <target name="phpmd" description="Project Mess Detection">
         <exec dir="${basedir}" executable="phpmd" failonerror="false">
-            <arg line=". xml codesize --reportfile ${basedir}/build/logs/pmd.xml" />
+            <arg line=". xml codesize --reportfile ${basedir}/build/logs/pmd.xml --exclude=build,tests,library/Zend,library/simplesamlphp" />
         </exec>
     </target>
  
-    <target name="phpcpd">
+    <target name="phpcpd" description="Copy &amp; Paste Detection">
         <exec dir="${basedir}" executable="phpcpd" failonerror="false">
             <arg line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml --exclude build --exclude tests --exclude library/Zend --exclude library/simplesamlphp ." />
         </exec>
@@ -50,13 +61,12 @@
         </exec>
     </target>
  
-    <target name="pdepend">
+    <target name="pdepend" description="Dependency Analysis">
         <exec dir="${basedir}" executable="pdepend" failonerror="false">
             <arg line="--jdepend-xml=${basedir}/build/logs/jdepend.xml
                        --jdepend-chart=${basedir}/build/dependencies/jdepend.svg
                        --overview-pyramid=${basedir}/build/dependencies/pyramid.svg
-                       --optimization=best
-                       --exclude=build,tests,library/Zend,library/simplesamlphp
+                       --ignore=build,tests,library/Zend,library/simplesamlphp
                        ." />
         </exec>
         <exec dir="${basedir}/build/dependencies" executable="cp" failonerror="false">
@@ -64,28 +74,9 @@
         </exec>
     </target>
  
-    <target name="phpcb">
+    <target name="phpcb" description="PHP CodeBrowser">
         <exec dir="${basedir}" executable="phpcb" failonerror="false">
-            <arg line="--log ${basedir}/build/logs --source ${basedir} --output ${basedir}/build/codebrowser" />
+            <arg line="--ignore=build,tests,library/Zend,library/simplesamlphp --log ${basedir}/build/logs --source ${basedir} --output ${basedir}/build/codebrowser" />
         </exec>
-    </target>
- 
-    <target name="phpunit">
-        <exec dir="${basedir}/tests" executable="phpunit" failonerror="true">
-            <arg line="--log-junit ${basedir}/build/logs/phpunit.xml
-                       --coverage-clover ${basedir}/build/logs/clover.xml
-                       --coverage-html ${basedir}/build/coverage
-                       ." />
-        </exec>
-    </target>
-
-    <target name="phpqa">
-        <parallel>
-            <antcall target="phpcs" />
-            <antcall target="phpmd" />
-            <antcall target="phpcb" />
-            <antcall target="phpcpd" />
-            <antcall target="pdepend" />
-        </parallel>
     </target>
 </project>
