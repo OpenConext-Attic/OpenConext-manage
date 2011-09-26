@@ -60,6 +60,8 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
          * Input filtering/validation.
          */
         $filters = array(
+            'year'       => array('Int'),
+            'month'      => array('Int'),
             'results'    => array('Int'),
             'startIndex' => array('Int'),
             'dir' =>array(
@@ -81,8 +83,9 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
             'filterNamespace'   => 'Surfnet_Filter',
             'allowEmpty'        => true
         );
-        $requestParams = array_merge(array_flip(array_keys($filters)), $this->getRequest()->getParams());
-
+        //Take default parameters from filter, zero out values.
+        $defaultParams = array_fill_keys(array_keys($filters), null);
+        $requestParams = array_merge($defaultParams, $this->getRequest()->getParams());
         return new Zend_Filter_Input(
             $filters,
             $validators,
