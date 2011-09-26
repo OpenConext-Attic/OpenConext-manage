@@ -48,7 +48,7 @@ class Default_Service_Vers
     {
         if (is_null($this->_client)) {
             // Create SOAP client
-            $config = Zend_Registry::get('config')->toArray();
+            $config = Zend_Registry::get('config');
             $env = $config->vers->env;
             $versConfig = $config->vers->full->{$env};
             /*
