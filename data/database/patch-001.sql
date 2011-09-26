@@ -1,2 +1,0 @@
-USE `engine_block`;
-ALTER TABLE `log_logins` ADD COLUMN `id` INT AUTO_INCREMENT PRIMARY KEY;
