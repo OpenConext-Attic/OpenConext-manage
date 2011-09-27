@@ -124,6 +124,9 @@ class Portal_GadgetDefinitionController extends Zend_Controller_Action
             $this->_redirect($this->view->url(array('action'=>'list-custom')));
         }
         else {
+            if ($promote) {
+                $gadgetDefinition->isCustom = true;
+            }
             $this->view->gadgetDefinition = $gadgetDefinition;
             $this->render('edit');
         }

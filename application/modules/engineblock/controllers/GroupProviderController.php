@@ -78,6 +78,15 @@ class EngineBlock_GroupProviderController extends Zend_Controller_Action
         }
     }
 
+    public function deleteAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $service = new EngineBlock_Service_GroupProvider();
+        $service->delete((int)$this->_getParam('id'));
+    }
+
     public function decoratoraddAction()
     {
         $this->view->group_provider_id = htmlentities($this->_getParam('group_provider_id'));

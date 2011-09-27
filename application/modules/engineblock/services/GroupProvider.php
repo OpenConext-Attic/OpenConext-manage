@@ -86,5 +86,16 @@ class EngineBlock_Service_GroupProvider
         }
         return $gp;
     }
-    
+
+
+    public function delete($id)
+    {
+        // Select Group Provider Records
+        $dao = new EngineBlock_Model_DbTable_GroupProvider();
+        $rows = $dao->find($id);
+        if ($rows->count() !== 1) {
+            throw new Exception("Group provider with id '$id' not found");
+        }
+        return $rows->current()->delete();
+    }
 }

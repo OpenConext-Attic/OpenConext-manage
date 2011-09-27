@@ -71,14 +71,14 @@ class EngineBlock_Model_Mapper_GroupProvider
 
     protected function _mapPreconditionsToGroupProvider(Array $preconditions, $groupProvider) {
         // translate preconditions to model properties
-        foreach ($preconditions as $p) {
-            switch ($p['type']) {
+        foreach ($preconditions as $precondition) {
+            switch ($precondition['classname']) {
                 case "EngineBlock_Group_Provider_Precondition_UserId_PregMatch":
                     $groupProvider->user_id_match = 'on';
-                    if (is_array($p['options'])) {
-                        foreach($p['options'] as $o) {
-                            if ($o['name'] == 'search') {
-                                $groupProvider->user_id_match_search = $o['value'];
+                    if (is_array($precondition['options'])) {
+                        foreach($precondition['options'] as $preconditionOption) {
+                            if ($preconditionOption['name'] == 'search') {
+                                $groupProvider->user_id_match_search = $preconditionOption['value'];
                             }
                         }
                     }
@@ -122,52 +122,60 @@ class EngineBlock_Model_Mapper_GroupProvider
         return $groupProvider;
     }    
     
-    protected function _mapFiltersToGroupProvider(Array $filters, $groupProvider) {
-        foreach ($filters as $f) {
-            switch ($f['type']) {
+    protected function _mapFiltersToGroupProvider(Array $filters, EngineBlock_Model_GroupProvider $groupProvider) {
+        foreach ($filters as $filter) {
+            switch ($filter['type']) {
                 case "group":
                     $groupProvider->modify_group = 'on';
                     $rule = array();
-                    if (is_array($f['options'])) {
-                        foreach($f['options'] as $o) {
-                            if ($o['name'] == 'property') {
-                                $rule['property'] = $o['value'];
+                    if (is_array($filter['options'])) {
+                        foreach($filter['options'] as $filterOption) {
+                            if ($filterOption['name'] == 'property') {
+                                $rule['property'] = $filterOption['value'];
                             }
-                            if ($o['name'] == 'search') {
-                                $rule['search'] = $o['value'];
+                            if ($filterOption['name'] == 'search') {
+                                $rule['search'] = $filterOption['value'];
                             }
-                            if ($o['name'] == 'replace') {
-                                $rule['replace'] = $o['value'];
+                            if ($filterOption['name'] == 'replace') {
+                                $rule['replace'] = $filterOption['value'];
                             }
                         }
                     }
                     // all options are obligatory
-                    if (count($rule) == 3) $groupProvider->modify_group_rules[] = $rule;
+                    if (count($rule) == 3) {
+                        $groupProvider->modify_group_rule[] = $rule;
+                    }
                     break;                
                 case "groupMember":
                     $groupProvider->modify_user = 'on';
                     $rule = array();
-                    if (is_array($f['options'])) {
-                        foreach($f['options'] as $o) {
-                            if ($o['name'] == 'property') {
-                                $rule['property'] = $o['value'];
+                    if (is_array($filter['options'])) {
+                        foreach($filter['options'] as $filterOption) {
+                            if ($filterOption['name'] == 'property') {
+                                $rule['property'] = $filterOption['value'];
                             }
-                            if ($o['name'] == 'search') {
-                                $rule['search'] = $o['value'];
+                            if ($filterOption['name'] == 'search') {
+                                $rule['search'] = $filterOption['value'];
                             }
-                            if ($o['name'] == 'replace') {
-                                $rule['replace'] = $o['value'];
+                            if ($filterOption['name'] == 'replace') {
+                                $rule['replace'] = $filterOption['value'];
                             }
                         }
                     }
                     // all options are obligatory
-                    if (count($rule) == 3) $groupProvider->modify_user_rules[] = $rule;
+                    if (count($rule) == 3) {
+                        $groupProvider->modify_user_rule[] = $rule;
+                    }
                     break;                
             }
         }
         // no sense in checking the box if there are no rules
-        if (count($groupProvider->modify_group_rules) == 0) $groupProvider->modify_group = null;
-        if (count($groupProvider->modify_user_rules) == 0) $groupProvider->modify_user = null;
+        if (count($groupProvider->modify_group_rule) == 0) {
+            $groupProvider->modify_group = null;
+        }
+        if (count($groupProvider->modify_user_rule) == 0) {
+            $groupProvider->modify_user = null;
+        }
         // done
         return $groupProvider;
     }    
@@ -328,12 +336,11 @@ class EngineBlock_Model_Mapper_GroupProvider
         }
         
         // special case: grouper URL is built from several components
-        if ($groupProvider->classname == "GROUPER") {
+        if ($groupProvider->classname == "GROUPER" && isset($groupProvider->host)) {
             $groupProvider->url = $groupProvider->protocol.'://'.$groupProvider->host.'/'.$groupProvider->version.'/'.$groupProvider->path;
             // clean multiple slashes (except ://)
             $groupProvider->url = preg_replace('/([^:])([\/]+)([^\/]|$)/', "$1/$3", $groupProvider->url);
         }
-  
         return $groupProvider;
     }
 
@@ -346,20 +353,26 @@ class EngineBlock_Model_Mapper_GroupProvider
 
         // transformations model->row: 
         // * authentication type -> classname
-        $authType = (is_array($groupProvider->authentication) ? $groupProvider->authentication[0] : "GROUPER");
-        switch($authType) {
-            case 'BASIC':
-                $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('OPENSOCIAL_BASIC');
-                break;
-            case 'OAUTH':
-                $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('OPENSOCIAL_OAUTH');
-                break;
-            case 'GROUPER':
-                $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('GROUPER');
-                break;
-            default:
-                $row['classname'] = $groupProvider->fullClassname;
-                break;
+
+        if (isset($groupProvider->authentication)) {
+            $authType = (is_array($groupProvider->authentication) ? $groupProvider->authentication[0] : "GROUPER");
+            switch($authType) {
+                case 'BASIC':
+                    $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('OPENSOCIAL_BASIC');
+                    break;
+                case 'OAUTH':
+                    $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('OPENSOCIAL_OAUTH');
+                    break;
+                case 'GROUPER':
+                    $row['classname'] = EngineBlock_Model_GroupProvider::getClassname('GROUPER');
+                    break;
+                default:
+                    $row['classname'] = $groupProvider->fullClassname;
+                    break;
+            }
+        }
+        else if (isset($groupProvider->classname)) {
+            $row['classname'] = EngineBlock_Model_GroupProvider::getClassname($groupProvider->classname);
         }
         // *         
 
@@ -382,14 +395,14 @@ class EngineBlock_Model_Mapper_GroupProvider
             // mandatory precondition for OAuth
             $preconditions[] = array(
                 'group_provider_id' => $groupProvider->id,
-                'type' => 'EngineBlock_Group_Provider_Precondition_OpenSocial_Oauth_AccessTokenExists',
+                'classname' => 'EngineBlock_Group_Provider_Precondition_OpenSocial_Oauth_AccessTokenExists',
             );
         }
         if ($groupProvider->user_id_match == 'on') {
             // user id must match
             $preconditions[] = array(
                 'group_provider_id' => $row['id'],
-                'type' => 'EngineBlock_Group_Provider_Precondition_UserId_PregMatch',
+                'classname' => 'EngineBlock_Group_Provider_Precondition_UserId_PregMatch',
                 'options' => array(
                     array('name' => 'search', 'value' => $groupProvider->user_id_match_search)
                 ),
@@ -475,7 +488,15 @@ class EngineBlock_Model_Mapper_GroupProvider
                 }
             }
         }        
-        
         return array($row, $newOptionRows, $preconditions, $decorators, $filters);
+    }
+
+    public function delete($id)
+    {
+        $rows = $this->_gpTable->find($id);
+        if ($rows->count() < 1) {
+            return false;
+        }
+        return $rows->current()->delete();
     }
 }

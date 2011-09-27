@@ -70,11 +70,13 @@ class EngineBlock_Model_GroupProvider extends Default_Model_Abstract
     public $site_url;
     public $request_token_url;
     public $access_token_url;
+    public $authorize_url;
     public $user_authorization_url;
     public $request_method;
     public $rsa_public_key;
     public $rsa_private_key;
     public $request_scheme;
+    public $timeout;
     
 /*****************/
 /* PRECONDITIONS */

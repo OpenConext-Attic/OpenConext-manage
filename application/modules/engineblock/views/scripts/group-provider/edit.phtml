@@ -1,4 +1,9 @@
-<?php $model = $this->groupProvider; ?>
+<?php
+/**
+ * @var Zend_View $this
+ * @var EngineBlock_Model_GroupProvider $model
+ */
+$model = $this->groupProvider; ?>
 <?php $this->headScript()->appendFile('/javascript/jquery-1.4.4.min.js'); ?>
 
 <h2>Group Provider Details</h2>
@@ -113,7 +118,7 @@
         <input id="timeout"
                name="timeout"
                type="text"
-               value="<?php echo $this->escape($model->timeout); ?>"
+               value="<?php if (isset($model->timeout)) { echo $this->escape($model->timeout); } ?>"
                size="100"
                maxlength="255"
                 />
@@ -126,7 +131,7 @@
         <input id="ssl_verifyhost"
                name="ssl_verifyhost"
                type="checkbox"
-               <?php echo ($model->ssl_verifyhost == 'on' ? 'checked="checked"' : ''); ?>
+               <?php echo (isset($model->ssl_verifyhost) && $model->ssl_verifyhost == 'on' ? 'checked="checked"' : ''); ?>
                size="100"
                maxlength="255"
                 />
@@ -139,7 +144,7 @@
         <input id="ssl_verifypeer"
                name="ssl_verifypeer"
                type="checkbox"
-               <?php echo ($model->ssl_verifypeer == 'on' ? 'checked="checked"' : ''); ?>
+               <?php echo (isset($model->ssl_verifypeer) && $model->ssl_verifypeer == 'on' ? 'checked="checked"' : ''); ?>
                size="100"
                maxlength="255"
                 />
@@ -155,7 +160,7 @@
         <input id="url"
                name="url"
                type="text"
-               value="<?php echo $this->escape($model->url); ?>"
+               value="<?php if (isset($model->url)) { echo $this->escape($model->url); } ?>"
                size="100"
                maxlength="255"
                 />
@@ -228,18 +233,6 @@
                                size="100"
                                maxlength="255"
                                 />
-                    </fieldset>
-                    <fieldset title="Signature Method">
-                        <?php if (isset($model->errors['signature_method'])): foreach ($model->errors['signature_method'] as $error): ?>
-                        <div class="form-error"><?php echo $error; ?></div>
-                        <?php endforeach; endif; ?>
-                        <label>Signature Method: </label>
-                        <select id="signature_method" name="signature_method">                            
-                            <option value="HMAC-SHA1" <?php echo ($model->signature_method == 'HMAC-SHA1' ? 'selected="selected"' : '') ?>>HMAC-SHA1</option>
-                            <option value="HMAC-SHA256" <?php echo ($model->signature_method == 'HMAC-SHA256' ? 'selected="selected"' : '') ?>>HMAC-SHA256</option>
-                            <option value="RSA-SHA1" <?php echo ($model->signature_method == 'RSA-SHA1' ? 'selected="selected"' : '') ?>>RSA-SHA1</option>
-                            <option value="PLAINTEXT" <?php echo ($model->signature_method == 'PLAINTEXT' ? 'selected="selected"' : '') ?>>PLAINTEXT</option>
-                        </select>
                     </fieldset>
                     <fieldset title="Callback URL">
                         <?php if (isset($model->errors['callback_url'])): foreach ($model->errors['callback_url'] as $error): ?>
@@ -331,38 +324,24 @@
                             <option value="DELETE" <?php echo ($model->request_method == 'DELETE' ? 'selected="selected"' : '') ?>>DELETE</option>
                         </select>
                     </fieldset>
-                    <fieldset title="RSA Public Key">
-                        <?php if (isset($model->errors['rsa_public_key'])): foreach ($model->errors['rsa_public_key'] as $error): ?>
+                    <fieldset title="Signature Method">
+                        <?php if (isset($model->errors['signature_method'])): foreach ($model->errors['signature_method'] as $error): ?>
                         <div class="form-error"><?php echo $error; ?></div>
                         <?php endforeach; endif; ?>
-                        <label>RSA Public Key: </span></label>
-                        <input id="rsa_public_key"
-                               name="rsa_public_key"
-                               type="text"
-                               value="<?php echo $this->escape($model->rsa_public_key); ?>"
-                               size="100"
-                               maxlength="255"
-                                />
-                    </fieldset>
-                    <fieldset title="RSA Private Key">
-                        <?php if (isset($model->errors['rsa_private_key'])): foreach ($model->errors['rsa_private_key'] as $error): ?>
-                        <div class="form-error"><?php echo $error; ?></div>
-                        <?php endforeach; endif; ?>
-                        <label>RSA Private Key: </span></label>
-                        <input id="rsa_private_key"
-                               name="rsa_private_key"
-                               type="text"
-                               value="<?php echo $this->escape($model->rsa_private_key); ?>"
-                               size="100"
-                               maxlength="255"
-                                />
+                        <label>Signature Method: </label>
+                        <select id="signature_method" name="signature_method">
+                            <option value="HMAC-SHA1" <?php echo ($model->signature_method == 'HMAC-SHA1' ? 'selected="selected"' : '') ?>>HMAC-SHA1</option>
+                            <option value="HMAC-SHA256" <?php echo ($model->signature_method == 'HMAC-SHA256' ? 'selected="selected"' : '') ?>>HMAC-SHA256</option>
+                            <option value="RSA-SHA1" <?php echo ($model->signature_method == 'RSA-SHA1' ? 'selected="selected"' : '') ?>>RSA-SHA1</option>
+                            <option value="PLAINTEXT" <?php echo ($model->signature_method == 'PLAINTEXT' ? 'selected="selected"' : '') ?>>PLAINTEXT</option>
+                        </select>
                     </fieldset>
                     <fieldset title="Request Scheme">
                         <?php if (isset($model->errors['request_scheme'])): foreach ($model->errors['request_scheme'] as $error): ?>
                         <div class="form-error"><?php echo $error; ?></div>
                         <?php endforeach; endif; ?>
                         <label>Request Scheme: </span></label>
-                        <select id="request_scheme" name="request_scheme">                            
+                        <select id="request_scheme" name="request_scheme">
                             <option value="HEADER" <?php echo ($model->request_scheme == 'HEADER' ? 'selected="selected"' : '') ?>>HEADER</option>
                             <option value="POSTBODY" <?php echo ($model->request_scheme == 'POSTBODY' ? 'selected="selected"' : '') ?>>POSTBODY</option>
                             <option value="QUERYSTRING" <?php echo ($model->request_scheme == 'QUERYSTRING' ? 'selected="selected"' : '') ?>>QUERYSTRING</option>
@@ -372,14 +351,39 @@
                         <?php if (isset($model->errors['timeout'])): foreach ($model->errors['timeout'] as $error): ?>
                         <div class="form-error"><?php echo $error; ?></div>
                         <?php endforeach; endif; ?>
-                        <label>Timeout: </span></label>
+                        <label>Timeout (in seconds): </span></label>
                         <input id="timeout"
                                name="timeout"
                                type="text"
                                value="<?php echo $this->escape($model->timeout); ?>"
-                               size="100"
+                               size="5"
                                maxlength="255"
+                               style="text-align: right"
                                 />
+                    </fieldset>
+                    <fieldset title="RSA Public Key">
+                        <?php if (isset($model->errors['rsa_public_key'])): foreach ($model->errors['rsa_public_key'] as $error): ?>
+                        <div class="form-error"><?php echo $error; ?></div>
+                        <?php endforeach; endif; ?>
+                        <label>RSA Public Key: </span></label>
+                        <textarea id="rsa_public_key"
+                                  name="rsa_public_key"
+                                  cols="100"
+                                  rows="20"><?php
+                            echo $this->escape($model->rsa_public_key);
+                        ?></textarea>
+                    </fieldset>
+                    <fieldset title="RSA Private Key">
+                        <?php if (isset($model->errors['rsa_private_key'])): foreach ($model->errors['rsa_private_key'] as $error): ?>
+                        <div class="form-error"><?php echo $error; ?></div>
+                        <?php endforeach; endif; ?>
+                        <label>RSA Private Key: </span></label>
+                        <textarea id="rsa_private_key"
+                                  name="rsa_private_key"
+                                  cols="100"
+                                  rows="20"><?php
+                            echo $this->escape($model->rsa_private_key);
+                        ?></textarea>
                     </fieldset>
                 </div>
             </div>
@@ -418,7 +422,7 @@
         <div style="float: left; width: 35px; height: 210px;">
             <img src="/images/icons/group.png" alt="Groups"/>
         </div>
-        <label>Provider IN: </span></label>
+        <label>GroupProvider Group IN: </span></label>
         <?php if (isset($model->errors['modify_group_id'])): foreach ($model->errors['modify_group_id'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
@@ -449,7 +453,7 @@
                 /><br/>
         <div style="float: left; margin-left: 88px; font-size: smaller">Regular expressions are allowed.</div>
         <br/><br/>
-        <label>Provider OUT: </span></label>
+        <label>GroupProvider Group OUT: </span></label>
         <?php if (isset($model->errors['modify_group_id'])): foreach ($model->errors['modify_group_id'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
@@ -463,14 +467,14 @@
         <?php if (isset($model->errors['modify_group_rules'])): foreach ($model->errors['modify_group_rules'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
-        <?php if (!is_array($model->modify_group_rules) || count($model->modify_group_rules) == 0) : ?>
+        <?php if (!is_array($model->modify_group_rule) || count($model->modify_group_rule) == 0) : ?>
         <p id="group_novaluesmessage" style="margin-left: 60px;">
             - no rules -
         </p>
         <?php endif; ?>
         <ul id="group_rule_list">
-        <?php if (is_array($model->modify_group_rules)) : ?>
-            <?php foreach ($model->modify_group_rules as $i => $rule) : ?>
+        <?php if (is_array($model->modify_group_rule)) : ?>
+            <?php foreach ($model->modify_group_rule as $i => $rule) : ?>
                 <li  style="margin-left: 60px;" id="modify_group_rules_<?php echo $i ?>">In <strong>[<?php echo $rule['property']; ?>]</strong> replace <strong>"<?php echo $rule['search']; ?>"</strong> with <strong>"<?php echo $rule['replace']; ?>"</strong>
                     <a href="#group_rule_list" style="margin-left: 50px" onclick="removeGroupRule(<?php echo $i ?>);">[remove]</a>
                 <input type="hidden" name="modify_group_rule[<?php echo $i ?>][property]" value ="<?php echo $rule['property']; ?>"/>
@@ -495,53 +499,14 @@
         <div style="float: left; width: 35px; height: 210px;">
             <img src="/images/icons/user.png" alt="Users"/>
         </div>
-        <label>Provider IN  : </span></label>
-        <?php if (isset($model->errors['modify_user_id'])): foreach ($model->errors['modify_user_id'] as $error): ?>
-        <div class="form-error"><?php echo $error; ?></div>
-        <?php endforeach; endif; ?>
-        <input id="modify_user"
-               name="modify_user"
-               type="checkbox"
-               <?php echo ($model->modify_user == 'on' ? 'checked="checked"' : ''); ?>               
-                /> Modify User
-        <br/>
-        <?php if (isset($model->errors['modify_user_rules'])): foreach ($model->errors['modify_user_rules'] as $error): ?>
-        <div class="form-error"><?php echo $error; ?></div>
-        <?php endforeach; endif; ?>
-
-        <?php if (!is_array($model->modify_user_rules) || count($model->modify_user_rules) == 0) : ?>
-        <p id="user_novaluesmessage" style="margin-left: 60px;">
-            - no rules -
-        </p>
-        <?php endif; ?>
-        <ul id="user_rule_list">
-        <?php if (is_array($model->modify_user_rules)) : ?>
-            <?php foreach ($model->modify_user_rules as $j => $rule) : ?>
-                <li  style="margin-left: 60px;" id="modify_user_rules_<?php echo $j ?>">In <strong>[<?php echo $rule['property']; ?>]</strong> replace <strong>"<?php echo $rule['search']; ?>"</strong> with <strong>"<?php echo $rule['replace']; ?>"</strong>
-                    <a href="#user_rule_list" style="margin-left: 50px" onclick="removeUserRule(<?php echo $j ?>);">[remove]</a>
-                <input type="hidden" name="modify_user_rule[<?php echo $j ?>][property]" value ="<?php echo $rule['property']; ?>"/>
-                <input type="hidden" name="modify_user_rule[<?php echo $j ?>][search]" value ="<?php echo $rule['search']; ?>"/>
-                <input type="hidden" name="modify_user_rule[<?php echo $j ?>][replace]" value ="<?php echo $rule['replace']; ?>"/></li>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        </ul>
-        <div style="margin: 10px 0 0 45px;">In <select id="modify_user_rules_property">
-                <option value="id">id</option>
-                <option value="name">name</option>
-                <option value="description">description</option>
-            </select>
-        replace <input id="modify_user_rules_search" type="text" size="20" maxlength="255">
-        with <input id="modify_user_rules_replace" type="text" size="20" maxlength="255"><input type="button" value="Add rule" onclick="addUserRule();"/>
-        </div>
-        <br/>
-        <label>Provider OUT: </span></label>
+        <label>GroupProvider User IN: </span></label>
         <?php if (isset($model->errors['modify_user_id'])): foreach ($model->errors['modify_user_id'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
         <input id="modify_user_id"
                name="modify_user_id"
                type="checkbox"
-               <?php echo ($model->modify_user_id == 'on' ? 'checked="checked"' : ''); ?>               
+               <?php echo ($model->modify_user_id == 'on' ? 'checked="checked"' : ''); ?>
                 /> Modify User Id
         <br/>
         <?php if (isset($model->errors['modify_user_id_search'])): foreach ($model->errors['modify_user_id_search'] as $error): ?>
@@ -564,17 +529,59 @@
                maxlength="255"
                 /><br/>
         <div style="float: left; margin-left: 88px; font-size: smaller">Regular expressions are allowed.</div>
+        </br>
+        <label>GroupProvider User OUT  : </span></label>
+        <?php if (isset($model->errors['modify_user_id'])): foreach ($model->errors['modify_user_id'] as $error): ?>
+        <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <input id="modify_user"
+               name="modify_user"
+               type="checkbox"
+               <?php echo ($model->modify_user == 'on' ? 'checked="checked"' : ''); ?>               
+                /> Modify User
+        <br/>
+        <?php if (isset($model->errors['modify_user_rules'])): foreach ($model->errors['modify_user_rules'] as $error): ?>
+        <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+
+        <?php if (!is_array($model->modify_user_rule) || count($model->modify_user_rule) == 0) : ?>
+        <p id="user_novaluesmessage" style="margin-left: 60px;">
+            - no rules -
+        </p>
+        <?php endif; ?>
+        <ul id="user_rule_list">
+        <?php if (is_array($model->modify_user_rule)) : ?>
+            <?php foreach ($model->modify_user_rule as $j => $rule) : ?>
+                <li  style="margin-left: 60px;" id="modify_user_rules_<?php echo $j ?>">In <strong>[<?php echo $rule['property']; ?>]</strong> replace <strong>"<?php echo $rule['search']; ?>"</strong> with <strong>"<?php echo $rule['replace']; ?>"</strong>
+                    <a href="#user_rule_list" style="margin-left: 50px" onclick="removeUserRule(<?php echo $j ?>);">[remove]</a>
+                <input type="hidden" name="modify_user_rule[<?php echo $j ?>][property]" value ="<?php echo $rule['property']; ?>"/>
+                <input type="hidden" name="modify_user_rule[<?php echo $j ?>][search]" value ="<?php echo $rule['search']; ?>"/>
+                <input type="hidden" name="modify_user_rule[<?php echo $j ?>][replace]" value ="<?php echo $rule['replace']; ?>"/></li>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        </ul>
+        <div style="margin: 10px 0 0 45px;">In <select id="modify_user_rules_property">
+                <option value="id">id</option>
+                <option value="name">name</option>
+                <option value="description">description</option>
+            </select>
+        replace <input id="modify_user_rules_search" type="text" size="20" maxlength="255">
+        with <input id="modify_user_rules_replace" type="text" size="20" maxlength="255"><input type="button" value="Add rule" onclick="addUserRule();"/>
+        </div>
+        <br/>
+
     </fieldset>
 
     
 <?php endif; ?>
     
-    <input type="submit" value="Save"></input>&nbsp;<input type="button" value="Cancel" onclick="javascript:location.href='<?php echo $this->listUrl;?>'">
+    <input type="submit" value="Save" />&nbsp;
+    <input type="button" value="Cancel" onclick="javascript:location.href='<?php echo $this->listUrl;?>'">
 </form>
 
 <script>
     // group rules
-    var groupRuleCount = <?php echo ($i > 0 ? $i : 0) ?>;
+    var groupRuleCount = <?php echo count($model->modify_group_rule); ?>;
     var addGroupRule = function() {
         var gr_property = $('#modify_group_rules_property').val();
         var gr_search = $('#modify_group_rules_search').val();
@@ -593,12 +600,12 @@
         $('#modify_group_rules_property').val('');
         $('#modify_group_rules_search').val('');
         $('#modify_group_rules_replace').val('');
-    }
+    };
     var removeGroupRule = function(i) {
         $('#modify_group_rules_'+i).remove();
-    }
+    };
     // user rules
-    var userRuleCount = <?php echo ($j > 0 ? $j : 0) ?>;
+    var userRuleCount = <?php echo count($model->modify_user_rule); ?>;;
     var addUserRule = function() {
         var gr_property = $('#modify_user_rules_property').val();
         var gr_search = $('#modify_user_rules_search').val();
@@ -617,10 +624,10 @@
         $('#modify_user_rules_property').val('');
         $('#modify_user_rules_search').val('');
         $('#modify_user_rules_replace').val('');
-    }
+    };
     var removeUserRule = function(i) {
         $('#modify_user_rules_'+i).remove();
-    }
+    };
 
 <?php if ($this->mode == 'edit' && substr($model->classname, 0, 10) == 'OPENSOCIAL') : ?>
     // OPENSOCIAL authorization tab control
