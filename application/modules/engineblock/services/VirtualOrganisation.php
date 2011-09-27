@@ -155,19 +155,16 @@ class EngineBlock_Service_VirtualOrganisation
 
     public function delete($id)
     {
-        if (strlen(trim($id)) > 0) {
-            $dao = new EngineBlock_Model_DbTable_VirtualOrganisation();
-            $result = $dao->delete("vo_id='$id'");
-            // cascade delete groups
-            if ($result) {
-                $dao = new EngineBlock_Model_DbTable_VirtualOrganisationGroup();
-                return $dao->delete("vo_id='$id'");
-            } else {
-                return false;
-            }
-        } else {
+        if (trim($id) === "") {
             return false;
         }
+
+        $dao = new EngineBlock_Model_DbTable_VirtualOrganisation();
+        $rowSet = $dao->find($id);
+        if (count($rowSet) === 0) {
+            throw new Exception("VO with id '$id' not found");
+        }
+        return $rowSet->current()->delete();
     }
 
 }
