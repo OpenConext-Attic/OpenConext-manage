@@ -23,6 +23,9 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
 
+### Strict Transport Security (ForceHTTPS)
+header('Strict-Transport-Security: max-age=15768000 ; includeSubDomains');
+
 include __DIR__ . '/_include.php';
 
 /** Zend_Application */
