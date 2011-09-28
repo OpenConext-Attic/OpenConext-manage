@@ -3,7 +3,6 @@
     <target name="build" depends="clean,prepare,lint,phpqa" />
     <target name="phpqa" depends="phpcs,phpmd,phpcb,phpcpd,pdepend" />
 
-
     <target name="clean">
         <delete dir="${basedir}/build" />
     </target>
