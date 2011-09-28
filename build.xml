@@ -1,6 +1,6 @@
-<project name="SURFconext Manage" default="test">
-    <target name="test" depends="clean,prepare,lint" />
-    <target name="build" depends="clean,prepare,lint,phpqa" />
+<project name="SURFconext Manage" default="build">
+    <target name="build" depends="clean,prepare,lint,phpunit,phpqa" />
+    <target name="test" depends="clean,prepare,lint,phpunit" />
     <target name="phpqa" depends="phpcs,phpmd,phpcb,phpcpd,pdepend" />
 
     <target name="clean">
@@ -67,9 +67,6 @@
                        --overview-pyramid=${basedir}/build/dependencies/pyramid.svg
                        --ignore=build,tests,library/Zend,library/simplesamlphp
                        ." />
-        </exec>
-        <exec dir="${basedir}/build/dependencies" executable="cp" failonerror="false">
-            <arg line="${basedir}/ci/dependencies.html index.html" />
         </exec>
     </target>
  
