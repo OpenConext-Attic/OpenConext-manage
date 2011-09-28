@@ -1,7 +1,16 @@
 <project name="SURFconext Manage" default="build">
-    <target name="build" depends="clean,prepare,lint,phpunit,phpqa" />
-    <target name="test" depends="clean,prepare,lint,phpunit" />
-    <target name="phpqa" depends="phpcs,phpmd,phpcb,phpcpd,pdepend" />
+    <target name="build" depends="clean,prepare,lint,phpunit" />
+    <target name="report" depends="clean,prepare,parallel" />
+
+     <target name="parallel">
+        <parallel>
+            <antcall target="phpcs" />
+            <antcall target="phpmd" />
+            <antcall target="phpcb" />
+            <antcall target="phpcpd" />
+            <antcall target="pdepend" />
+        </parallel>
+    </target>
 
     <target name="clean">
         <delete dir="${basedir}/build" />
