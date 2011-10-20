@@ -46,7 +46,44 @@ Then open a new terminal to make sure you have the new environment.
 
 Copy docs/example.manage.ini to /etc/surfconext/manage.ini and edit this file to reflect your configuration.
 
-### 4 Set up VERS reporting.
+### 4 Configure LDAP
+
+add engineblock ldap username to /etc/surfcontact/manage.ini:
+
+engineblock.ldap.userName = "cn=VERS Account,dc=surfconext,dc=nl"
+engineblock.ldap.password = "[password]"
+
+Create LDAP user :
+
+Add LDAP user "cn=VERS Account,dc=surfconext,dc=nl":
+
+ldapadd -h ldap.surfconext.nl -D "cn=engine,dc=surfconext,dc=nl" \
+    -x -W -f add_VERS-Account.ldif
+
+file add_VERS-Account.ldif:
+==================================== 
+DN: cn=VERS Account,dc=surfconext,dc=nl
+objectClass: pilotPerson
+cn: VERS Account
+sn: VERS
+description: VERS Account
+userPassword: {SHA}***********
+====================================
+
+Set sizelimit for VERS LDAP user:
+ldapmodify -h ldap.surfconext.nl -x -b 'cn=config' -D 'cn=admin,cn=config' \
+    -W -f change_bdb.ldif
+file change_bdb.ldif:
+
+==================================== 
+dn: olcDatabase={1}bdb,cn=config
+changetype: modify
+add: olcLimits
+olcLimits: {0}dn.exact="cn=VERS Account,dc=surfconext,dc=nl" size=unlimited
+-
+====================================
+
+### 5 Set up VERS reporting.
 
 Edit */etc/surfconext/manage.ini* and add:
 
