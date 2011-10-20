@@ -75,6 +75,8 @@ class Default_ExportController extends Zend_Controller_Action
         
         $connectedProviderTypes          = $kpi->getConnectedProviderTypes($timestamp);
         $data['Totaal aantal logins']    = $kpi->getLogins($timestamp);
+        $data['IdP Logins']              = $kpi->getIdpLogins($timestamp);
+        $data['SP Logins']               = $kpi->getSpLogins($timestamp);
         $data['Aantal aangesloten IdPs'] = $connectedProviderTypes['idp'];
         $data['Aantal aangesloten SPs']  = $connectedProviderTypes['sp'];
         $data['Beschikbare tabs']        = $kpi->getTeamTabs($timestamp);
