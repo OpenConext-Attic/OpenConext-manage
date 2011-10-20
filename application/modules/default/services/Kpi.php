@@ -111,7 +111,7 @@ class Default_Service_Kpi
      *
      * @param Integer $timestamp timestamp to determine the month
      *                this KPI covers.
-     * @return <type>
+     * @return Integer
      */
     public function getIdpLogins($timestamp)
     {
@@ -123,7 +123,7 @@ class Default_Service_Kpi
      *
      * @param Integer $timestamp timestamp to determine the month
      *                this KPI covers.
-     * @return <type>
+     * @return Integer
      */
     public function getSpLogins($timestamp)
     {
@@ -136,7 +136,7 @@ class Default_Service_Kpi
      * @param Integer $timestamp timestamp to determine the month
      *                this KPI covers.
      * @param String $type Provider type (IdP or SP)
-     * @return <type> 
+     * @return Integer
      */
     protected function _getProviderTypeLogins($timestamp, $type)
     {
