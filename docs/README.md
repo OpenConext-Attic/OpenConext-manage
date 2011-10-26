@@ -97,9 +97,9 @@ so make sure you don't mess up things for other developers.
 
 Create a cronjob to run the VERS export:
 
-    php [path to surfconext-admin]/scripts/versexport.php
+    [path to surfconext-admin]/scripts/versexport.sh
 
-Run the surfconext-admin/scipts/versexport.php script once a month,
+Run the surfconext-admin/scipts/versexport.sh script once a month,
 on the first day of the month.
 It will put the data of the previous month in VERS.
 
