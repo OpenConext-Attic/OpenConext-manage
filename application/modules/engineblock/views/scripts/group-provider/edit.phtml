@@ -389,6 +389,7 @@ $model = $this->groupProvider; ?>
             </div>
         </div>
     </fieldset>
+
     <fieldset title="User Precondition">
         <label>User Precondition: </span></label>
         <?php if (isset($model->errors['token_required'])): foreach ($model->errors['token_required'] as $error): ?>
@@ -416,7 +417,7 @@ $model = $this->groupProvider; ?>
         <div style="float: left; margin-left: 144px; font-size: smaller">Regular expressions are allowed.</div>
     </fieldset>
     
-    
+<?php endif; ?>
     
     <fieldset title="Groups">
         <div style="float: left; width: 35px; height: 210px;">
@@ -492,8 +493,6 @@ $model = $this->groupProvider; ?>
         with <input id="modify_group_rules_replace" type="text" size="20" maxlength="255"><input type="button" value="Add rule" onclick="addGroupRule();"/>
         </div>
     </fieldset>
-    
-
     
     <fieldset title="Users">
         <div style="float: left; width: 35px; height: 210px;">
@@ -571,9 +570,6 @@ $model = $this->groupProvider; ?>
         <br/>
 
     </fieldset>
-
-    
-<?php endif; ?>
     
     <input type="submit" value="Save" />&nbsp;
     <input type="button" value="Cancel" onclick="javascript:location.href='<?php echo $this->listUrl;?>'">
