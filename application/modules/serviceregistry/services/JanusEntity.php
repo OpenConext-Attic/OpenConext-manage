@@ -44,6 +44,7 @@ class ServiceRegistry_Service_JanusEntity
         if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
             $selectIdp->where(
                 $this->_getCountTypesWhereForDate(
+                    'je1',
                     $searchParams['year'],
                     $searchParams['month']
                 )
@@ -62,6 +63,7 @@ class ServiceRegistry_Service_JanusEntity
         if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
             $selectSp->where(
                 $this->_getCountTypesWhereForDate(
+                   'je1',
                     $searchParams['year'],
                     $searchParams['month']
                 )
@@ -79,22 +81,30 @@ class ServiceRegistry_Service_JanusEntity
     }
 
     /**
-     * Get 'where' condition for 
+     * Get 'where' condition for janus__entities in a given month
+     * in a given year.
+     * The created/expiration fields are varchar() columns and 
+     * not dates, which is why we need the LEFT() hack.
      * 
-     * @param Surfnet_Search_Parameters $params
+     * @param String  Table
+     * @param Integer Year
+     * @param Integer Month
      * @return String
      */
-    protected function _getCountTypesWhereForDate($year, $month) {
+    protected function _getCountTypesWhereForDate($table, $year, $month) {
         $year = intval($year);
         $month = intval($month);
         
         return sprintf(
-                    "((`expiration` IS NULL) OR (LEFT(`expiration`,7) <= '%04u-%02u'))",
+                    "((`%s`.`expiration` IS NULL) OR (LEFT(`%s`.`expiration`,7) <= '%04u-%02u'))",
+                    $table,
+                    $table,
                     $year,
                     $month
                )
                . sprintf(
-                    " AND (LEFT(`created`,7) <= '%04u-%02u')",
+                    " AND (LEFT(`%s`.`created`,7) <= '%04u-%02u')",
+                    $table,
                     $year,
                     $month
                );
@@ -112,6 +122,7 @@ class ServiceRegistry_Service_JanusEntity
 
     protected function _searchType($type, Surfnet_Search_Parameters $params)
     {
+        $searchParams = $params->getSearchParams();
         $dao = new ServiceRegistry_Model_DbTable_JanusEntity();
 
         $rev_fields = array(
@@ -137,6 +148,7 @@ class ServiceRegistry_Service_JanusEntity
     )",
         );
 
+        $entityType = ($type==='saml20-sp') ? 'sp' : 'idp' ;
         $entityType = 'idp';
         if ($type==='saml20-sp') {
             $entityType = 'sp';
@@ -154,6 +166,16 @@ class ServiceRegistry_Service_JanusEntity
                         array('userid'=>'userid')
                       )
                 ->where('ent.type= ?',$type);
+
+        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+            $select->where(
+                $this->_getCountTypesWhereForDate(
+                    'ent',
+                    $searchParams['year'],
+                    $searchParams['month']
+                )
+            );
+        }
 
         if ($params->getLimit()) {
             $select->limit($params->getLimit(), $params->getOffset());
