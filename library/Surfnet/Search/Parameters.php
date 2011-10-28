@@ -38,16 +38,49 @@ class Surfnet_Search_Parameters
 
     protected $_searchParams = array();
 
-    protected function __construct()
+    protected function __construct($inputFilter = null)
     {
+        if (!is_null($inputFilter)) {
+            $this->setFromFilter($inputFilter);
+        }
     }
 
     /**
+     * Set search parameters from an input filter.
+     * 
+     * @param type $inputFilter
+     * 
+     * @return void 
+     */
+    public function setFromFilter($inputFilter)
+    {
+        if ($inputFilter->results) {
+            $this->setLimit($inputFilter->results);
+        }
+        if ($inputFilter->startIndex) {
+            $this->setOffset($inputFilter->startIndex);
+        }
+        if ($inputFilter->sort) {
+            $this->setSortByField($inputFilter->sort);
+        }
+        if ($inputFilter->dir) {
+            $this->setSortDirection($inputFilter->dir);
+        }
+        if ($inputFilter->year) {
+            $this->addSearchParam('year', $inputFilter->year);
+        }
+        if ($inputFilter->month) {
+            $this->addSearchParam('month', $inputFilter->month);
+        }
+    }
+    /**
+     * @param input filter
+     * 
      * @return Surfnet_Search_Parameters
      */
-    public static function create()
+    public static function create($inputFilter = null)
     {
-        return new self();
+        return new self($inputFilter);
     }
 
     public function getLimit()
