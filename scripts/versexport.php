@@ -26,10 +26,10 @@
 include __DIR__ . '/../public/_include.php';
 
 /** Zend_Application */
-require_once 'Surfnet/Application.php';
+require_once 'Manage/Application.php';
 
 // Create application, bootstrap, and run
-$application = new Surfnet_Application(
+$application = new Manage_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
 );
@@ -44,7 +44,7 @@ $request = new Zend_Controller_Request_Simple('vers', 'export', 'default');
 // set front controller options to make everything operational from CLI
 $front->setRequest($request)
       ->setResponse(new Zend_Controller_Response_Cli())
-      ->setRouter(new Surfnet_Controller_Router_Cli())
+      ->setRouter(new Surfnet_Zend_Controller_Router_Cli())
       ->throwExceptions(true);
 
 try {

@@ -29,7 +29,7 @@ class Default_Service_Vers
 {
     /**
      *
-     * @var ExternalReporting_Insert_Client
+     * @var SurfDashboard_Insert_Client
      */
     protected $_client;
 
@@ -51,14 +51,8 @@ class Default_Service_Vers
             $config = Zend_Registry::get('config');
             $env = $config->vers->env;
             $versConfig = $config->vers->full->{$env};
-            /*
-             * The reporting client is an external, so the
-             * Location/ naming convention is not exactly the
-             * same. For this reason we need to include the client
-             * explicitly.
-             */
-            require_once('Surfnet/ExternalReporting/Insert/Client.php');
-            $this->_client = new ExternalReporting_Insert_Client(
+            
+            $this->_client = new SurfDashboard_Insert_Client(
                 $versConfig->wsdl_url,
                 $versConfig->user_name,
                 $versConfig->password
@@ -101,8 +95,8 @@ class Default_Service_Vers
     /**
      * Add a result to the list
      *
-     * @param $key    Index
-     * @param $result
+     * @param string $key    Index
+     * @param mixed $result
      */
     protected function _addResult($key, $result) {
         $this->_results[$key] = $result;

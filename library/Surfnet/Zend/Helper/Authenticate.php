@@ -23,36 +23,31 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
 
+require_once('Surfnet/Zend/Auth/Adapter/Saml.php');
+require_once('SurfConext/Identity.php');
+
 /**
- * The Surfnet_Identity class is responsible for storing
- * the metadata of a user.
+ * Action helper to force authentication in every action.
  *
- * Usually the metadata is provided by an external source
- * like an Identity Provider.
- *
+ * @todo make this more flexible: Accept more different types of identities.
  * @author marc
  */
-class Surfnet_Identity
+class Surfnet_Zend_Helper_Authenticate extends Zend_Controller_Action_Helper_Abstract
 {
-    /**
-     * Display name to use in the interface for this user.
-     * 
-     * @var String
-     */
-    public $displayName;
+    const AUTH_DISPLAY_NAME_SAML_ATTRIBUTE = 'urn:mace:dir:attribute-def:cn';
 
-    /**
-     * Unique identifier for this identity
-     *
-     * @var mixed
-     */
-    public $id;
-
-    /**
-     * @param mixed $id Unique Identifier
-     */
-    public function __construct($id)
+    public function direct()
     {
-        $this->id = $id;
+        $auth = Zend_Auth::getInstance();
+        $auth->setStorage(new Zend_Auth_Storage_NonPersistent());
+        $adapter = new Surfnet_Zend_Auth_Adapter_Saml();
+
+        $res = $auth->authenticate($adapter);
+
+        $samlIdentity = $res->getIdentity();
+        $identity = new SurfConext_Identity($samlIdentity['nameid'][0]);
+        $identity->displayName = $samlIdentity[self::AUTH_DISPLAY_NAME_SAML_ATTRIBUTE][0];
+
+        return $identity;
     }
 }

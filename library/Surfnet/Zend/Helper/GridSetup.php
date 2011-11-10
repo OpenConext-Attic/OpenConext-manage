@@ -28,7 +28,7 @@
  *
  * @author marc
  */
-class Surfnet_Helper_GridSetup extends Zend_Controller_Action_Helper_Abstract
+class Surfnet_Zend_Helper_GridSetup extends Zend_Controller_Action_Helper_Abstract
 {
     const GRID_CONFIG_APPLICATION_PATH = '/configs/grid.ini';
 
@@ -57,23 +57,23 @@ class Surfnet_Helper_GridSetup extends Zend_Controller_Action_Helper_Abstract
         $id             = $this->_configId;
 
         if (!isset($config->$module)) {
-            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown module: '$module'");
+            throw new Surfnet_Zend_Helper_Exception_ActionNotFound("Unable to get grid options, unknown module: '$module'");
         }
         $gridConfig = $config->$module;
 
         if (!isset($gridConfig->$controller)) {
-            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown controller: '$controller'");
+            throw new Surfnet_Zend_Helper_Exception_ActionNotFound("Unable to get grid options, unknown controller: '$controller'");
         }
         $gridConfig = $gridConfig->$controller;
 
         if (!isset($gridConfig->$action)) {
-            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown action: '$action'");
+            throw new Surfnet_Zend_Helper_Exception_ActionNotFound("Unable to get grid options, unknown action: '$action'");
         }
         $gridConfig = $gridConfig->$action;
 
         if (!empty($id)) {
             if (!isset($gridConfig->$id)) {
-                throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown id: '$id'");
+                throw new Surfnet_Zend_Helper_Exception_ActionNotFound("Unable to get grid options, unknown id: '$id'");
             }
             $gridConfig = $gridConfig->$id;
         }

@@ -29,7 +29,7 @@
  *
  * @author marc
  */
-class Surfnet_Filter_InArray implements Zend_Filter_Interface
+class Surfnet_Zend_Filter_InArray implements Zend_Filter_Interface
 {
     /**
      * Default value returned when the input

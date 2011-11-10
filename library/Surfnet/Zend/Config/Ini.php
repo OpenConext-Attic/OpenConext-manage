@@ -29,7 +29,7 @@
  */
 require 'Zend/Config/Ini.php';
 
-class Surfnet_Config_Ini extends Zend_Config_Ini
+class Surfnet_Zend_Config_Ini extends Zend_Config_Ini
 {
     /**
      * Load the INI file from disk or from a string,

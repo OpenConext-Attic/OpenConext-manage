@@ -23,7 +23,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
 
-class Surfnet_Auth_Adapter_Saml implements Zend_Auth_Adapter_Interface
+class Surfnet_Zend_Auth_Adapter_Saml implements Zend_Auth_Adapter_Interface
 {
     /**
      * Performs an authentication attempt using SimpleSAMLphp

@@ -6,8 +6,8 @@
  * Use the applications authentication.ini
  */
 
-require_once 'Surfnet/Application.php';
-$application = new Surfnet_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
+require_once 'Manage/Application.php';
+$application = new Manage_Application(APPLICATION_ENV, APPLICATION_PATH . '/configs/application.ini');
 $appConfig = $application->getConfig();
 
 $config = array(

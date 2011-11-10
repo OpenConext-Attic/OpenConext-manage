@@ -26,7 +26,7 @@
  * Dummy Router class that does no routing whatsoever.
  *
  */
-class Surfnet_Controller_Router_Cli 
+class Surfnet_Zend_Controller_Router_Cli
         extends Zend_Controller_Router_Abstract
         implements Zend_Controller_Router_Interface
 {

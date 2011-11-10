@@ -23,14 +23,14 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
 
-require_once 'Surfnet/Filter/InArray.php';
+require_once 'Surfnet/Zend/Filter/InArray.php';
 
 /**
  * Action helper to load standard filters.
  *
  * @author marc
  */
-class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
+class Surfnet_Zend_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
 {
     const GRID_CONFIG_APPLICATION_PATH = '/configs/grid.ini';
 
@@ -65,13 +65,13 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
             'results'    => array('Int'),
             'startIndex' => array('Int'),
             'dir' =>array(
-                new Surfnet_Filter_InArray(
+                new Surfnet_Zend_Filter_InArray(
                     array('asc', 'desc'),
                     (isset($sortOptions['defaultDir'])?$sortOptions['defaultDir']:'asc')
                 )
             ),
             'sort' => array(
-                new Surfnet_Filter_InArray(
+                new Surfnet_Zend_Filter_InArray(
                     $sortOptions['fields'],
                     $sortOptions['defaultField']
                 )
@@ -80,7 +80,7 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
 
         $validators = null;
         $options = array(
-            'filterNamespace'   => 'Surfnet_Filter',
+            'filterNamespace'   => 'Surfnet_Zend_Filter',
             'allowEmpty'        => true
         );
         //Take default parameters from filter, zero out values.
@@ -110,23 +110,23 @@ class Surfnet_Helper_FilterLoader extends Zend_Controller_Action_Helper_Abstract
         $id             = $this->_configId;
 
         if (!isset($config->$module)) {
-            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown module: '$module'");
+            throw new Surfnet_Zend_Helper_Exception_ActionNotFound("Unable to get grid options, unknown module: '$module'");
         }
         $config = $config->$module;
 
         if (!isset($config->$controller)) {
-            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown controller: '$controller'");
+            throw new Surfnet_Zend_Helper_Exception_ActionNotFound("Unable to get grid options, unknown controller: '$controller'");
         }
         $config = $config->$controller;
 
         if (!isset($config->$action)) {
-            throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown action: '$action'");
+            throw new Surfnet_Zend_Helper_Exception_ActionNotFound("Unable to get grid options, unknown action: '$action'");
         }
         $config = $config->$action;
 
         if (!empty($id)) {
             if (!isset($config->$id)) {
-                throw new Surfnet_Helper_Exception_ActionNotFound("Unable to get grid options, unknown id: '$id'");
+                throw new Surfnet_Zend_Helper_Exception_ActionNotFound("Unable to get grid options, unknown id: '$id'");
             }
             $config = $config->$id;
         }

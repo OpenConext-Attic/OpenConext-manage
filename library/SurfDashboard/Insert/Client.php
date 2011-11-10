@@ -3,7 +3,7 @@
 require_once 'Zend/Cache.php';
 require_once 'Zend/Soap/Client.php';
 
-class ExternalReporting_Insert_Client
+class SurfDashboard_Insert_Client
 {
     /**
      * SOAP Client for communication with the VERS SOAP service.

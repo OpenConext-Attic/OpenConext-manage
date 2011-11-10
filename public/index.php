@@ -29,10 +29,10 @@ header('Strict-Transport-Security: max-age=15768000 ; includeSubDomains');
 include __DIR__ . '/_include.php';
 
 /** Zend_Application */
-require_once 'Surfnet/Application.php';
+require_once 'Manage/Application.php';
 
 // Create application, bootstrap, and run
-$application = new Surfnet_Application(
+$application = new Manage_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
 );

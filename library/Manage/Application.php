@@ -24,12 +24,12 @@
  */
 
 require 'Zend/Application.php';
-require 'Surfnet/Config/Ini.php';
+require 'Surfnet/Zend/Config/Ini.php';
 
 /**
  * An override of Zend_Application to allow local config overrides in /etc/surfconext/manage.ini
  */
-class Surfnet_Application extends Zend_Application
+class Manage_Application extends Zend_Application
 {
     const ENV_CONFIG_OVERRIDE_PATH = '/etc/surfconext/manage.ini';
 
@@ -43,10 +43,10 @@ class Surfnet_Application extends Zend_Application
         if (file_exists(self::ENV_CONFIG_OVERRIDE_PATH)) {
             $configContent = file_get_contents($file) 
                            . file_get_contents(self::ENV_CONFIG_OVERRIDE_PATH);
-            $config = new Surfnet_Config_Ini($configContent, $environment);
+            $config = new Surfnet_Zend_Config_Ini($configContent, $environment);
         }
         else {
-            $config = new Surfnet_Config_Ini($file);
+            $config = new Surfnet_Zend_Config_Ini($file);
         }
         $this->_config = $config;
 

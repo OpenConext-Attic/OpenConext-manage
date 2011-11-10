@@ -26,7 +26,7 @@
 /**
  * A custom ContextSwitch which knows how to export JSON and CSV files.
  */
-class Surfnet_Helper_ContextSwitch extends Zend_Controller_Action_Helper_ContextSwitch
+class Surfnet_Zend_Helper_ContextSwitch extends Zend_Controller_Action_Helper_ContextSwitch
 {
     public function __construct($options = array())
     {

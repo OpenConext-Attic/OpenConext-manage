@@ -59,7 +59,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initActionHelpers()
     {
-        Zend_Controller_Action_HelperBroker::addPrefix('Surfnet_Helper');
+        Zend_Controller_Action_HelperBroker::addPrefix('Surfnet_Zend_Helper');
     }
 
     protected function _initViewHelpers()
