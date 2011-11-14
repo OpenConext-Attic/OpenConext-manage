@@ -91,8 +91,8 @@ if (defined('TESTS_GENERATE_REPORT') && TESTS_GENERATE_REPORT === true &&
     PHPUnit_Util_Filter::addDirectoryToWhitelist($controllers);
 }
 
-require_once '../library/Surfnet/Application.php';
-$application = new Surfnet_Application(APPLICATION_ENV,
+require_once '../library/Manage/Application.php';
+$application = new Manage_Application(APPLICATION_ENV,
         APPLICATION_PATH . '/configs/application.ini');
 $application->bootstrap();
 
