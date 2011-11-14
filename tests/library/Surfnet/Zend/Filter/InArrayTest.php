@@ -23,19 +23,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
 
-require_once('Surfnet/Filter/InArray.php');
+require_once('Surfnet/Zend/Filter/InArray.php');
 
 /**
  * Description of InArrayTest
  *
  * @author marc
  */
-class Surfnet_Filter_InArrayTest extends PHPUnit_Framework_TestCase
+class Surfnet_Zend_Filter_InArrayTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Filter to test.
      *
-     * @var Surfnet_Filter_InArray
+     * @var Surfnet_Zend_Filter_InArray
      */
     protected $_filter;
 
@@ -54,7 +54,7 @@ class Surfnet_Filter_InArrayTest extends PHPUnit_Framework_TestCase
                                 );
     public function setUp()
     {
-        $this->_filter = new Surfnet_Filter_InArray(
+        $this->_filter = new Surfnet_Zend_Filter_InArray(
                                 $this->_haystack,
                                 $this->_default
                              );
@@ -70,7 +70,7 @@ class Surfnet_Filter_InArrayTest extends PHPUnit_Framework_TestCase
                                   'Dummy1',
                                   'Dummy2'
                               );
-        $dummyFilter = new Surfnet_Filter_InArray(
+        $dummyFilter = new Surfnet_Zend_Filter_InArray(
                                $dummyHaystack,
                                $dummyDefault
                            );
@@ -148,4 +148,3 @@ class Surfnet_Filter_InArrayTest extends PHPUnit_Framework_TestCase
         );
     }
 }
-?>
