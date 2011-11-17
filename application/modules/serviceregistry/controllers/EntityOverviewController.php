@@ -23,16 +23,8 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
 
-class ServiceRegistry_EntityOverviewController extends Zend_Controller_Action
+class ServiceRegistry_EntityOverviewController extends Surfnet_Zend_Controller_Abstract
 {
-    public function init()
-    {
-        $this->view->identity = $this->_helper->Authenticate();
-
-        $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
-                             ->addActionContext('show-by-type', 'json')
-                             ->initContext();
-    }
 
     public function showByTypeAction()
     {
