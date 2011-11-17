@@ -72,6 +72,11 @@ class Surfnet_Search_Parameters
         if ($inputFilter->month) {
             $this->addSearchParam('month', $inputFilter->month);
         }
+        if ($inputFilter->everything) {
+            $this->addSearchParam('everything', true);
+        } else {
+            $this->addSearchParam('everything', false);
+        }
     }
     /**
      * @param input filter
@@ -148,6 +153,24 @@ class Surfnet_Search_Parameters
         return $this;
     }
 
+    /**
+     * Get one search parameter
+     * 
+     * @param type $name 
+     */
+    public function getSearchParam($name) {
+        if (array_key_exists($name, $this->_searchParams)) {
+            return $this->_searchParams[$name];
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Get all search parameters
+     * 
+     * @return Array
+     */
     public function getSearchParams()
     {
         return $this->_searchParams;
@@ -165,4 +188,21 @@ class Surfnet_Search_Parameters
         $this->_sortDirection = $direction;
         return $this;
     }
+    
+    /**
+     * Is the search by date.
+     * Year And Month search must be set,
+     * and 'everything' must be false.
+     * 
+     * @return Boolean
+     */
+    public function searchByDate()
+    {
+        return (!$this->getSearchParam('everything')
+                && $this->getSearchParam('year') 
+                && $this->getSearchParam('month')
+        );
+        
+    }
+    
 }
