@@ -32,6 +32,10 @@
 <div id="export">
     <h3>Export</h3>
     <form action="<?php echo $this->url(); ?>">
+        <?php foreach ($this->exportParameters as $name => $value): ?>
+            <input type="hidden" name="<?=$name?>" value="<?=$value?>">
+        <?php endforeach; ?>
+
         <div class="exportContainer">
             <label for="exportEverything">All records</label>
             <input type="checkbox" name="everything" id="exportEverything" />
