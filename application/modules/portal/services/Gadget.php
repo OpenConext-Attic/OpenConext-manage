@@ -65,6 +65,7 @@ class Portal_Service_Gadget
         if ($params->getLimit()) {
             $query->limit($params->getLimit(), $params->getOffset());
         }
+        
         $query->order($params->getSortByField(). ' ' . $params->getSortDirection());
 
         $results = $dao->fetchAll($query)->toArray();

@@ -1,35 +1,12 @@
 <?php
 
-class EngineBlock_LoginOverviewController extends Zend_Controller_Action
+class EngineBlock_LoginOverviewController extends Surfnet_Zend_Controller_Abstract
 {
-    public function init()
-    {
-        $this->view->identity = $this->_helper->Authenticate();
-
-        $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
-                             ->addActionContext('show-by-type', 'json')
-                             ->addActionContext('show-by-idp', 'json')
-                             ->addActionContext('show-by-sp', 'json')
-                             ->initContext();
-    }
-
     public function showByTypeAction()
     {
-        if ($this->getRequest()->getParam('download', false)) {
-            $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
-        }
-
-        $inputFilter = $this->_helper->FilterLoader();
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir);
-
         $service = new EngineBlock_Service_LoginLog();
-        $results = $service->searchCountByType($params);
-
-        $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
+        $results = $service->searchCountByType($this->_searchParams);
+        
         $this->view->ResultSet          = $results->getResults();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
@@ -37,21 +14,9 @@ class EngineBlock_LoginOverviewController extends Zend_Controller_Action
 
     public function showByIdpAction()
     {
-        if ($this->getRequest()->getParam('download', false)) {
-            $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
-        }
-
-        $inputFilter = $this->_helper->FilterLoader();
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir);
-
         $service = new EngineBlock_Service_LoginLog();
-        $results = $service->searchCountByIdp($params);
+        $results = $service->searchCountByIdp($this->_searchParams);
 
-        $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
         $this->view->ResultSet          = $results->getResults();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
@@ -59,21 +24,9 @@ class EngineBlock_LoginOverviewController extends Zend_Controller_Action
 
     public function showBySpAction()
     {
-        if ($this->getRequest()->getParam('download', false)) {
-            $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
-        }
-
-        $inputFilter = $this->_helper->FilterLoader();
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir);
-
         $service = new EngineBlock_Service_LoginLog();
-        $results = $service->searchCountBySp($params);
+        $results = $service->searchCountBySp($this->_searchParams);
 
-        $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
         $this->view->ResultSet          = $results->getResults();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
@@ -91,20 +44,11 @@ class EngineBlock_LoginOverviewController extends Zend_Controller_Action
         if (!$entityId) {
             throw new Exception('No entity ID provided!');
         }
-        if ($this->getRequest()->getParam('download', false)) {
-            $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
-        }
-
-        $inputFilter = $this->_helper->FilterLoader();
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir)
-                ->addSearchParam('entity_id', $entityId);
-
+        $this->_addExportParameter('eid', $entityId);
+        $this->_searchParams->addSearchParam('entity_id', $entityId);
         $service = new EngineBlock_Service_LoginLog();
-        $results = $service->searchSpLoginsByIdp($params);
+        $results = $service->searchSpLoginsByIdp($this->_searchParams);
+        
         $this->view->entityId  = $entityId;
         $this->view->ResultSet = $results->getResults();
     }
@@ -121,20 +65,10 @@ class EngineBlock_LoginOverviewController extends Zend_Controller_Action
         if (!$entityId) {
             throw new Exception('No entity ID provided!');
         }
-        if ($this->getRequest()->getParam('download', false)) {
-            $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
-        }
-
-        $inputFilter = $this->_helper->FilterLoader();
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir)
-                ->addSearchParam('entity_id', $entityId);
-
+        $this->_addExportParameter('eid', $entityId);
+        $this->_searchParams->addSearchParam('entity_id', $entityId);
         $service = new EngineBlock_Service_LoginLog();
-        $results = $service->searchIdpLoginsBySp($params);
+        $results = $service->searchIdpLoginsBySp($this->_searchParams);
         $this->view->entityId  = $entityId;
         $this->view->ResultSet = $results->getResults();
     }

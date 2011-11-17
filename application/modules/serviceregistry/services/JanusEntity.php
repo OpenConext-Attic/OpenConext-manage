@@ -41,7 +41,7 @@ class ServiceRegistry_Service_JanusEntity
                   ->where('type = ?', 'saml20-idp')
                   ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
 
-        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+        if ($params->searchByDate()) {
             $selectIdp->where(
                 $this->_getCountTypesWhereForDate(
                     'je1',
@@ -60,7 +60,7 @@ class ServiceRegistry_Service_JanusEntity
                  ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
 
 
-        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+        if ($params->searchByDate()) {
             $selectSp->where(
                 $this->_getCountTypesWhereForDate(
                    'je1',
@@ -166,8 +166,8 @@ class ServiceRegistry_Service_JanusEntity
                         array('userid'=>'userid')
                       )
                 ->where('ent.type= ?',$type);
-
-        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+        
+        if ($params->searchByDate()) {
             $select->where(
                 $this->_getCountTypesWhereForDate(
                     'ent',

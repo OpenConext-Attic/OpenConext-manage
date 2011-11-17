@@ -23,7 +23,7 @@ class EngineBlock_Service_LoginLog
                               'type' => new Zend_Db_Expr("'Unique Logins'"))
                        );
 
-        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+        if ($params->searchByDate()) {
             $dateWhere = $this->_getLoginDateWhere(
                 $searchParams['year'],
                 $searchParams['month']
@@ -91,7 +91,7 @@ class EngineBlock_Service_LoginLog
         }
 
         $searchParams = $params->getSearchParams();
-        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+        if ($params->searchByDate()) {
             $select->where(
                 $this->_getLoginDateWhere(
                     $searchParams['year'],

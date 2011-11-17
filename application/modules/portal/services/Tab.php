@@ -44,7 +44,7 @@ class Portal_Service_Tab
                           )
                           ->where('team IS NULL');
         $searchParams = $params->getSearchParams();
-        if (!empty($searchParams['year']) && !empty($searchParams['month'])) {
+        if ($params->searchByDate()) {
             $dateWhere = $this->_getTeamTabsDateWhere(
                 $searchParams['year'],
                 $searchParams['month']

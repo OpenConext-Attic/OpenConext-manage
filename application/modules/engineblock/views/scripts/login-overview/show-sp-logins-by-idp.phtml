@@ -1,39 +1,10 @@
 <h1>IdP logins for '<?=$this->entityId;?>'</h1>
 <br/>
-<table id="SpTable">
-    <thead>
-    <tr class="yui-dt-first yui-dt-last">
-        <th>IdP</th>
-        <th>Logins</th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($this->ResultSet as $entity) { ?>
-    <tr>
-        <td><?=$entity['grouped'];?></td>
-        <td><?=$entity['num'];?></td>
-    </tr>
-        <?php } ?>
-    </tbody>
-</table>
-<br/>
-<br/>
-<a href="javascript:history.go(-1)"><< Go back</a>
-<script type="text/javascript">
-
-    var fixTableLayout = function() {
-        var evenElements = YAHOO.util.Selector.query('tbody tr:nth-child(even)');
-        var oddElements = YAHOO.util.Selector.query('tbody tr:nth-child(odd)');
-
-        for (var i in evenElements) {
-            YAHOO.util.Dom.addClass(evenElements[i], 'even');
-        }
-
-        for (var i in oddElements) {
-            YAHOO.util.Dom.addClass(oddElements[i], 'odd');
-        }
-
-    };
-
-    YAHOO.util.Event.onDOMReady(fixTableLayout);
-</script>
+<?php 
+echo $this->grid($this->gridConfig);
+echo $this->partial(
+         'export-month.phtml', 
+         'default', 
+         array('exportParameters' => $this->exportParameters)
+     );
+?>

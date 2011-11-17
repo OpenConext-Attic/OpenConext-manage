@@ -22,7 +22,7 @@
  * @copyright Copyright © 2010-2011 SURFnet bv, The Netherlands (http://www.surfnet.nl)
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
-abstract class Surfnet_Controller_Abstract
+abstract class Surfnet_Zend_Controller_Abstract
     extends Zend_Controller_Action
 {
     /**

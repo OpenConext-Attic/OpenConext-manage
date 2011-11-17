@@ -1,4 +1,9 @@
 <h1>Gadget usage</h1>
 <?php
 echo $this->grid($this->gridConfig);
+echo $this->partial(
+         'export.phtml', 
+         'default', 
+         array('exportParameters' => $this->exportParameters)
+     );
 ?>

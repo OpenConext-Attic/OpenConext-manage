@@ -23,34 +23,17 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
  */
 
-class ServiceRegistry_ServiceProviderOverviewController extends Zend_Controller_Action
+class ServiceRegistry_ServiceProviderOverviewController extends Surfnet_Zend_Controller_Abstract
 {
-    public function init()
-    {
-        $this->view->identity = $this->_helper->Authenticate();
-
-        $this->_helper->ContextSwitch->setAutoJsonSerialization(true)
-                             ->addActionContext('show-by-type', 'json')
-                             ->initContext();
-    }
-
     public function showByTypeAction()
     {
         if ($this->getRequest()->getParam('download', false)) {
             $this->getResponse()->setHeader('Content-disposition', 'attachment; filename=json.txt');
         }
 
-        $inputFilter = $this->_helper->FilterLoader();
-        $params = Surfnet_Search_Parameters::create()
-                ->setLimit($inputFilter->results)
-                ->setOffset($inputFilter->startIndex)
-                ->setSortByField($inputFilter->sort)
-                ->setSortDirection($inputFilter->dir);
-
         $service = new ServiceRegistry_Service_JanusEntity();
-        $results = $service->searchSps($params);
+        $results = $service->searchSps($this->_searchParams);
 
-        $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
         $this->view->ResultSet          = $results->getResults();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();

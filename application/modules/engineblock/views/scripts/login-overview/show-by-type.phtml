@@ -2,4 +2,9 @@
 <br />
 <?php 
 echo $this->grid($this->gridConfig);
+echo $this->partial(
+         'export-month.phtml', 
+         'default', 
+         array('exportParameters' => $this->exportParameters)
+     );
 ?>
