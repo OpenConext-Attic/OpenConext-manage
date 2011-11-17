@@ -35,7 +35,7 @@ class Surfnet_Search_ParametersTest extends PHPUnit_Framework_TestCase
     /**
      * Filter to test.
      *
-     * @var Surfnet_Filter_Parameters
+     * @var Surfnet_Zend_Filter_Parameters
      */
     protected $_params;
 
