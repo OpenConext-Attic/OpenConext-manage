@@ -1,0 +1,10 @@
+<h1>Total number of user logins per User-Agent</h1>
+<br />
+<?php 
+echo $this->grid($this->gridConfig);
+echo $this->partial(
+         'export-month.phtml', 
+         'default', 
+         array('exportParameters' => $this->exportParameters)
+     );
+?>

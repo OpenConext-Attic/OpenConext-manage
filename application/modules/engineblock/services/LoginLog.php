@@ -41,6 +41,16 @@ class EngineBlock_Service_LoginLog
         return new Surfnet_Search_Results($params, $rows, 2);
     }
 
+    public function searchCountByVo(Surfnet_Search_Parameters $params)
+    {
+        return $this->_searchCountGrouped('voname', $params);
+    }
+
+    public function searchCountByUseragent(Surfnet_Search_Parameters $params)
+    {
+        return $this->_searchCountGrouped('useragent', $params);
+    }
+
     public function searchCountByIdp(Surfnet_Search_Parameters $params)
     {
         return $this->_searchCountGrouped('idpentityname', $params);
