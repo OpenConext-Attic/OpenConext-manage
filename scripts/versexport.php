@@ -24,15 +24,20 @@
  */
 
 include __DIR__ . '/../public/_include.php';
+include_once '../library/SurfDashboard/Insert/Client.php';
 
 /** Zend_Application */
 require_once 'Manage/Application.php';
+
+print(APPLICATION_ENV);
 
 // Create application, bootstrap, and run
 $application = new Manage_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
 );
+
+print_r($application);
 
 // bootstrap and retrive the frontController resource
 $front = $application->getBootstrap()
