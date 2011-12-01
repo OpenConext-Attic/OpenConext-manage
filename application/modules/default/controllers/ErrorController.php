@@ -15,7 +15,8 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License.
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
  *
  * @category  SURFconext Manage
  * @package
@@ -52,7 +53,8 @@ class Default_ErrorController extends Zend_Controller_Action
             default:
                 // application error
                 $this->getResponse()->setHttpResponseCode(500);
-                $this->view->message = 'The application encountered an error, please contact the application support.';
+                $this->view->message = 'The application encountered an error, '
+                                     . 'please contact the application support.';
                 break;
         }
         
@@ -75,8 +77,7 @@ class Default_ErrorController extends Zend_Controller_Action
         if (!$bootstrap->hasResource('Log')) {
             return false;
         }
-        $log = $bootstrap->getResource('Log');
-        return $log;
+        return $bootstrap->getResource('Log');
     }
 
 
