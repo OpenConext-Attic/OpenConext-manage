@@ -34,7 +34,19 @@ require_once('SurfConext/Identity.php');
  */
 class Surfnet_Zend_Helper_Authenticate extends Zend_Controller_Action_Helper_Abstract
 {
+    /**
+     * SAML attribute with person name.
+     * 
+     * @var String
+     */
     const AUTH_DISPLAY_NAME_SAML_ATTRIBUTE = 'urn:mace:dir:attribute-def:cn';
+    
+    /**
+     * SAML attribute with email address.
+     * 
+     * @var String
+     */
+    const AUTH_EMAIL_SAML_ATTRIBUTE = 'urn:mace:dir:attribute-def:mail';
 
     public function direct()
     {
@@ -47,7 +59,7 @@ class Surfnet_Zend_Helper_Authenticate extends Zend_Controller_Action_Helper_Abs
         $samlIdentity = $res->getIdentity();
         $identity = new SurfConext_Identity($samlIdentity['nameid'][0]);
         $identity->displayName = $samlIdentity[self::AUTH_DISPLAY_NAME_SAML_ATTRIBUTE][0];
-
+        $identity->email = $samlIdentity[self::AUTH_EMAIL_SAML_ATTRIBUTE][0];
         return $identity;
     }
 }
