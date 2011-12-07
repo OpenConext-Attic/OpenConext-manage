@@ -42,6 +42,13 @@ class SurfConext_Identity
     public $displayName;
 
     /**
+     * Email address to use in reports.
+     * 
+     * @var String
+     */
+    public $email;
+    
+    /**
      * Unique identifier for this identity
      *
      * @var mixed
