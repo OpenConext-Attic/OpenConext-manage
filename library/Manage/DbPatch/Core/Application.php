@@ -9,18 +9,11 @@ class Manage_DbPatch_Core_Application extends DbPatch_Core_Application
     protected function getConfig($filename = null)
     {
         try {
-            /**
-             * Hack:
-             * Dummy empty file, because Zend_Application requires a
-             * config. 
-             */
-            $tmpfile = tempnam('/tmp', 'manage_dbpatch');
-            if ($file === false ) {
-                throw new Exception("Unable to create temporary file");
-            }
 
             
-            $app = new Manage_Application($this->_getEnvironment(), $tmpfile);
+            $app = new Manage_Application(
+                            $this->_getEnvironment(), 
+                            APPLICATION_PATH . '/configs/application.ini');
             $dbConfig = $app->getConfig()->resources->multidb->manage->toArray();
             $config = array(
                 'db' => array(
@@ -33,7 +26,6 @@ class Manage_DbPatch_Core_Application extends DbPatch_Core_Application
         } catch (Exception $e) {
             die($e->getMessage()."\n");
         }
-        unlink($tmpfile);
         
         return new Zend_Config($config);
     }
