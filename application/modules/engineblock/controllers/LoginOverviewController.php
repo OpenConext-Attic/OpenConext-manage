@@ -6,8 +6,9 @@ class EngineBlock_LoginOverviewController extends Surfnet_Zend_Controller_Abstra
     {
         $service = new EngineBlock_Service_LoginLog();
         $results = $service->searchCountByType($this->_searchParams);
-        
+
         $this->view->ResultSet          = $results->getResults();
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }
@@ -18,6 +19,7 @@ class EngineBlock_LoginOverviewController extends Surfnet_Zend_Controller_Abstra
         $results = $service->searchCountByVo($this->_searchParams);
         $data = $this->_stripNullRows($results);
         $this->view->ResultSet          = $data;
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }
@@ -28,6 +30,7 @@ class EngineBlock_LoginOverviewController extends Surfnet_Zend_Controller_Abstra
         $results = $service->searchCountByUseragent($this->_searchParams);
         $data = $this->_stripNullRows($results);
         $this->view->ResultSet          = $data;
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }
@@ -38,6 +41,7 @@ class EngineBlock_LoginOverviewController extends Surfnet_Zend_Controller_Abstra
         $results = $service->searchCountByIdp($this->_searchParams);
 
         $this->view->ResultSet          = $results->getResults();
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }
@@ -48,6 +52,7 @@ class EngineBlock_LoginOverviewController extends Surfnet_Zend_Controller_Abstra
         $results = $service->searchCountBySp($this->_searchParams);
 
         $this->view->ResultSet          = $results->getResults();
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }
@@ -66,11 +71,15 @@ class EngineBlock_LoginOverviewController extends Surfnet_Zend_Controller_Abstra
         }
         $this->_addExportParameter('eid', $entityId);
         $this->_searchParams->addSearchParam('entity_id', $entityId);
+
         $service = new EngineBlock_Service_LoginLog();
         $results = $service->searchSpLoginsByIdp($this->_searchParams);
         
-        $this->view->entityId  = $entityId;
-        $this->view->ResultSet = $results->getResults();
+        $this->view->entityId           = $entityId;
+        $this->view->ResultSet          = $results->getResults();
+        $this->view->startIndex         = $results->getParameters()->getOffset();
+        $this->view->recordsReturned    = $results->getResultCount();
+        $this->view->totalRecords       = $results->getTotalCount();
     }
 
     /**

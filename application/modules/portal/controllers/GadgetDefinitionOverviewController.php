@@ -30,6 +30,7 @@ class Portal_GadgetDefinitionOverviewController extends Zend_Controller_Action
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
         $this->view->ResultSet          = $results->getResults();
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }

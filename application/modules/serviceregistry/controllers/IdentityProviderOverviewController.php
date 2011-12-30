@@ -32,6 +32,7 @@ class ServiceRegistry_IdentityProviderOverviewController
         $results = $service->searchIdps($this->_searchParams);
 
         $this->view->ResultSet          = $results->getResults();
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }

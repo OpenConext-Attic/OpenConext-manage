@@ -9,6 +9,7 @@ class Portal_GadgetOverviewController extends Surfnet_Zend_Controller_Abstract
         $results = $service->searchUsage($this->_searchParams);
 
         $this->view->ResultSet          = $results->getResults();
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }

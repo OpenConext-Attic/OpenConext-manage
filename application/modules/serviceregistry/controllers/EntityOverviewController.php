@@ -25,7 +25,6 @@
 
 class ServiceRegistry_EntityOverviewController extends Surfnet_Zend_Controller_Abstract
 {
-
     public function showByTypeAction()
     {
         if ($this->getRequest()->getParam('download', false)) {
@@ -44,6 +43,7 @@ class ServiceRegistry_EntityOverviewController extends Surfnet_Zend_Controller_A
 
         $this->view->gridConfig         = $this->_helper->gridSetup($inputFilter);
         $this->view->ResultSet          = $results->getResults();
+        $this->view->startIndex         = $results->getParameters()->getOffset();
         $this->view->recordsReturned    = $results->getResultCount();
         $this->view->totalRecords       = $results->getTotalCount();
     }
