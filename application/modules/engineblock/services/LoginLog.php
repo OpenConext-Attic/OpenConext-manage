@@ -5,25 +5,20 @@ class EngineBlock_Service_LoginLog
     public function searchCountByType(Surfnet_Search_Parameters $params)
     {
         $dao = new EngineBlock_Model_DbTable_LogLogin();
-        /**
-         *
-         * $qry = "SELECT COUNT(userid) as num, 'Total Logins' as type FROM `engine_block`.`log_logins`
-         *    UNION
-         *   SELECT COUNT(DISTINCT(userid)) as num, 'Unique Logins' as type FROM `engine_block`.`log_logins`";
-         */
 
-        $selectTotal = $dao->select()->from($dao,
-                      array("num" => "COUNT(userid)",
-                            'type' => new Zend_Db_Expr("'Total Logins'"))
-                     );
-        $searchParams = $params->getSearchParams();
 
-        $selectUnique = $dao->select()->from($dao,
-                        array("num" => "COUNT(DISTINCT(userid))",
-                              'type' => new Zend_Db_Expr("'Unique Logins'"))
-                       );
+        $selectTotal = $dao->select()->from(
+            $dao,
+            array('num' => 'COUNT(userid)')
+        );
+
+        $selectUnique = $dao->select()->from(
+            $dao,
+            array('num' => 'COUNT(DISTINCT(userid))')
+        );
 
         if ($params->searchByDate()) {
+            $searchParams = $params->getSearchParams();
             $dateWhere = $this->_getLoginDateWhere(
                 $searchParams['year'],
                 $searchParams['month']
@@ -31,12 +26,13 @@ class EngineBlock_Service_LoginLog
             $selectUnique->where($dateWhere);
             $selectTotal->where($dateWhere);
         }
-        $select = $dao->select()
-                ->union(array(
-                    $selectTotal,
-                    $selectUnique
-                ));
-        $rows = $dao->fetchAll($select)->toArray();
+
+        $rows = array(
+            array(
+                'total'  => (int)$dao->fetchRow($selectTotal)->num,
+                'unique' => (int)$dao->fetchRow($selectUnique)->num,
+            ),
+        );
 
         return new Surfnet_Search_Results($params, $rows, 2);
     }
@@ -86,8 +82,8 @@ class EngineBlock_Service_LoginLog
         $select = $dao->select()->from(
             $dao,
             array(
-                 "num" => "COUNT(*)",
-                 "grouped" => $groupByField
+                 'num' => 'COUNT(*)',
+                 'grouped' => $groupByField
             )
         )->group($groupByField);
 
@@ -147,11 +143,15 @@ class EngineBlock_Service_LoginLog
             $month
         );
     }
+
     /**
      * Get the SQL selector for entity
      *
+     * @todo This is insecure and should be removed, potential for SQL injection
+     *
      * @param String $field
      * @param String $value
+     * @return array
      */
     protected function _getEntityWhere($field, $value)
     {
@@ -161,5 +161,4 @@ class EngineBlock_Service_LoginLog
             $value
         );
     }
-
 }
