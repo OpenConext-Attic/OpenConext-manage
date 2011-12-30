@@ -45,23 +45,24 @@ abstract class Surfnet_Zend_Controller_Abstract
 
         $this->view->identity = $this->_helper->Authenticate();
 
-        $this->_helper->ContextSwitch()->addActionContext($action, 
-                                             array(
-                                                 'json',
-                                                 'json-export',
-                                                 'csv-export'
-                                             )
-                                         )
-                                       ->initContext();
+        $this->_helper->ContextSwitch()->addActionContext(
+            $action,
+            array(
+                'json',
+                'json-export',
+                'csv-export'
+            )
+        )->initContext();
+
         $this->_inputFilter = $this->_helper->FilterLoader();
         $this->_searchParams = Surfnet_Search_Parameters::create(
-                                   $this->_inputFilter
-                               );
+            $this->_inputFilter
+        );
         $this->_initExportParameters();
         $this->view->gridConfig = $this->_helper->gridSetup(
-                                      $this->_inputFilter
-                                  );
-        
+            $this->_inputFilter
+        );
+        $this->_helper->ContextSwitch()->setGridConfig($this->view->gridConfig);
     }
     
     /**

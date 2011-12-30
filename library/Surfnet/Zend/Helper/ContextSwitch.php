@@ -28,6 +28,8 @@
  */
 class Surfnet_Zend_Helper_ContextSwitch extends Zend_Controller_Action_Helper_ContextSwitch
 {
+    protected $_gridConfig;
+
     public function __construct($options = array())
     {
         if ($options instanceof Zend_Config) {
@@ -70,6 +72,11 @@ class Surfnet_Zend_Helper_ContextSwitch extends Zend_Controller_Action_Helper_Co
         }
 
         $this->init();
+    }
+
+    public function setGridConfig(Zend_Config $config)
+    {
+        $this->_gridConfig = $config;
     }
 
     /**
@@ -154,16 +161,51 @@ class Surfnet_Zend_Helper_ContextSwitch extends Zend_Controller_Action_Helper_Co
             return "";
         }
 
-        array_unshift($records, array_keys($records[0]));
-        $csv = "";
+        $csv = $this->_getCsvHeadersFromFirstRow($records[0]);
         foreach ($records as $record) {
-            $outStream = fopen("php://temp", 'a');
-            fputcsv($outStream, $record, ',', '"');
-            rewind($outStream);
-            $csv .= fgets($outStream);
-            fclose($outStream);
+            $csv .= $this->_convertRecordToCsvLine($record);
         }
         
+        return $csv;
+    }
+
+    /**
+     * Get the array keys from the first row and try to translate using a grid config (if given).
+     *
+     * @param $row
+     * @return string
+     */
+    protected function _getCsvHeadersFromFirstRow($row)
+    {
+        $record = array();
+        $columnNames = array_keys($row);
+        foreach ($columnNames as $columnName) {
+            if (!isset($this->_gridConfig)) {
+                $record[] = $columnName;
+                continue;
+            }
+
+            if (!isset($this->_gridConfig->columns->$columnName)) {
+                $record[] = $columnName;
+                continue;
+            }
+
+            $record[] = $this->_gridConfig->columns->{$columnName}->label;
+        }
+        return $this->_convertRecordToCsvLine($record);
+    }
+
+    protected function _convertRecordToCsvLine($record)
+    {
+        $outStream = fopen("php://temp", 'a');
+
+        fputcsv($outStream, $record, ',', '"');
+
+        rewind($outStream);
+        $csv = fgets($outStream);
+
+        fclose($outStream);
+
         return $csv;
     }
 }
