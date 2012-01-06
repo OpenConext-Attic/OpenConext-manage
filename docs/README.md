@@ -83,7 +83,16 @@ olcLimits: {0}dn.exact="cn=VERS Account,dc=surfconext,dc=nl" size=unlimited
 -
 ====================================
 
-### 5 Set up VERS reporting.
+### 5 Install database schema
+
+To install the initial database, just call the 'migrate' script in *bin/*, like so:
+
+    cd bin && ./migrate && cd ..
+
+**NOTE**
+Manage requires database settings, without it the install script will not function
+
+### 6 Set up VERS reporting.
 
 Edit */etc/surfconext/manage.ini* and add:
 
