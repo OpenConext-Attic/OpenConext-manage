@@ -39,11 +39,8 @@ class ServiceRegistry_AllowedConnectionsController extends Zend_Controller_Actio
         }
 
         $service = new ServiceRegistry_Service_JanusEntity();
-        $this->view->ResultSet = $service->getAllowedConnections($entityId);
-        $this->view->startIndex         = $results->getParameters()->getOffset();
-        $this->view->recordsReturned    = $results->getResultCount();
-        $this->view->totalRecords       = $results->getTotalCount();
-        $this->view->entity = $service->fetchByEntityId($entityId);
+        $this->view->ResultSet          = $service->getAllowedConnections($entityId);
+        $this->view->entity             = $service->fetchByEntityId($entityId);
     }
 
     public function showForSpAction()
@@ -56,6 +53,6 @@ class ServiceRegistry_AllowedConnectionsController extends Zend_Controller_Actio
 
         $service = new ServiceRegistry_Service_JanusEntity();
         $this->view->ResultSet = $service->getAllowedConnections($entityId);
-        $this->view->entity = $service->fetchByEntityId($entityId);
+        $this->view->entity    = $service->fetchByEntityId($entityId);
     }
 }
