@@ -17,12 +17,12 @@
                                 value="<?php echo $spAcl->id; ?>" />
                 <tr>
                     <td>
-                        <?php echo $this->groupProvider['name']; ?>
+                        <?php echo htmlentities($this->groupProvider['name']); ?>
                     </td>
                     <td>
                         <input name="spacl[<?=$index?>][spentityid]" type="hidden"
-                               value="<?php echo $spAcl->spentityid; ?>" />
-                        <?php echo $spAcl->spentityid; ?>
+                               value="<?php echo htmlentities($spAcl->spentityid); ?>" />
+                        <?php echo htmlentities($spAcl->spentityid); ?>
                     </td>
                     <td>
                         <input name="spacl[<?=$index?>][allow_groups]" type="checkbox" value="1"
