@@ -91,7 +91,7 @@ class EngineBlock_ServiceProviderGroupAclController extends Zend_Controller_Acti
         foreach ($spAcls as $spAcl) {
             $service->save($spAcl, true);
         }
-        $this->_redirect("engineblock/group-provider/list");
+        $this->_forward('list','group-provider','engineblock');
     }
 
 
