@@ -1,0 +1,44 @@
+<form method="POST" id="contentEdit" action="<?php echo $this->url(array('action'=>'save')); ?>">
+
+    <table id="serviceProviderAclTable">
+        <thead>
+            <tr class="yui-dt-first yui-dt-last">
+                <th>Group Provider</th>
+                <th>Service Provider</th>
+                <th>Allow groups</th>
+                <th>Allow members</th>
+            </tr>
+        </thead>
+        <tbody class="apps">
+            <?php foreach ($this->serviceProviderAcls as $index => $spAcl) : ?>
+                <input type="hidden" name="spacl[<?=$index?>][groupProviderId]"
+                    value="<?php echo $this->groupProvider['id']; ?>" />
+                <input type="hidden" name="spacl[<?=$index?>][id]"
+                                value="<?php echo $spAcl->id; ?>" />
+                <tr>
+                    <td>
+                        <?php echo $this->groupProvider['name']; ?>
+                    </td>
+                    <td>
+                        <input name="spacl[<?=$index?>][spentityid]" type="hidden"
+                               value="<?php echo $spAcl->spentityid; ?>" />
+                        <?php echo $spAcl->spentityid; ?>
+                    </td>
+                    <td>
+                        <input name="spacl[<?=$index?>][allow_groups]" type="checkbox" value="1"
+                            <?php if ($spAcl->allow_groups): ?>checked="checked"<?php endif; ?>/>
+                    </td>
+                    <td>
+                        <input name="spacl[<?=$index?>][allow_members]" type="checkbox" value="1"
+                            <?php if ($spAcl->allow_members): ?>checked="checked"<?php endif; ?>/>
+                    </td>
+                </tr>
+            <? endforeach; ?>
+        </tbody>
+    </table>
+    <input type="submit" value="Save" />
+</form>
+
+
+
+

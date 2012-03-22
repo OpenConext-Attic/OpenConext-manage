@@ -153,3 +153,11 @@ YAHOO.widget.DataTable.Formatter.showIdPLoginsBySp = function(el, oRecord, oColu
     var html = '<a href="/engineblock/login-overview/show-idp-logins-by-sp?eid=' + encodeURIComponent(entityId) + '">' + entityId + '</a>';
     el.innerHTML += html;
 }
+
+YAHOO.widget.DataTable.Formatter.showSpGroupAcl = function(el, oRecord, oColumn, oData) {
+    var id = oRecord.getData('id');
+    var abr = oRecord.getData('identifier');
+    var name = oRecord.getData('name');
+    var html = '<a href="/engineblock/service-provider-group-acl/show-sp--by-groupprovider?id=' + encodeURIComponent(id) + '&abr=' + encodeURIComponent(abr) + '&name=' + encodeURIComponent(name) + '">ACL</a>';
+    el.innerHTML += html;
+}
