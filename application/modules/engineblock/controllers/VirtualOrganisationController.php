@@ -57,43 +57,40 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
         $this->view->listUrl = $this->view->url(array('module' => 'engineblock', 'controller' => 'virtual-organisation', 'action' => 'list'), null, true);
         $this->view->gridData = array();
 
-        switch ($this->view->virtualOrganisation->vo_type) {
-            case 'GROUP' :
-                // groups grid
-                $inputFilter = $this->_helper->FilterLoader('groups');
-                $params = Surfnet_Search_Parameters::create()
-                        ->setLimit($inputFilter->results)
-                        ->setOffset($inputFilter->startIndex)
-                        ->setSortByField($inputFilter->sort)
-                        ->setSortDirection($inputFilter->dir);
-                $service = new EngineBlock_Service_VirtualOrganisationGroup();
-                $groupRecords = $service->listSearch($params, $this->view->vo_id);
-                $this->view->gridData['groups'] = array(
-                    'gridConfig' => $this->_helper->gridSetup($inputFilter, 'groups'),
-                );
-                break;
-            case 'STEM' :
-                $config = $this->getFrontController()->getParam('bootstrap')->getApplication()->getOptions();
-                $voPrefix = $config['engineBlock']['vo']['stemPrefix'];
-                $this->view->voStem = $voPrefix . $this->view->virtualOrganisation->vo_id;
-                // Do nothing, since we only have to display the stem name
-                break;
-            case 'IDP' :
-                // idps grid
-                $inputFilter = $this->_helper->FilterLoader('idps');
-                $params = Surfnet_Search_Parameters::create()
-                        ->setLimit($inputFilter->results)
-                        ->setOffset($inputFilter->startIndex)
-                        ->setSortByField($inputFilter->sort)
-                        ->setSortDirection($inputFilter->dir);
-                $service = new EngineBlock_Service_VirtualOrganisationIdp();
-                $idpRecords = $service->listSearch($params, $this->view->vo_id);
-                $this->view->gridData['idps'] = array(
-                    'gridConfig' => $this->_helper->gridSetup($inputFilter, 'idps'),
-                );
-                break;
-            default :
-                break;
+        $voType = $this->view->virtualOrganisation->vo_type;
+        if (in_array($voType, array('GROUP', 'MIXED'))) {
+            // groups grid
+            $inputFilter = $this->_helper->FilterLoader('groups');
+            $params = Surfnet_Search_Parameters::create()
+                    ->setLimit($inputFilter->results)
+                    ->setOffset($inputFilter->startIndex)
+                    ->setSortByField($inputFilter->sort)
+                    ->setSortDirection($inputFilter->dir);
+            $service = new EngineBlock_Service_VirtualOrganisationGroup();
+            $groupRecords = $service->listSearch($params, $this->view->vo_id);
+            $this->view->gridData['groups'] = array(
+                'gridConfig' => $this->_helper->gridSetup($inputFilter, 'groups'),
+            );
+        }
+        if (in_array($voType, array('STEM'))) {
+            $config = $this->getFrontController()->getParam('bootstrap')->getApplication()->getOptions();
+            $voPrefix = $config['engineBlock']['vo']['stemPrefix'];
+            $this->view->voStem = $voPrefix . $this->view->virtualOrganisation->vo_id;
+            // Do nothing, since we only have to display the stem name
+        }
+        if (in_array($voType, array('IDP', 'MIXED'))) {
+            // idps grid
+            $inputFilter = $this->_helper->FilterLoader('idps');
+            $params = Surfnet_Search_Parameters::create()
+                    ->setLimit($inputFilter->results)
+                    ->setOffset($inputFilter->startIndex)
+                    ->setSortByField($inputFilter->sort)
+                    ->setSortDirection($inputFilter->dir);
+            $service = new EngineBlock_Service_VirtualOrganisationIdp();
+            $idpRecords = $service->listSearch($params, $this->view->vo_id);
+            $this->view->gridData['idps'] = array(
+                'gridConfig' => $this->_helper->gridSetup($inputFilter, 'idps'),
+            );
         }
 
         // json context dependent variables
@@ -141,7 +138,16 @@ class EngineBlock_VirtualOrganisationController extends Zend_Controller_Action
         $virtualOrganisation = $service->save($this->_getAllParams(), true);
 
         if (empty($virtualOrganisation->errors)) {
-            $this->_redirect($this->view->url(array('module' => 'engineblock', 'controller' => 'virtual-organisation', 'action' => 'list'), null, true));
+            $listAllVosUrl = $this->view->url(
+                array(
+                    'module' => 'engineblock',
+                    'controller' => 'virtual-organisation',
+                    'action' => 'list'
+                ),
+                null,
+                true
+            );
+            $this->_redirect($listAllVosUrl);
         }
         else {
             $virtualOrganisation->vo_id = $this->_getParam('org_vo_id');

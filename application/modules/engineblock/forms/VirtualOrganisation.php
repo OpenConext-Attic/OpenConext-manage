@@ -42,13 +42,14 @@ class EngineBlock_Form_VirtualOrganisation extends Zend_Form
     {
         $element = new Zend_Form_Element_Radio('vo_type');
         $element->addMultiOptions(array(
+            'MIXED' => 'Mixed',
             'GROUP' => 'Group',
             'STEM'  => 'Stem',
             'IDP'   => 'IdP',
         ));
         $element->setRequired(true);
         $element->setAllowEmpty(false);
-        $element->setValue('GROUP');
+        $element->setValue('MIXED');
         return $this->addElement($element);
     }
 

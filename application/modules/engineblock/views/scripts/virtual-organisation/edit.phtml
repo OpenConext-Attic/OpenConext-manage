@@ -28,33 +28,44 @@
     <?php if (!$model->vo_id): ?>
     <fieldset title="Virtual Organisation Type">
         <label>Virtual Organisation type<span class="required-postfix" title="Required field">*</span></label>
+        <input id="vo_type_mixed"
+               name="vo_type"
+               type="radio"
+               value="MIXED" <?= $model->vo_type === 'MIXED' ? 'checked' : !isset($model->vo_type) ? 'checked' : ''; ?>>
+        Mixed (IDPs & Groups)<br/>
+
         <input id="vo_type_group"
                name="vo_type"
                type="radio"
-               value="GROUP" <?= $model->vo_type === 'GROUP' ? 'checked' : !isset($model->vo_type) ? 'checked' : ''; ?>>Group<br/>
+               value="GROUP" <?= $model->vo_type === 'GROUP' ? 'checked' : ''; ?>>
+        Group<br/>
+
         <input id="vo_type_stem"
                name="vo_type"
                type="radio"
-               value="STEM" <?= $model->vo_type === 'STEM' ? 'checked' : ''; ?>>Stem<br/>
+               value="STEM" <?= $model->vo_type === 'STEM' ? 'checked' : ''; ?>>
+        Stem<br/>
+
         <input id="vo_type_idp"
                name="vo_type"
                type="radio"
-               value="IDP" <?= $model->vo_type === 'IDP' ? 'checked' : ''; ?>>IdP<br/>
+               value="IDP" <?= $model->vo_type === 'IDP' ? 'checked' : ''; ?>>
+        IdP<br/>
     </fieldset>
     <?php else: ?>
         <input type="hidden" name="vo_type" value="<?=$model->vo_type; ?>">
     <?php endif; ?>
 
-    <?php if (strlen($model->vo_id) > 0 && !isset($model->errors['vo_id'])) : ?>
-    <?php switch ($model->vo_type) {
-        case 'GROUP' : ?>
-            <a href="<?php echo $this->url(array('action' => 'groupadd', 'vo_id' => $model->vo_id)); ?>">Add a new
-                Group</a>
+    <?php
+    if (strlen($model->vo_id) > 0 && !isset($model->errors['vo_id'])) :
+        if (in_array($model->vo_type, array('MIXED', 'GROUP'))) : ?>
+            <a href="<?php echo $this->url(array('action' => 'groupadd', 'vo_id' => $model->vo_id)); ?>">
+                Add a new Group
+            </a>
             <?php
-                    echo $this->grid($this->gridData['groups']['gridConfig']);
-        ?>
-            <?php break;
-        case 'STEM' : ?>
+            echo $this->grid($this->gridData['groups']['gridConfig']);
+        endif;
+        if (in_array($model->vo_type, array('STEM'))): ?>
             <div class="notice">
                 <h3>Reminder</h3>
                 <ol>
@@ -66,15 +77,17 @@
             <p>
                 The current stem name is <strong><?= $this->voStem; ?></strong>.
             </p>
-            <?php break;
-        case 'IDP' : ?>
-            <a href="<?php echo $this->url(array('action' => 'idpadd', 'vo_id' => $model->vo_id)); ?>">Add a new IdP</a>
             <?php
-                    echo $this->grid($this->gridData['idps']['gridConfig']);
-        ?>
-            <?php break;
-    } ?>
-    <?php endif; ?>
+        endif;
+        if (in_array($model->vo_type, array('MIXED', 'IDP'))): ?>
+            <a href="<?php echo $this->url(array('action' => 'idpadd', 'vo_id' => $model->vo_id)); ?>">
+                Add a new IdP
+            </a>
+            <?php
+            echo $this->grid($this->gridData['idps']['gridConfig']);
+        endif;
+    endif;
+    ?>
 
     <br/>
     <input id="submit" name="submit" value="Save" type="submit">
