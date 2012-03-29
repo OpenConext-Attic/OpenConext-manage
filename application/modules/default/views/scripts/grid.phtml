@@ -105,14 +105,14 @@ COINMANAGE.lastDataTable = COINMANAGE.AjaxDataTable('#<?php echo $this->id; ?>')
                 return false;
             }
 
-            var deleteUrl = '<?php if (isset($this->config->delete->url->action)) echo $this->url(array('action'=>$this->config->delete->url->action)); 
+            var deleteUrl = '<?php if (isset($this->config->delete->url->action)) echo $this->url(array('action'=>$this->config->delete->url->action));
                                     else echo $this->url(array('action'=>'delete')); ?>?';
 <?php if (isset($this->config->params)) :  foreach ($this->config->params->toArray() as $key => $param) : ?>
             var <?= $param ?> = record.getData('<?php echo $key ?>');
             deleteUrl += '<?= $key ?>='+<?= $param ?>+'&';
-<?php endforeach; endif; ?>                                                
+<?php endforeach; endif; ?>
             var myDataSource = new YAHOO.util.DataSource(deleteUrl);
-            myDataSource.sendRequest('<?php echo $idColumn ?>=' + record.getData('<?php echo $idColumn ?>'), {
+            myDataSource.sendRequest('<?php echo $idColumn ?>=' + encodeURIComponent(record.getData('<?php echo $idColumn ?>')), {
                 success : function() {
                     DataTable.reQuery();
                 }
