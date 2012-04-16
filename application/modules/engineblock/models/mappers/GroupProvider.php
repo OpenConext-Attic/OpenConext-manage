@@ -326,6 +326,7 @@ class EngineBlock_Model_Mapper_GroupProvider
         $groupProvider->id = $row['id'];
         $groupProvider->identifier = $row['identifier'];
         $groupProvider->name = $row['name'];
+        $groupProvider->logoUrl = $row['logo_url'];
         $groupProvider->fullClassname = $row['classname'];
         $groupProvider->classname = EngineBlock_Model_GroupProvider::getClassnameDisplayValue($row['classname']);
         
@@ -350,6 +351,7 @@ class EngineBlock_Model_Mapper_GroupProvider
         $row['id'] = $groupProvider->id;
         $row['identifier'] = $groupProvider->identifier;
         $row['name'] = $groupProvider->name;
+        $row['logo_url'] = $groupProvider->logoUrl;
 
         // transformations model->row: 
         // * authentication type -> classname

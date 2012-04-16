@@ -13,7 +13,8 @@ class EngineBlock_Form_GroupProvider extends Zend_Form
         $this->_initId()
             ->_initIdentifier()
             ->_initName()
-            ->_initClassName();
+            ->_initClassName()
+            ->_initLogoUrl();
         
     }
 
@@ -60,7 +61,16 @@ class EngineBlock_Form_GroupProvider extends Zend_Form
         $element->setAllowEmpty(false);
         return $this->addElement($element);
     }
-    
+
+    public function _initLogoUrl()
+    {
+        $element = new Zend_Form_Element_Text('logoUrl');
+        $element->setRequired(TRUE);
+        $element->setAllowEmpty(false);
+        return $this->addElement($element);
+
+    }
+
     public function _initClassName()
     {
         $element = new Zend_Form_Element_Select('classname');

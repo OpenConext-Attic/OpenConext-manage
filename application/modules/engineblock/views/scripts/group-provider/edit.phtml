@@ -52,6 +52,20 @@ $model = $this->groupProvider; ?>
                 />
     </fieldset>
 
+    <fieldset title="Logo">
+        <?php if (isset($model->errors['logoUrl'])): foreach ($model->errors['logoUrl'] as $error): ?>
+        <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
+        <label for="id">Logo url: <span class="required-postfix" title="Required field">*</span></label>
+        <input id="logoUrl"
+               name="logoUrl"
+               type="text"
+               value="<?php echo $this->escape($model->logoUrl); ?>"
+               size="100"
+               maxlength="255"
+                />
+    </fieldset>
+
 <?php if ($this->mode == 'add') : ?>
     <fieldset title="Type">
         <?php if (isset($model->errors['classname'])): foreach ($model->errors['classname'] as $error): ?>

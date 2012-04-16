@@ -47,6 +47,7 @@ class EngineBlock_Model_GroupProvider extends Default_Model_Abstract
     public $identifier;
     public $name;
     public $classname;
+    public $logoUrl;
     
 /************************/
 /* AUXILIARY PROPERTIES */
