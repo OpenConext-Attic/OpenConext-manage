@@ -177,7 +177,7 @@ body {
 }
 
 .content {
-    float: left;
+    margin-left: 155px;
     padding: 10px;
 }
 
