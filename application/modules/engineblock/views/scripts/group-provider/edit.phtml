@@ -84,7 +84,8 @@ $model = $this->groupProvider; ?>
     </table>    
 <?php endif; ?>
 
-<?php if ($this->mode == 'edit' && $model->classname == 'GROUPER') : ?>
+<?php if ($this->mode == 'edit') :
+        if ($model->classname == 'GROUPER') : ?>
     <fieldset title="URL">
         <?php if (isset($model->errors['url'])): foreach ($model->errors['url'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
@@ -163,9 +164,9 @@ $model = $this->groupProvider; ?>
                maxlength="255"
                 />
     </fieldset>
-<?php endif; ?>
+    <?php endif; ?>
 
-<?php if ($this->mode == 'edit' && substr($model->classname, 0, 10) == 'OPENSOCIAL') : ?>
+    <?php if (substr($model->classname, 0, 10) == 'OPENSOCIAL') : ?>
     <fieldset title="URL">
         <?php if (isset($model->errors['url'])): foreach ($model->errors['url'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
@@ -403,6 +404,7 @@ $model = $this->groupProvider; ?>
             </div>
         </div>
     </fieldset>
+    <?php endif; ?>
 
     <fieldset title="User Precondition">
         <label>User Precondition: </span></label>
@@ -430,8 +432,8 @@ $model = $this->groupProvider; ?>
                 /><br/>
         <div style="float: left; margin-left: 144px; font-size: smaller">Regular expressions are allowed.</div>
     </fieldset>
-    
 <?php endif; ?>
+
     
     <fieldset title="Groups">
         <div style="float: left; width: 35px; height: 210px;">
