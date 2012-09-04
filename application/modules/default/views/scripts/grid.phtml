@@ -30,19 +30,23 @@ $searchableFields = array();
 foreach ($columnsDefinition as $key => $definition) {
     $dataSourceFields[] = $key;
 
-    if (!isset($definition['hidden']) || !$definition['hidden']) {
+    if (empty($definition['hidden'])) {
         // Add visible fields as columns
         $definition['key'] = $key;
         $columnsDefinition[] = $definition;
-
-        // Register searchable fields.
-        if (isset($definition['searchable']) && $definition['searchable']) {
-            $searchableFields[] = array(
-                'key' => $key,
-                'label' => $definition['label'],
-            );
-        }
     }
+
+    // Register searchable fields.
+    if (
+        (!empty($definition['searchable'])) &&
+        (empty($definition['hidden']) || ($key === 'entityid')) // allow searching on hidden entityid
+    ) {
+        $searchableFields[] = array(
+            'key' => $key,
+            'label' => $definition['label'],
+        );
+    }
+
     unset($columnsDefinition[$key]);
 }
 ?>

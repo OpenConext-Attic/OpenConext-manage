@@ -81,11 +81,42 @@ class ServiceRegistry_Service_JanusEntity
     }
 
     /**
+     * Get 'where' condition for janus__entities bases on given filter
+     * strings
+     *
+     * @param Zend_Db Adapter
+     * @param String  Table
+     * @param array Field definitions
+     * @param array Filter strings
+     * @return array of sql where clauses
+     */
+    protected function _getSearchFiltersWhere($adapter, $table, $fields, $filters) {
+        $queries = array();
+
+        // search by filter
+        foreach ($filters as $key => $filter) {
+            if (!array_key_exists($key, $fields)) {
+                continue; // unknown field
+            }
+
+            $field = $adapter->quoteIdentifier($key);
+
+            $query = $adapter->quoteInto(
+                $field . ' LIKE ?', '%' . $filter . '%'
+            );
+
+            $queries[$key] = $query;
+        }
+
+        return $queries;
+    }
+
+    /**
      * Get 'where' condition for janus__entities in a given month
      * in a given year.
-     * The created/expiration fields are varchar() columns and 
+     * The created/expiration fields are varchar() columns and
      * not dates, which is why we need the LEFT() hack.
-     * 
+     *
      * @param String  Table
      * @param Integer Year
      * @param Integer Month
@@ -94,7 +125,7 @@ class ServiceRegistry_Service_JanusEntity
     protected function _getCountTypesWhereForDate($table, $year, $month) {
         $year = intval($year);
         $month = intval($month);
-        
+
         return sprintf(
                     "((`%s`.`expiration` IS NULL) OR (LEFT(`%s`.`expiration`,7) <= '%04u-%02u'))",
                     $table,
@@ -166,7 +197,17 @@ class ServiceRegistry_Service_JanusEntity
                         array('userid'=>'userid')
                       )
                 ->where('ent.type= ?',$type);
-        
+
+        // apply search filters
+        $whereQueries = $this->_getSearchFiltersWhere(
+            $dao->getAdapter(), 'ent', $fields, $params->getSearchParams()
+        );
+
+        foreach ($whereQueries as $query) {
+            $select->having($query);
+        }
+
+        // search by date
         if ($params->searchByDate()) {
             $select->where(
                 $this->_getCountTypesWhereForDate(
@@ -186,11 +227,17 @@ class ServiceRegistry_Service_JanusEntity
         }
         $rows = $dao->fetchAll($select)->toArray();
 
-        $totalCount = $dao->fetchRow(
+        $row = $dao->fetchRow(
             $select->reset(Zend_Db_Select::LIMIT_COUNT)
                     ->reset(Zend_Db_Select::LIMIT_OFFSET)
                     ->columns(array('count'=>'COUNT(*)'))
-        )->offsetGet('count');
+        );
+
+        if ($row instanceof Zend_Db_Table_Row) {
+            $totalCount = $row->offsetGet('count');
+        } else { // null, no rows
+            $totalCount = 0;
+        }
 
         return new Surfnet_Search_Results($params, $rows, $totalCount);
     }

@@ -27,18 +27,18 @@ abstract class Surfnet_Zend_Controller_Abstract
 {
     /**
      * Search parametrs (limit, offset, sort, month, year etc.)
-     * 
+     *
      * @var Surfnet_Search_Parameters
      */
     protected $_searchParams;
-    
+
     /**
      * External parameters input filter.
-     * 
-     * @var type 
+     *
+     * @var type
      */
     protected $_inputFilter;
-    
+
     public function init()
     {
         $action = $this->getRequest()->getActionName();
@@ -58,26 +58,35 @@ abstract class Surfnet_Zend_Controller_Abstract
         $this->_searchParams = Surfnet_Search_Parameters::create(
             $this->_inputFilter
         );
+
+        // add search filters
+        $params = $this->_getParam('search');
+        if (!empty($params)) {
+            foreach ($params as $searchKey=>$searchParam) {
+                $this->_searchParams->addSearchParam($searchKey, $searchParam);
+            }
+        }
+
         $this->_initExportParameters();
         $this->view->gridConfig = $this->_helper->gridSetup(
             $this->_inputFilter
         );
         $this->_helper->ContextSwitch()->setGridConfig($this->view->gridConfig);
     }
-    
+
     /**
      * Set up an array to store extra export parameters.
-     * 
+     *
      * @return void
      */
     protected function _initExportParameters()
     {
         $this->view->exportParameters = array();
     }
-    
+
     /**
      * Add extra hidden parameter to export form.
-     * 
+     *
      * @return void
      */
     protected function _addExportParameter($name, $value)
