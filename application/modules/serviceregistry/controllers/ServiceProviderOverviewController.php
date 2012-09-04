@@ -40,6 +40,3 @@ class ServiceRegistry_ServiceProviderOverviewController extends Surfnet_Zend_Con
         $this->view->totalRecords       = $results->getTotalCount();
     }
 }
-
-
-
