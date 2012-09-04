@@ -11,7 +11,7 @@
     <tbody>
     <?php foreach ($this->ResultSet as $entity) { ?>
     <tr>
-        <td><?=$entity['display_name'];?></td>
+        <td class="state-<?=$entity['state']?>"><?=$entity['display_name'];?></td>
         <td><?=$entity['state'];?></td>
         <td><?=$entity['created'];?></td>
     </tr>
@@ -24,6 +24,11 @@
 <script type="text/javascript">
 
     var fixTableLayout = function() {
+        var greenElements = YAHOO.util.Selector.query('tbody tr td.state-prodaccepted');
+        for (var i in greenElements) {
+            YAHOO.util.Dom.setStyle(greenElements[i], 'color', 'green');
+        }
+
         var evenElements = YAHOO.util.Selector.query('tbody tr:nth-child(even)');
         var oddElements = YAHOO.util.Selector.query('tbody tr:nth-child(odd)');
 

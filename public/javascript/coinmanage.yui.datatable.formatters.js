@@ -48,7 +48,7 @@ YAHOO.widget.DataTable.Formatter.entityValid = function(el, oRecord, oColumn, oD
         }
         if (entity.Errors.length === 0 && entity.Warnings.length === 0) {
             el.innerHTML += '<a href="' + response.meta.link + '" target="_blank">'+
-                '<img src="/images/icons/tick.png" alt="Valid" title="No errors or warnings, entity valid" /></a>';        
+                '<img src="/images/icons/tick.png" alt="Valid" title="No errors or warnings, entity valid" /></a>';
         }
     };
     var myFailureHandler = function() {
@@ -160,4 +160,15 @@ YAHOO.widget.DataTable.Formatter.showSpGroupAcl = function(el, oRecord, oColumn,
     var name = oRecord.getData('name');
     var html = '<a href="/engineblock/service-provider-group-acl/show-sp--by-groupprovider?id=' + encodeURIComponent(id) + '&abr=' + encodeURIComponent(abr) + '&name=' + encodeURIComponent(name) + '">ACL</a>';
     el.innerHTML += html;
+}
+
+YAHOO.widget.DataTable.Formatter.showStateColoring = function(el, oRecord, oColumn, oData) {
+    var state = oRecord.getData('state');
+    var name = oRecord.getData('display_name');
+
+    if (state == 'prodaccepted') {
+        YAHOO.util.Dom.setStyle(el, 'color', 'green');
+    }
+
+    el.innerHTML += name;
 }
