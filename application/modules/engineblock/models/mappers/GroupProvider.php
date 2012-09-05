@@ -393,7 +393,7 @@ class EngineBlock_Model_Mapper_GroupProvider
 
         // map preconditions
         $preconditions = array();
-        if ($groupProvider->classname == 'OPENSOCIAL_OAUTH') {
+        if ($row['classname'] === EngineBlock_Model_GroupProvider::getClassname('OPENSOCIAL_OAUTH')) {
             // mandatory precondition for OAuth
             $preconditions[] = array(
                 'group_provider_id' => $groupProvider->id,
