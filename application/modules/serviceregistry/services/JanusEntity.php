@@ -227,6 +227,9 @@ class ServiceRegistry_Service_JanusEntity
         if ($params->getSortByField() != '') {
             $select->order($params->getSortByField() . ' ' . $params->getSortDirection());
         }
+        else {
+            $select->order(array('ent.state', 'display_name'));
+        }
         $rows = $dao->fetchAll($select)->toArray();
 
         $row = $dao->fetchRow(
