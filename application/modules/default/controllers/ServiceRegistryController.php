@@ -84,6 +84,13 @@ class Default_ServiceRegistryController extends Zend_Controller_Action
             $errors = array_merge($errors, $data->Errors);
         }
 
+        // Cache for an hour to make working with dynamic datagrids easier
+        $secondsToCache = 3600;
+        $ts = gmdate("D, d M Y H:i:s", time() + $secondsToCache) . " GMT";
+        header("Expires: $ts");
+        header("Pragma: cache");
+        header("Cache-Control: max-age=$secondsToCache");
+
         header('Content-Type: application/json');
         echo json_encode(array(
             'Response'=>array(
