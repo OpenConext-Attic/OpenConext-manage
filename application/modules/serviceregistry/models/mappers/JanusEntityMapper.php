@@ -207,11 +207,12 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'maxrev' => 'max(revisionid)',
         );
 
-        $rev_select = $dao->select()->from(
-            array('janus__entity'),
-            $rev_fields
-        )
-                ->group('eid');
+        $rev_select = $dao->select()
+                                ->from(
+                                    array('janus__entity'),
+                                    $rev_fields
+                                )
+                                ->group('eid');
 
         $fields = array(
             'entityid' => 'entityid',
@@ -226,22 +227,26 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
     )",
         );
 
-        $select = $dao->select()->setIntegrityCheck(false)->from(array('ent' => 'janus__entity'))
-                ->columns($fields)
-                ->joinInner(
-            array('entgrp' => $rev_select),
-            'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
-        )
-                ->join(
-            array('ju' => 'janus__user'),
-            '(ent.user=ju.uid)',
-            array('userid' => 'userid')
-        )
-                ->where('ent.entityid= ?', $entityId);
+        $select = $dao->select()
+                            ->setIntegrityCheck(false)
+                            ->from(array('ent' => 'janus__entity'))
+                            ->columns($fields)
+                            ->joinInner(
+                                array('entgrp' => $rev_select),
+                                'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
+                            )
+                            ->join(
+                                array('ju' => 'janus__user'),
+                                '(ent.user=ju.uid)',
+                                array('userid' => 'userid')
+                            )
+                            ->where('ent.entityid= ?', $entityId);
 
-        $row = $dao->fetchRow($select)->toArray();
-
-        return $row;
+        $row = $dao->fetchRow($select);
+        if (!$row) {
+            throw new Exception("No Entity found for EntityID '$entityId'");
+        }
+        return $row->toArray();
     }
 
     public function fetchByEId($eid)
@@ -253,40 +258,46 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'maxrev' => 'max(revisionid)',
         );
 
-        $rev_select = $dao->select()->from(
-            array('janus__entity'),
-            $rev_fields
-        )
-                ->group('eid');
+        $rev_select = $dao->select()
+                            ->from(
+                                array('janus__entity'),
+                                $rev_fields
+                            )
+                            ->group('eid');
 
         $fields = array(
-            'entityid' => 'entityid',
-            'state' => 'state',
-            'metadataurl' => 'metadataurl',
-            'created' => 'created',
-            'user' => 'user',
-            'allowedall' => 'allowedall',
-            'display_name' => "IFNULL(
-    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev),
-    ent.entityid
-    )",
+            'entityid'      => 'entityid',
+            'state'         => 'state',
+            'metadataurl'   => 'metadataurl',
+            'created'       => 'created',
+            'user'          => 'user',
+            'allowedall'    => 'allowedall',
+            'display_name'  => "IFNULL(
+                                    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev),
+                                    ent.entityid
+                                )",
         );
 
-        $select = $dao->select()->setIntegrityCheck(false)->from(array('ent' => 'janus__entity'))
-                ->columns($fields)
-                ->joinInner(
-            array('entgrp' => $rev_select),
-            'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
-        )
-                ->join(
-            array('ju' => 'janus__user'),
-            '(ent.user=ju.uid)',
-            array('userid' => 'userid')
-        )
-                ->where('ent.eid= ?', $eid);
+        $select = $dao->select()
+                        ->setIntegrityCheck(false)
+                        ->from(array('ent' => 'janus__entity'))
+                        ->columns($fields)
+                        ->joinInner(
+                            array('entgrp' => $rev_select),
+                            'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
+                        )
+                        ->join(
+                            array('ju' => 'janus__user'),
+                            '(ent.user=ju.uid)',
+                            array('userid' => 'userid')
+                        )
+                        ->where('ent.eid= ?', $eid);
 
-        $row = $dao->fetchRow($select)->toArray();
-        return $row;
+        $row = $dao->fetchRow($select);
+        if (!$row) {
+            throw new Exception("No Entity found for eid '$eid'");
+        }
+        return $row->toArray();
     }
 
     public function isConnectionAllowed(array $fromEntity, array $toEntity)
@@ -355,10 +366,11 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'maxrev' => 'max(revisionid)',
         );
 
-        $rev_select = $dao->select()->from(
-            array('janus__entity'),
-            $rev_fields
-        )
+        $rev_select = $dao->select()
+                            ->from(
+                                array('janus__entity'),
+                                $rev_fields
+                            )
                 ->where('eid = ?', $eid)
                 ->group('eid');
 

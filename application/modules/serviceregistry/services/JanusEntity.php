@@ -185,7 +185,9 @@ class ServiceRegistry_Service_JanusEntity
             $entityType = 'sp';
         }
 
-        $select = $dao->select()->setIntegrityCheck(false)->from(array('ent' => 'janus__entity'))
+        $select = $dao->select()
+                ->setIntegrityCheck(false)
+                ->from(array('ent' => 'janus__entity'))
                 ->columns($fields)
                 ->joinInner(
                              array('entgrp' => $rev_select),
