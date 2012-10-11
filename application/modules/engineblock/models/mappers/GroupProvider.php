@@ -26,10 +26,10 @@ class EngineBlock_Model_Mapper_GroupProvider
             throw new Exception("Multiple Group Providers with id '$id' found?");
         }
         $row = $rowsFound->current();
-        
+
         //fetch  options
         $options = $row->findDependentRowset('EngineBlock_Model_DbTable_GroupProviderOption')->toArray();
-        
+
         // fetch preconditions
         $preconditions = $row->findDependentRowset('EngineBlock_Model_DbTable_GroupProviderPrecondition')->toArray();
         // fetch precondition options (using query)
@@ -55,11 +55,11 @@ class EngineBlock_Model_Mapper_GroupProvider
         foreach ($filters as &$f) {
             $f['options'] = $dao->fetchAll("group_provider_filter_id = ".$f['id'])->toArray();
         }
-        unset($f);        
-        
+        unset($f);
+
         // create model
         $groupProvider = new EngineBlock_Model_GroupProvider();
-        $this->_mapRowToGroupProvider($row, $options, $groupProvider);        
+        $this->_mapRowToGroupProvider($row, $options, $groupProvider);
 
         // add preconditions, decorators and filters
         $this->_mapPreconditionsToGroupProvider($preconditions, $groupProvider);
@@ -103,7 +103,7 @@ class EngineBlock_Model_Mapper_GroupProvider
                             }
                         }
                     }
-                    break;                
+                    break;
                 case "EngineBlock_Group_Provider_Decorator_UserIdReplace":
                     $groupProvider->modify_user_id = 'on';
                     if (is_array($d['options'])) {
@@ -116,12 +116,12 @@ class EngineBlock_Model_Mapper_GroupProvider
                             }
                         }
                     }
-                    break;                
+                    break;
             }
         }
         return $groupProvider;
-    }    
-    
+    }
+
     protected function _mapFiltersToGroupProvider(Array $filters, EngineBlock_Model_GroupProvider $groupProvider) {
         foreach ($filters as $filter) {
             switch ($filter['type']) {
@@ -145,7 +145,7 @@ class EngineBlock_Model_Mapper_GroupProvider
                     if (count($rule) == 3) {
                         $groupProvider->modify_group_rule[] = $rule;
                     }
-                    break;                
+                    break;
                 case "groupMember":
                     $groupProvider->modify_user = 'on';
                     $rule = array();
@@ -166,7 +166,7 @@ class EngineBlock_Model_Mapper_GroupProvider
                     if (count($rule) == 3) {
                         $groupProvider->modify_user_rule[] = $rule;
                     }
-                    break;                
+                    break;
             }
         }
         // no sense in checking the box if there are no rules
@@ -178,8 +178,8 @@ class EngineBlock_Model_Mapper_GroupProvider
         }
         // done
         return $groupProvider;
-    }    
-    
+    }
+
     /**
      *
      * @param EngineBlock_Model_GroupProvider $groupProvider
@@ -215,7 +215,7 @@ class EngineBlock_Model_Mapper_GroupProvider
 
         return $groupProvider;
     }
-    
+
     protected function _savePreconditions($row, $preconditions) {
         // delete the old
         $gppTable = new EngineBlock_Model_DbTable_GroupProviderPrecondition();
@@ -244,13 +244,13 @@ class EngineBlock_Model_Mapper_GroupProvider
                     }
                 }
             }
-        } 
+        }
         catch (Exception $ex) {
             // TODO: handle exception
             throw $ex;
         }
     }
-    
+
     protected function _saveDecorators($row, $decorators) {
         // delete the old
         $gpdTable = new EngineBlock_Model_DbTable_GroupProviderDecorator();
@@ -279,13 +279,13 @@ class EngineBlock_Model_Mapper_GroupProvider
                     }
                 }
             }
-        } 
+        }
         catch (Exception $ex) {
             // TODO: handle exception
             throw $ex;
         }
     }
-    
+
     protected function _saveFilters($row, $filters) {
         // delete the old
         $gpfTable = new EngineBlock_Model_DbTable_GroupProviderFilter();
@@ -314,13 +314,13 @@ class EngineBlock_Model_Mapper_GroupProvider
                     }
                 }
             }
-        } 
+        }
         catch (Exception $ex) {
             // TODO: handle exception
             throw $ex;
         }
     }
-    
+
     protected function _mapRowToGroupProvider(Zend_Db_Table_Row_Abstract $row, Array $options, $groupProvider)
     {
         $groupProvider->id = $row['id'];
@@ -329,13 +329,13 @@ class EngineBlock_Model_Mapper_GroupProvider
         $groupProvider->logoUrl = $row['logo_url'];
         $groupProvider->fullClassname = $row['classname'];
         $groupProvider->classname = EngineBlock_Model_GroupProvider::getClassnameDisplayValue($row['classname']);
-        
+
         // add options
         foreach ($options as $i => $option) {
             $column = $groupProvider->getColumnName($option['name']);
             if (strlen($column) > 0) $groupProvider->$column = $option['value'];
         }
-        
+
         // special case: grouper URL is built from several components
         if ($groupProvider->classname == "GROUPER" && isset($groupProvider->host)) {
             $groupProvider->url = $groupProvider->protocol.'://'.$groupProvider->host.'/'.$groupProvider->version.'/'.$groupProvider->path;
@@ -353,7 +353,7 @@ class EngineBlock_Model_Mapper_GroupProvider
         $row['name'] = $groupProvider->name;
         $row['logo_url'] = $groupProvider->logoUrl;
 
-        // transformations model->row: 
+        // transformations model->row:
         // * authentication type -> classname
 
         if (isset($groupProvider->authentication)) {
@@ -376,7 +376,7 @@ class EngineBlock_Model_Mapper_GroupProvider
         else if (isset($groupProvider->classname)) {
             $row['classname'] = EngineBlock_Model_GroupProvider::getClassname($groupProvider->classname);
         }
-        // *         
+        // *
 
         // special case: grouper URL is split into several components
         if ($groupProvider->classname == "GROUPER" && strlen(trim($groupProvider->url)) > 0) {
@@ -434,7 +434,7 @@ class EngineBlock_Model_Mapper_GroupProvider
                 ),
             );
         }
-        
+
         $filters = array();
         if ($groupProvider->modify_group == 'on') {
             foreach ($groupProvider->modify_group_rule as $rule) {
@@ -464,7 +464,7 @@ class EngineBlock_Model_Mapper_GroupProvider
                 );
             }
         }
-                
+
         // map existing and new options to new option rows
         $gpoTable = new EngineBlock_Model_DbTable_GroupProviderOption();
         $newOptionRows = array();
@@ -489,7 +489,7 @@ class EngineBlock_Model_Mapper_GroupProvider
                     $newOptionRows[] = $newOptionRow;
                 }
             }
-        }        
+        }
         return array($row, $newOptionRows, $preconditions, $decorators, $filters);
     }
 

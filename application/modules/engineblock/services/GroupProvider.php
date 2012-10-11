@@ -47,20 +47,33 @@ class EngineBlock_Service_GroupProvider
         $mapper = new EngineBlock_Model_Mapper_GroupProvider(new EngineBlock_Model_DbTable_GroupProvider());
         return $mapper->fetchById($id);
     }
-    
+
     public function save($data)
     {
         if (isset($data['id']) && intval($data['id']) > 0) {
             $gpService = new EngineBlock_Service_GroupProvider();
             $gp = $gpService->fetchById(intval($data['id']));
-        } 
+
+            // set explicitly to off, if they're enabled they will
+            // be overridden by POST values
+            $gp->user_id_match = 'off';
+            $gp->modify_user = 'off';
+            $gp->modify_user_id = 'off';
+            $gp->modify_group = 'off';
+            $gp->modify_group_id = 'off';
+        }
         else {
             $gp = new EngineBlock_Model_GroupProvider();
         }
+
         $gp->populate($data);
 
+        $data = $gp->toArray();
+
         $form = new EngineBlock_Form_GroupProvider();
-        if (!$form->isValid($gp->toArray())) {
+        $customErrors = $form->validateCustomFields($data);
+
+        if (!$form->isValid($data) || !empty($customErrors)) {
             $formErrors = $form->getErrors();
             $modelErrors = array();
             foreach ($formErrors as $fieldName => $fieldErrors) {
@@ -79,6 +92,14 @@ class EngineBlock_Service_GroupProvider
                     $modelErrors[$fieldName][] = $error;
                 }
             }
+
+            // check for non-zf validates error messages
+            foreach ($customErrors as $fieldName => $errors) {
+                foreach ($errors as $error) {
+                    $modelErrors[$fieldName][] = $error;
+                }
+            }
+
             $gp->errors = $modelErrors;
         } else {
             $mapper = new EngineBlock_Model_Mapper_GroupProvider(new EngineBlock_Model_DbTable_GroupProvider());

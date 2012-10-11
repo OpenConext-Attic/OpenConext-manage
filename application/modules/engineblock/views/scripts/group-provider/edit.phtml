@@ -81,7 +81,7 @@ $model = $this->groupProvider; ?>
     <input type="hidden" name="classname" id="classname" value="<?php echo $model->classname ?>"/>
     <table class="form_subtable">
         <tr><td class="fieldlabel">Type: </td></tr><tr><td>&nbsp;<?php echo ($model->classname == 'GROUPER' ? 'Grouper' : 'OpenSocial'); ?></td></tr>
-    </table>    
+    </table>
 <?php endif; ?>
 
 <?php if ($this->mode == 'edit') :
@@ -332,7 +332,7 @@ $model = $this->groupProvider; ?>
                         <div class="form-error"><?php echo $error; ?></div>
                         <?php endforeach; endif; ?>
                         <label>Request Method: </label>
-                        <select id="request_method" name="request_method">                            
+                        <select id="request_method" name="request_method">
                             <option value="GET" <?php echo ($model->request_method == 'GET' ? 'selected="selected"' : '') ?>>GET</option>
                             <option value="POST" <?php echo ($model->request_method == 'POST' ? 'selected="selected"' : '') ?>>POST</option>
                             <option value="PUT" <?php echo ($model->request_method == 'PUT' ? 'selected="selected"' : '') ?>>PUT</option>
@@ -415,14 +415,11 @@ $model = $this->groupProvider; ?>
         <?php if (isset($model->errors['user_id_match'])): foreach ($model->errors['user_id_match'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
-        <?php if (isset($model->errors['user_id_match_regex'])): foreach ($model->errors['user_id_match_regex'] as $error): ?>
-        <div class="form-error"><?php echo $error; ?></div>
-        <?php endforeach; endif; ?>
         <input id="user_id_match"
                name="user_id_match"
                type="checkbox"
                <?php echo ($model->user_id_match == 'on' ? 'checked="checked"' : ''); ?>
-                /> User Id must match: 
+                /> User Id must match:
         <input id="user_id_match_search"
                name="user_id_match_search"
                type="text"
@@ -430,11 +427,14 @@ $model = $this->groupProvider; ?>
                size="70"
                maxlength="255"
                 /><br/>
+        <?php if (isset($model->errors['user_id_match_regex'])): foreach ($model->errors['user_id_match_regex'] as $error): ?>
+        <div class="form-error"><?php echo $error; ?></div>
+        <?php endforeach; endif; ?>
         <div style="float: left; margin-left: 144px; font-size: smaller">Regular expressions are allowed.</div>
     </fieldset>
 <?php endif; ?>
 
-    
+
     <fieldset title="Groups">
         <div style="float: left; width: 35px; height: 210px;">
             <img src="/images/icons/group.png" alt="Groups"/>
@@ -446,7 +446,7 @@ $model = $this->groupProvider; ?>
         <input id="modify_group_id"
                name="modify_group_id"
                type="checkbox"
-               <?php echo ($model->modify_group_id == 'on' ? 'checked="checked"' : ''); ?>               
+               <?php echo ($model->modify_group_id == 'on' ? 'checked="checked"' : ''); ?>
                 /> Modify Group Id
         <br/>
         <?php if (isset($model->errors['modify_group_id_search'])): foreach ($model->errors['modify_group_id_search'] as $error): ?>
@@ -477,10 +477,10 @@ $model = $this->groupProvider; ?>
         <input id="modify_group"
                name="modify_group"
                type="checkbox"
-               <?php echo ($model->modify_group == 'on' ? 'checked="checked"' : ''); ?>               
+               <?php echo ($model->modify_group == 'on' ? 'checked="checked"' : ''); ?>
                 /> Modify Group
         <br/>
-        
+
         <?php if (isset($model->errors['modify_group_rules'])): foreach ($model->errors['modify_group_rules'] as $error): ?>
         <div class="form-error"><?php echo $error; ?></div>
         <?php endforeach; endif; ?>
@@ -509,7 +509,7 @@ $model = $this->groupProvider; ?>
         with <input id="modify_group_rules_replace" type="text" size="20" maxlength="255"><input type="button" value="Add rule" onclick="addGroupRule();"/>
         </div>
     </fieldset>
-    
+
     <fieldset title="Users">
         <div style="float: left; width: 35px; height: 210px;">
             <img src="/images/icons/user.png" alt="Users"/>
@@ -552,7 +552,7 @@ $model = $this->groupProvider; ?>
         <input id="modify_user"
                name="modify_user"
                type="checkbox"
-               <?php echo ($model->modify_user == 'on' ? 'checked="checked"' : ''); ?>               
+               <?php echo ($model->modify_user == 'on' ? 'checked="checked"' : ''); ?>
                 /> Modify User
         <br/>
         <?php if (isset($model->errors['modify_user_rules'])): foreach ($model->errors['modify_user_rules'] as $error): ?>
@@ -586,7 +586,7 @@ $model = $this->groupProvider; ?>
         <br/>
 
     </fieldset>
-    
+
     <input type="submit" value="Save" />&nbsp;
     <input type="button" value="Cancel" onclick="javascript:location.href='<?php echo $this->listUrl;?>'">
 </form>
