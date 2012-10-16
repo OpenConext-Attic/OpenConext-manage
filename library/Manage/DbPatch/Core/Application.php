@@ -20,7 +20,7 @@ class Manage_DbPatch_Core_Application extends DbPatch_Core_Application
                     'adapter'   => $this->_convertPdoDriverToZendDbAdapter('mysql'),
                     'params' =>array(
                         'host'      => isset($dbConfig['host'])    ? $dbConfig['host']    : 'localhost',
-                        'username'  => isset($dbConfig['user'])    ? $dbConfig['user']    : 'root',
+                        'username'  => isset($dbConfig['username'])? $dbConfig['username']: 'root',
                         'password'  => isset($dbConfig['password'])? $dbConfig['password']: '',
                         'dbname'    => isset($dbConfig['dbname'])  ? $dbConfig['dbname']  : 'manage',
                         'charset'   => isset($dbConfig['charset']) ? $dbConfig['charset'] : 'utf8',
