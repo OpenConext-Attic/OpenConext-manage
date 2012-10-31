@@ -70,7 +70,7 @@
                 $year = $startYear;
                 while ($year <= $maxYear):
                 ?>
-                <option value="<?php echo $year; ?>"<?if ($year === $lastMonthsYear): ?> selected="selected"<?php endif; ?>><?php echo $year; ?></option>
+                <option value="<?php echo $year; ?>"<?php if ($year === $lastMonthsYear): ?> selected="selected"<?php endif; ?>><?php echo $year; ?></option>
                 <?php $year++; endwhile; ?>
             </select>
         </div>
