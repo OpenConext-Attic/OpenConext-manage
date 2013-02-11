@@ -30,7 +30,7 @@ Set up an HTTP server, note that for the Manage environment to work the followin
     # ... or an image, javascript or CSS file, route it to index.php
     RewriteRule !\.(js|ico|gif|jpg|png|css)$ /index.php
 
-Note that !!ENV!! MUST be replaced by one of the environments from application.ini (production, staging, test, dev,...).
+Note that !!ENV!! MUST be replaced by one of the environments from application.ini (production, acceptance, test, dev,...).
 And !!PATH_TO_MANAGE_ROOT!! MUSTw be replaced with where the Manage application is placed at (example: /var/www/surfconext/manage).
 
 ### 2. Set up shell environment.
