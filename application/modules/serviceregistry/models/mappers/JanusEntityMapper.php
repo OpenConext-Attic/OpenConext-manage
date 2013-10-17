@@ -222,7 +222,7 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'user' => 'user',
             'allowedall' => 'allowedall',
             'display_name' => "IFNULL(
-    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev),
+    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev AND jm.value <> ''),
     ent.entityid
     )",
         );
@@ -274,7 +274,7 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'allowedall' => 'allowedall',
             'display_name' => "IFNULL(
                                     (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev),
-                                    ent.entityid
+                                    ent.entityid AND jm.value <> ''
                                 )",
         );
 

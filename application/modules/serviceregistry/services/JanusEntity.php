@@ -174,16 +174,10 @@ class ServiceRegistry_Service_JanusEntity
             'created' => 'created',
             'user' => 'user',
             'display_name' => "IFNULL(
-    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev),
+    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev AND jm.value <> ''),
     ent.entityid
     )",
         );
-
-        $entityType = ($type==='saml20-sp') ? 'sp' : 'idp' ;
-        $entityType = 'idp';
-        if ($type==='saml20-sp') {
-            $entityType = 'sp';
-        }
 
         $select = $dao->select()
                 ->setIntegrityCheck(false)
