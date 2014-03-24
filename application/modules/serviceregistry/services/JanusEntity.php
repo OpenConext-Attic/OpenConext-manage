@@ -30,21 +30,21 @@ class ServiceRegistry_Service_JanusEntity
         $dao = new ServiceRegistry_Model_DbTable_JanusEntity();
         $searchParams = $params->getSearchParams();
         /*
-         $qry = "SELECT COUNT(DISTINCT(entityid)) AS num, 'Identity Provider' as type FROM `service_registry`.`janus__entity` where type = 'saml20-idp'
-         UNION SELECT COUNT(DISTINCT(entityid)) AS num, 'Service Provider' as type FROM `service_registry`.`janus__entity` where type = 'saml20-sp'";
+         $qry = "SELECT COUNT(DISTINCT(entityid)) AS num, 'Identity Provider' as type FROM `service_registry`.`janus__connectionRevision` where type = 'saml20-idp'
+         UNION SELECT COUNT(DISTINCT(entityid)) AS num, 'Service Provider' as type FROM `service_registry`.`janus__connectionRevision` where type = 'saml20-sp'";
          */
         $selectIdp = $dao->select();
-        $selectIdp->from('janus__entity AS je1',
+        $selectIdp->setIntegrityCheck(false);
+        $selectIdp->from('janus__connection as idp',
                          array("num" => "COUNT(*)",
                               'type' => new Zend_Db_Expr("'Identity Provider'"))
                         )
-                  ->where('type = ?', 'saml20-idp')
-                  ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
+                  ->where('idp.type = ?', 'saml20-idp');
 
         if ($params->searchByDate()) {
             $selectIdp->where(
                 $this->_getCountTypesWhereForDate(
-                    'je1',
+                    'idp',
                     $searchParams['year'],
                     $searchParams['month']
                 )
@@ -52,18 +52,17 @@ class ServiceRegistry_Service_JanusEntity
         }
 
         $selectSp = $dao->select();
-        $selectSp->from('janus__entity AS je1',
+        $selectSp->setIntegrityCheck(false);
+        $selectSp->from('janus__connection as sp',
                         array("num" => "COUNT(*)",
                               'type' => new Zend_Db_Expr("'Service Provider'"))
                        )
-                 ->where('type = ?', 'saml20-sp')
-                 ->where('revisionid = (SELECT MAX(je.revisionid) FROM janus__entity je WHERE je.eid = je1.eid)');
-
+                 ->where('sp.type = ?', 'saml20-sp');
 
         if ($params->searchByDate()) {
             $selectSp->where(
                 $this->_getCountTypesWhereForDate(
-                   'je1',
+                    'sp',
                     $searchParams['year'],
                     $searchParams['month']
                 )
@@ -81,7 +80,7 @@ class ServiceRegistry_Service_JanusEntity
     }
 
     /**
-     * Get 'where' condition for janus__entities bases on given filter
+     * Get 'where' condition for connections bases on given filter
      * strings
      *
      * @param Zend_Db Adapter
@@ -112,7 +111,7 @@ class ServiceRegistry_Service_JanusEntity
     }
 
     /**
-     * Get 'where' condition for janus__entities in a given month
+     * Get 'where' condition for connections in a given month
      * in a given year.
      * The created/expiration fields are varchar() columns and
      * not dates, which is why we need the LEFT() hack.
@@ -161,9 +160,9 @@ class ServiceRegistry_Service_JanusEntity
             'maxrev' => 'max(revisionid)',
         );
 
-        $rev_select = $dao->select()->from(
-                           array('janus__entity'),
-                           $rev_fields
+        $connectionRevisionSelect = $dao->select()->from(
+                           array('janus__connectionRevision'),
+                       $rev_fields
                          )
                    ->group('eid');
 
@@ -174,29 +173,29 @@ class ServiceRegistry_Service_JanusEntity
             'created' => 'created',
             'user' => 'user',
             'display_name' => "IFNULL(
-    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev AND jm.value <> ''),
-    ent.entityid
+    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.connectionRevisionId = connectionRevision.id AND jm.value <> ''),
+    connectionRevision.entityid
     )",
         );
 
         $select = $dao->select()
                 ->setIntegrityCheck(false)
-                ->from(array('ent' => 'janus__entity'))
+                ->from(array('connectionRevision' => 'janus__connectionRevision'))
                 ->columns($fields)
                 ->joinInner(
-                             array('entgrp' => $rev_select),
-                             'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
+                             array('connectionRevisionGroup' => $connectionRevisionSelect),
+                             'connectionRevision.eid = connectionRevisionGroup.eid and connectionRevision.revisionid = connectionRevisionGroup.maxrev'
                            )
                 ->join(
                         array('ju' => 'janus__user'),
-                        '(ent.user=ju.uid)',
+                        '(connectionRevision.user=ju.uid)',
                         array('userid'=>'userid')
                       )
-                ->where('ent.type= ?',$type);
+                ->where('connectionRevision.type= ?',$type);
 
         // apply search filters
         $whereQueries = $this->_getSearchFiltersWhere(
-            $dao->getAdapter(), 'ent', $fields, $params->getSearchParams()
+            $dao->getAdapter(), 'connectionRevision', $fields, $params->getSearchParams()
         );
 
         foreach ($whereQueries as $query) {
@@ -207,7 +206,7 @@ class ServiceRegistry_Service_JanusEntity
         if ($params->searchByDate()) {
             $select->where(
                 $this->_getCountTypesWhereForDate(
-                    'ent',
+                    'connectionRevision',
                     $searchParams['year'],
                     $searchParams['month']
                 )
@@ -222,7 +221,7 @@ class ServiceRegistry_Service_JanusEntity
             $select->order($params->getSortByField() . ' ' . $params->getSortDirection());
         }
         else {
-            $select->order(array('ent.state', 'display_name'));
+            $select->order(array('connectionRevision.state', 'display_name'));
         }
         $rows = $dao->fetchAll($select)->toArray();
 
@@ -241,40 +240,40 @@ class ServiceRegistry_Service_JanusEntity
         return new Surfnet_Search_Results($params, $rows, $totalCount);
     }
 
-    public function fetchByEntityId($entityId)
+    public function fetchByconnectionRevisionityId($connectionRevisionityId)
     {
         $mapper = new ServiceRegistry_Model_Mapper_JanusEntityMapper(new ServiceRegistry_Service_JanusEntity());
-        return $mapper->fetchByEntityId($entityId);
+        return $mapper->fetchByconnectionRevisionityId($connectionRevisionityId);
     }
 
-    public function getAllowedConnections($entityId)
+    public function getAllowedConnections($connectionRevisionityId)
     {
         $service = new ServiceRegistry_Service_JanusEntity();
-        $fromEntity = $service->fetchByEntityId($entityId);
+        $fromconnectionRevisionity = $service->fetchByconnectionRevisionityId($connectionRevisionityId);
 
-        $entities = array();
-        // get all entities from other type
-        if ($fromEntity['type'] === "saml20-idp") {
+        $connectionRevisionities = array();
+        // get all connectionRevisionities from other type
+        if ($fromconnectionRevisionity['type'] === "saml20-idp") {
             $results = $service->searchSps(Surfnet_Search_Parameters::create());
-            $entities = $results->getResults();
+            $connectionRevisionities = $results->getResults();
         } else {
             $results = $service->searchIdps(Surfnet_Search_Parameters::create());
-            $entities = $results->getResults();
+            $connectionRevisionities = $results->getResults();
         }
 
-        $entitiesResult = array();
-        foreach ($entities as $entity) {
-            if ($service->isConnectionAllowed($fromEntity, $entity) && $service->isConnectionAllowed($entity, $fromEntity)) {
-                $entitiesResult[] = $entity;
+        $connectionRevisionitiesResult = array();
+        foreach ($connectionRevisionities as $connectionRevisionity) {
+            if ($service->isConnectionAllowed($fromconnectionRevisionity, $connectionRevisionity) && $service->isConnectionAllowed($connectionRevisionity, $fromconnectionRevisionity)) {
+                $connectionRevisionitiesResult[] = $connectionRevisionity;
             }
         }
 
-        return $entitiesResult;
+        return $connectionRevisionitiesResult;
     }
 
-    public function isConnectionAllowed($fromEntity, $toEntity)
+    public function isConnectionAllowed($fromconnectionRevisionity, $toconnectionRevisionity)
     {
         $mapper = new ServiceRegistry_Model_Mapper_JanusEntityMapper(new ServiceRegistry_Service_JanusEntity());
-        return $mapper->isConnectionAllowed($fromEntity, $toEntity);
+        return $mapper->isConnectionAllowed($fromconnectionRevisionity, $toconnectionRevisionity);
     }
 }
