@@ -71,15 +71,15 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
     {
         $db = $this->_dao->getAdapter();
 
-        $rev_select = $db->select();
+        $connectionRevisionSelect = $db->select();
 
         $rev_fields = array(
             'eid' => 'eid',
             'maxrev' => 'max(revisionid)',
         );
 
-        $rev_select->from(
-            array('janus__entity'),
+        $connectionRevisionSelect->from(
+            array('janus__connectionRevision'),
             $rev_fields
         )
             ->group('eid');
@@ -98,25 +98,26 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
         }
 
         $select = $db->select();
+
         $select->from(
-            array('ent' => 'janus__entity'),
+            array('connectionRevision' => 'janus__connectionRevision'),
             $fields
         )
             ->joinInner(
-                array('entgrp' => $rev_select),
-                'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
+                array('connectionRevisionGroup' => $connectionRevisionSelect),
+                'connectionRevision.eid = connectionRevisionGroup.eid and connectionRevision.revisionid = connectionRevisionGroup.maxrev'
             )
             ->join(
                 array('jm' => 'janus__metadata'),
-                '(ent.eid=jm.eid AND jm.revisionid=entgrp.maxrev)',
+                '(connectionRevision.id=jm.connectionRevisionId)',
                 array($entityType => 'value', 'key' => 'key')
             )
             ->join(
                 array('ju' => 'janus__user'),
-                '(ent.user=ju.uid)',
+                '(connectionRevision.user=ju.uid)',
                 array('userid' => 'userid')
             )
-            ->where('ent.type= ?', $type)
+            ->where('connectionRevision.type= ?', $type)
             ->where('jm.key=?', 'name:nl');
 
         if (isset($limit)) {
@@ -162,8 +163,8 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
     public function fetchIdpAndSpCount($order = 'title', $dir = 'asc', $limit = null, $offset = 0, $countOnly = false)
     {
         /*
-         $qry = "SELECT COUNT(DISTINCT(entityid)) AS num, 'Identity Provider' as type FROM `service_registry`.`janus__entity` where type = 'saml20-idp'
-         UNION SELECT COUNT(DISTINCT(entityid)) AS num, 'Service Provider' as type FROM `service_registry`.`janus__entity` where type = 'saml20-sp'";
+         $qry = "SELECT COUNT(DISTINCT(entityid)) AS num, 'Identity Provider' as type FROM `service_registry`.`janus__connectionRevision` where type = 'saml20-idp'
+         UNION SELECT COUNT(DISTINCT(entityid)) AS num, 'Service Provider' as type FROM `service_registry`.`janus__connectionRevision` where type = 'saml20-sp'";
          */
         $selectIdp = $this->_dao->select();
         $selectIdp->from($this->_dao,
@@ -207,9 +208,9 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'maxrev' => 'max(revisionid)',
         );
 
-        $rev_select = $dao->select()
+        $connectionRevisionSelect = $dao->select()
             ->from(
-                array('janus__entity'),
+                array('janus__connectionRevision'),
                 $rev_fields
             )
             ->group('eid');
@@ -222,25 +223,25 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'user' => 'user',
             'allowedall' => 'allowedall',
             'display_name' => "IFNULL(
-    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev AND jm.value <> ''),
-    ent.entityid
+    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.connectionRevisionId = connectionRevision.id AND jm.value <> ''),
+    connectionRevision.entityid
     )",
         );
 
         $select = $dao->select()
             ->setIntegrityCheck(false)
-            ->from(array('ent' => 'janus__entity'))
+            ->from(array('connectionRevision' => 'janus__connectionRevision'))
             ->columns($fields)
             ->joinInner(
-                array('entgrp' => $rev_select),
-                'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
+                array('connectionRevisionGroup' => $connectionRevisionSelect),
+                'connectionRevision.eid = connectionRevisionGroup.eid and connectionRevision.revisionid = connectionRevisionGroup.maxrev'
             )
             ->join(
                 array('ju' => 'janus__user'),
-                '(ent.user=ju.uid)',
+                '(connectionRevision.user=ju.uid)',
                 array('userid' => 'userid')
             )
-            ->where('ent.entityid= ?', $entityId);
+            ->where('connectionRevision.entityid= ?', $entityId);
 
         $row = $dao->fetchRow($select);
         if (!$row) {
@@ -258,9 +259,9 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'maxrev' => 'max(revisionid)',
         );
 
-        $rev_select = $dao->select()
+        $connectionRevisionSelect = $dao->select()
             ->from(
-                array('janus__entity'),
+                array('janus__connectionRevision'),
                 $rev_fields
             )
             ->group('eid');
@@ -273,25 +274,25 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'user' => 'user',
             'allowedall' => 'allowedall',
             'display_name' => "IFNULL(
-                                    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.eid = ent.eid AND jm.revisionid = maxrev),
-                                    ent.entityid AND jm.value <> ''
+                                    (SELECT `value` FROM `janus__metadata` `jm` WHERE `key`='name:en' AND jm.connectionRevisionId = connectionRevision.id),
+                                    connectionRevision.entityid AND jm.value <> ''
                                 )",
         );
 
         $select = $dao->select()
             ->setIntegrityCheck(false)
-            ->from(array('ent' => 'janus__entity'))
+            ->from(array('connectionRevision' => 'janus__connectionRevision'))
             ->columns($fields)
             ->joinInner(
-                array('entgrp' => $rev_select),
-                'ent.eid = entgrp.eid and ent.revisionid = entgrp.maxrev'
+                array('connectionRevisionGroup' => $connectionRevisionSelect),
+                'connectionRevision.eid = connectionRevisionGroup.eid and connectionRevision.revisionid = connectionRevisionGroup.maxrev'
             )
             ->join(
                 array('ju' => 'janus__user'),
-                '(ent.user=ju.uid)',
+                '(connectionRevision.user=ju.uid)',
                 array('userid' => 'userid')
             )
-            ->where('ent.eid= ?', $eid);
+            ->where('connectionRevision.eid= ?', $eid);
 
         $row = $dao->fetchRow($select);
         if (!$row) {
@@ -338,8 +339,8 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'maxrev' => 'max(revisionid)',
         );
 
-        $rev_select = $dao->select()->from(
-            array('janus__entity'),
+        $connectionRevisionSelect = $dao->select()->from(
+            array('janus__connectionRevision'),
             $rev_fields)
             ->where('eid = ?', $eid)
             ->group('eid');
@@ -352,11 +353,11 @@ class ServiceRegistry_Model_Mapper_JanusEntityMapper
             'ip' => 'ip'
         );
 
-        $rev_id = $dao->fetchRow($rev_select)->toArray();
-        $select = $dao->select()->setIntegrityCheck(false)->from(array('ent' => $table))
+        $rev_id = $dao->fetchRow($connectionRevisionSelect)->toArray();
+        $select = $dao->select()->setIntegrityCheck(false)->from(array('connectionRevision' => $table))
             ->columns($fields)
-            ->where('ent.eid = ?', $eid)
-            ->where('ent.revisionid = ?', $rev_id['maxrev']);
+            ->where('connectionRevision.eid = ?', $eid)
+            ->where('connectionRevision.revisionid = ?', $rev_id['maxrev']);
 
         $rows = $dao->fetchAll($select)->toArray();
 
